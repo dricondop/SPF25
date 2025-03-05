@@ -1,0 +1,15 @@
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\bin\Debug\net8.0\PROJECT.exe
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\bin\Debug\net8.0\PROJECT.deps.json
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\bin\Debug\net8.0\PROJECT.runtimeconfig.json
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\bin\Debug\net8.0\PROJECT.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\bin\Debug\net8.0\PROJECT.pdb
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\PROJECT.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\PROJECT.AssemblyInfoInputs.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\PROJECT.AssemblyInfo.cs
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\PROJECT.csproj.CoreCompileInputs.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\PROJECT.sourcelink.json
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\PROJECT.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\refint\PROJECT.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\PROJECT.pdb
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\PROJECT.genruntimeconfig.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\PROJECT\obj\Debug\net8.0\ref\PROJECT.dll

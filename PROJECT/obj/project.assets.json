@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\SPF25.csproj",
-      "projectName": "SPF25",
-      "projectPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\SPF25.csproj",
+      "projectUniqueName": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\PROJECT\\PROJECT.csproj",
+      "projectName": "PROJECT",
+      "projectPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\PROJECT\\PROJECT.csproj",
       "packagesPath": "C:\\Users\\downy\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\obj\\",
+      "outputPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\PROJECT\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\downy\\AppData\\Roaming\\NuGet\\NuGet.Config"
