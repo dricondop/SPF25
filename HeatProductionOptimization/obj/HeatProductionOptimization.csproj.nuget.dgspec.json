@@ -1,28 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\SDU\\2nd semester group project\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj": {}
+    "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj": {}
   },
   "projects": {
-    "C:\\SDU\\2nd semester group project\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj": {
+    "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\SDU\\2nd semester group project\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
+        "projectUniqueName": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
         "projectName": "HeatProductionOptimization",
-        "projectPath": "C:\\SDU\\2nd semester group project\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
-        "packagesPath": "C:\\Users\\Sanda\\.nuget\\packages\\",
-        "outputPath": "C:\\SDU\\2nd semester group project\\SPF25\\HeatProductionOptimization\\obj\\",
+        "projectPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
+        "packagesPath": "C:\\Users\\downy\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Sanda\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\downy\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
