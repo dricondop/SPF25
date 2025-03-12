@@ -1,0 +1,6 @@
+Name,Type,Max Heat (MW),Max Electricity (MW),Production Cost (DKK/MWh),CO2 Emissions (kg/MWh),Fuel Type,Fuel Consumption (MWh fuel/MWh heat)
+GB1,Gas Boiler,4.0,,520,175,Gas,0.9
+GB2,Gas Boiler,3.0,,560,130,Gas,0.7
+OB1,Oil Boiler,4.0,,670,330,Oil,1.5
+GM1,Gas Motor,3.5,2.6,990,650,Gas,1.8
+HP1,Heat Pump,6.0,-6.0,60,,, 
