@@ -943,19 +943,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\downy\\.nuget\\packages\\": {}
+    "C:\\Users\\manue\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization.test1\\HeatProductionOptimization.test1.csproj",
+      "projectUniqueName": "C:\\Users\\manue\\Documents\\AA SDU\\Semester project 2\\SPF25\\HeatProductionOptimization.test1\\HeatProductionOptimization.test1.csproj",
       "projectName": "HeatProductionOptimization.test1",
-      "projectPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization.test1\\HeatProductionOptimization.test1.csproj",
-      "packagesPath": "C:\\Users\\downy\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization.test1\\obj\\",
+      "projectPath": "C:\\Users\\manue\\Documents\\AA SDU\\Semester project 2\\SPF25\\HeatProductionOptimization.test1\\HeatProductionOptimization.test1.csproj",
+      "packagesPath": "C:\\Users\\manue\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\manue\\Documents\\AA SDU\\Semester project 2\\SPF25\\HeatProductionOptimization.test1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\downy\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\manue\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
