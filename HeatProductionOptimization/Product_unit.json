@@ -1,0 +1,57 @@
+[
+    {
+      "GB1":{
+      "Type": "Gas Boiler",
+      "Max Heat (MW)": 4.0,
+      "MinMax Electricity (MW)": null,
+      "Production Cost (DKK/MWh)": 520,
+      "CO2 Emissions (kg/MWh)": 175,
+      "FuelType": "Gas",
+      "Fuel Consumption (MWh fuel/MWh heat)": 0.9
+      }
+    },
+    {
+      "GB2":{
+      "Type": "Gas Boiler",
+      "Max Heat (MW)": 3.0,
+      "MiMax Electricity (MW)Temp": null,
+      "Production Cost (DKK/MWh)": 560,
+      "CO2 Emissions (kg/MWh)": 130,
+      "FuelType": "Gas",
+      "Fuel Consumption (MWh fuel/MWh heat)": 0.7
+      }
+    },
+    {
+      "OB1":{
+      "Type": "Oil Boiler",
+      "Max Heat (MW)": 4.0,
+      "MinTeMax Electricity (MW)p": null,
+      "Production Cost (DKK/MWh)": 670,
+      "CO2 Emissions (kg/MWh)": 330,
+      "FuelType": "Oil",
+      "Fuel Consumption (MWh fuel/MWh heat)": 1.5
+      }
+    },
+    {
+      "GM1":{
+      "Type": "Gas Motor",
+      "Max Heat (MW)": 3.5,
+      "MinTMax Electricity (MW)mp": 2.6,
+      "Production Cost (DKK/MWh)": 990,
+      "CO2 Emissions (kg/MWh)": 650,
+      "FuelType": "Gas",
+      "Fuel Consumption (MWh fuel/MWh heat)": 1.8
+      }
+    },
+    {
+      "HP1":{
+      "Type": "Heat Pump",
+      "Max Heat (MW)": 6.0,
+      "MinTemMax Electricity (MW)": -6.0,
+      "Production Cost (DKK/MWh)": 60,
+      "CO2 Emissions (kg/MWh)": null,
+      "FuelType": null,
+      "Fuel Consumption (MWh fuel/MWh heat)": null
+      }
+    }
+  ]
