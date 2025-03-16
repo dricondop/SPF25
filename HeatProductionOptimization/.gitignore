@@ -1,0 +1,10 @@
+# Ignore this folders
+bin/
+obj/
+
+# Ignore VS Code config
+.vscode/
+*.user
+*.suo
+*.sln.cache
+*.csproj.user
