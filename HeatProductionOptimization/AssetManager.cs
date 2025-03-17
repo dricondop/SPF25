@@ -66,9 +66,9 @@ using System.Text.Json.Serialization;
     // then use the LoadBoilerSpecifications() to set the _boilers and then use the GetBoilerSpecification() method
 
     // Method to get a specific boiler specification by name
-    public BoilerSpecification GetBoilerSpecification(string name)
+    public BoilerSpecification GetBoilerSpecification(string name, Dictionary<string, BoilerSpecification> boiler)
     {
-        return _boilers.TryGetValue(name, out var spec) ? spec : null;
+        return boiler.TryGetValue(name, out var spec) ? spec : null;
     }
 
 }
