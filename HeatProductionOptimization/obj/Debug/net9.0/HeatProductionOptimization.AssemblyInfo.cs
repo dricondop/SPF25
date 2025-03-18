@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HeatProductionOptimization")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9c65ff7a00a02f45cfe0d58dfe5e11a6c53d520a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a1e94cc128e3f1620bedae1103e2f80b13d90fc")]
 [assembly: System.Reflection.AssemblyProductAttribute("HeatProductionOptimization")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HeatProductionOptimization")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
