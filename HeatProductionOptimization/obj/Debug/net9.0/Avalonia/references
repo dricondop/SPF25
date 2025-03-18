@@ -1,3 +1,32 @@
+<<<<<<< HEAD
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.Base.dll
+C:\Users\sanch\.nuget\packages\avalonia.controls.colorpicker\11.2.1\lib\net8.0\Avalonia.Controls.ColorPicker.dll
+C:\Users\sanch\.nuget\packages\avalonia.controls.datagrid\11.2.1\lib\net8.0\Avalonia.Controls.DataGrid.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.Controls.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.DesignerSupport.dll
+C:\Users\sanch\.nuget\packages\avalonia.desktop\11.2.1\lib\net8.0\Avalonia.Desktop.dll
+C:\Users\sanch\.nuget\packages\avalonia.diagnostics\11.2.1\lib\net8.0\Avalonia.Diagnostics.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.Dialogs.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.dll
+C:\Users\sanch\.nuget\packages\avalonia.fonts.inter\11.2.1\lib\net8.0\Avalonia.Fonts.Inter.dll
+C:\Users\sanch\.nuget\packages\avalonia.freedesktop\11.2.1\lib\net8.0\Avalonia.FreeDesktop.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.Markup.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.Markup.Xaml.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.Metal.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.MicroCom.dll
+C:\Users\sanch\.nuget\packages\avalonia.native\11.2.1\lib\net8.0\Avalonia.Native.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.OpenGL.dll
+C:\Users\sanch\.nuget\packages\avalonia.remote.protocol\11.2.1\lib\net8.0\Avalonia.Remote.Protocol.dll
+C:\Users\sanch\.nuget\packages\avalonia.skia\11.2.1\lib\net8.0\Avalonia.Skia.dll
+C:\Users\sanch\.nuget\packages\avalonia.themes.fluent\11.2.1\lib\net8.0\Avalonia.Themes.Fluent.dll
+C:\Users\sanch\.nuget\packages\avalonia.themes.simple\11.2.1\lib\net8.0\Avalonia.Themes.Simple.dll
+C:\Users\sanch\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.Vulkan.dll
+C:\Users\sanch\.nuget\packages\avalonia.win32\11.2.1\lib\net8.0\Avalonia.Win32.dll
+C:\Users\sanch\.nuget\packages\avalonia.x11\11.2.1\lib\net8.0\Avalonia.X11.dll
+C:\Users\sanch\.nuget\packages\communitytoolkit.mvvm\8.2.1\lib\net6.0\CommunityToolkit.Mvvm.dll
+C:\Users\sanch\.nuget\packages\harfbuzzsharp\7.3.0.2\lib\net6.0\HarfBuzzSharp.dll
+C:\Users\sanch\.nuget\packages\microcom.runtime\0.11.0\lib\net5.0\MicroCom.Runtime.dll
+=======
 C:\Users\manue\.nuget\packages\avalonia\11.2.1\ref\net8.0\Avalonia.Base.dll
 C:\Users\manue\.nuget\packages\avalonia.controls.colorpicker\11.2.1\lib\net8.0\Avalonia.Controls.ColorPicker.dll
 C:\Users\manue\.nuget\packages\avalonia.controls.datagrid\11.2.1\lib\net8.0\Avalonia.Controls.DataGrid.dll
@@ -25,6 +54,7 @@ C:\Users\manue\.nuget\packages\avalonia.x11\11.2.1\lib\net8.0\Avalonia.X11.dll
 C:\Users\manue\.nuget\packages\communitytoolkit.mvvm\8.2.1\lib\net6.0\CommunityToolkit.Mvvm.dll
 C:\Users\manue\.nuget\packages\harfbuzzsharp\7.3.0.2\lib\net6.0\HarfBuzzSharp.dll
 C:\Users\manue\.nuget\packages\microcom.runtime\0.11.0\lib\net5.0\MicroCom.Runtime.dll
+>>>>>>> main
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\Microsoft.CSharp.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\Microsoft.VisualBasic.Core.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\Microsoft.VisualBasic.dll
@@ -32,7 +62,11 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\Microso
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\Microsoft.Win32.Registry.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\mscorlib.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\netstandard.dll
+<<<<<<< HEAD
+C:\Users\sanch\.nuget\packages\skiasharp\2.88.8\lib\net6.0\SkiaSharp.dll
+=======
 C:\Users\manue\.nuget\packages\skiasharp\2.88.8\lib\net6.0\SkiaSharp.dll
+>>>>>>> main
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\System.AppContext.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\System.Buffers.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\System.Collections.Concurrent.dll
@@ -189,5 +223,9 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\System.
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\System.Xml.XmlSerializer.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\System.Xml.XPath.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\System.Xml.XPath.XDocument.dll
+<<<<<<< HEAD
+C:\Users\sanch\.nuget\packages\tmds.dbus.protocol\0.20.0\lib\net8.0\Tmds.DBus.Protocol.dll
+=======
 C:\Users\manue\.nuget\packages\tmds.dbus.protocol\0.20.0\lib\net8.0\Tmds.DBus.Protocol.dll
+>>>>>>> main
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.1\ref\net9.0\WindowsBase.dll
