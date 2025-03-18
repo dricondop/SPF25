@@ -7,7 +7,9 @@
         x:Class="HeatProductionOptimization.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="HeatProductionOptimization">
+        RequestedThemeVariant="Light"
+        Height="400" Width="400"
+        Title="Heat Production Optimization">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -15,6 +17,10 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Please import your .csv file" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+            <Button Content="Import File" Click="ImportButton_Click" Background="Blue" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Margin="10"/>
+        </StackPanel>
+    </Grid>
 </Window>

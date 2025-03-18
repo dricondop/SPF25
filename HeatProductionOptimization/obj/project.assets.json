@@ -1474,19 +1474,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\sanch\\.nuget\\packages\\": {}
+    "C:\\Users\\manue\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\sanch\\OneDrive\\Escritorio\\SPF25-main\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
+      "projectUniqueName": "C:\\Users\\manue\\Documents\\AA SDU\\Semester project 2\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
       "projectName": "HeatProductionOptimization",
-      "projectPath": "C:\\Users\\sanch\\OneDrive\\Escritorio\\SPF25-main\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
-      "packagesPath": "C:\\Users\\sanch\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\sanch\\OneDrive\\Escritorio\\SPF25-main\\SPF25\\HeatProductionOptimization\\obj\\",
+      "projectPath": "C:\\Users\\manue\\Documents\\AA SDU\\Semester project 2\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
+      "packagesPath": "C:\\Users\\manue\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\manue\\Documents\\AA SDU\\Semester project 2\\SPF25\\HeatProductionOptimization\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\sanch\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\manue\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"

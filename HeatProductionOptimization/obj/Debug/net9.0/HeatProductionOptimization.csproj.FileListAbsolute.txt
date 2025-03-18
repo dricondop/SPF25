@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\SDU\2nd semester group project\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.exe
 C:\SDU\2nd semester group project\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.deps.json
 C:\SDU\2nd semester group project\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.runtimeconfig.json
@@ -134,3 +135,141 @@ C:\Users\sanch\OneDrive\Escritorio\SPF25-main\SPF25\HeatProductionOptimization\o
 C:\Users\sanch\OneDrive\Escritorio\SPF25-main\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProd.6FF94C2F.Up2Date
 C:\Users\sanch\OneDrive\Escritorio\SPF25-main\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.genruntimeconfig.cache
 C:\Users\sanch\OneDrive\Escritorio\SPF25-main\SPF25\HeatProductionOptimization\obj\Debug\net9.0\ref\HeatProductionOptimization.dll
+=======
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.exe
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.deps.json
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.runtimeconfig.json
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.pdb
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Base.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Controls.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.DesignerSupport.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Dialogs.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Markup.Xaml.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Markup.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Metal.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.MicroCom.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.OpenGL.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Vulkan.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Controls.ColorPicker.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Controls.DataGrid.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Desktop.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Diagnostics.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Fonts.Inter.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.FreeDesktop.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Native.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Remote.Protocol.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Skia.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Themes.Fluent.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Themes.Simple.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Win32.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.X11.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\CommunityToolkit.Mvvm.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HarfBuzzSharp.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\MicroCom.Runtime.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\SkiaSharp.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Tmds.DBus.Protocol.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-arm64\native\av_libglesv2.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x64\native\av_libglesv2.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x86\native\av_libglesv2.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\osx\native\libAvaloniaNative.dylib
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-arm\native\libHarfBuzzSharp.so
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-arm64\native\libHarfBuzzSharp.so
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-musl-x64\native\libHarfBuzzSharp.so
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-x64\native\libHarfBuzzSharp.so
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\osx\native\libHarfBuzzSharp.dylib
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-arm64\native\libHarfBuzzSharp.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x64\native\libHarfBuzzSharp.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x86\native\libHarfBuzzSharp.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-arm\native\libSkiaSharp.so
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-arm64\native\libSkiaSharp.so
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-musl-x64\native\libSkiaSharp.so
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-x64\native\libSkiaSharp.so
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\osx\native\libSkiaSharp.dylib
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-arm64\native\libSkiaSharp.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x64\native\libSkiaSharp.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x86\native\libSkiaSharp.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.AssemblyReference.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\Avalonia\Resources.Inputs.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\Avalonia\resources
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.AssemblyInfoInputs.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.AssemblyInfo.cs
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.CoreCompileInputs.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.sourcelink.json
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\Avalonia\HeatProductionOptimization.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\Avalonia\HeatProductionOptimization.pdb
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\refint\Avalonia\HeatProductionOptimization.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProd.6FF94C2F.Up2Date
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.genruntimeconfig.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\ref\HeatProductionOptimization.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.exe
+C:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.deps.json
+C:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.runtimeconfig.json
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HeatProductionOptimization.pdb
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Base.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Controls.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.DesignerSupport.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Dialogs.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Markup.Xaml.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Markup.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Metal.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.MicroCom.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.OpenGL.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Vulkan.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Controls.ColorPicker.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Controls.DataGrid.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Desktop.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Diagnostics.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Fonts.Inter.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.FreeDesktop.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Native.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Remote.Protocol.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Skia.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Themes.Fluent.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Themes.Simple.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.Win32.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Avalonia.X11.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\CommunityToolkit.Mvvm.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\HarfBuzzSharp.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\MicroCom.Runtime.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\SkiaSharp.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Tmds.DBus.Protocol.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-arm64\native\av_libglesv2.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x64\native\av_libglesv2.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x86\native\av_libglesv2.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\osx\native\libAvaloniaNative.dylib
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-arm\native\libHarfBuzzSharp.so
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-arm64\native\libHarfBuzzSharp.so
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-musl-x64\native\libHarfBuzzSharp.so
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-x64\native\libHarfBuzzSharp.so
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\osx\native\libHarfBuzzSharp.dylib
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-arm64\native\libHarfBuzzSharp.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x64\native\libHarfBuzzSharp.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x86\native\libHarfBuzzSharp.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-arm\native\libSkiaSharp.so
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-arm64\native\libSkiaSharp.so
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-musl-x64\native\libSkiaSharp.so
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\linux-x64\native\libSkiaSharp.so
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\osx\native\libSkiaSharp.dylib
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-arm64\native\libSkiaSharp.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x64\native\libSkiaSharp.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\bin\Debug\net9.0\runtimes\win-x86\native\libSkiaSharp.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.AssemblyReference.cache
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\Avalonia\Resources.Inputs.cache
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\Avalonia\resources
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.AssemblyInfoInputs.cache
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.AssemblyInfo.cs
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.CoreCompileInputs.cache
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.sourcelink.json
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\Avalonia\HeatProductionOptimization.dll
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\Avalonia\HeatProductionOptimization.pdb
+c:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\refint\Avalonia\HeatProductionOptimization.dll
+C:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProd.6FF94C2F.Up2Date
+C:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.genruntimeconfig.cache
+C:\Users\manue\Documents\AA SDU\Semester project 2\SPF25\HeatProductionOptimization\obj\Debug\net9.0\ref\HeatProductionOptimization.dll
+>>>>>>> main
