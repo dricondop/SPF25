@@ -12,32 +12,34 @@ internal class ImportButton
 {
     private IStorageProvider? StorageProvider;
     // Import button logic when clicked
-        public ImportButton(Window window)
+    public ImportButton(UserControl control)
+    {
+        var topLevel = TopLevel.GetTopLevel(control);
+        StorageProvider = topLevel?.StorageProvider;
+    }
+    internal async void ImportClicked(object? sender, RoutedEventArgs e)
+    {
+        if (StorageProvider is not null)
         {
-            StorageProvider = window.StorageProvider;
-        }
-        internal async void ImportClicked(object? sender, RoutedEventArgs e)
-        {
-            if (StorageProvider is not null)
+            var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
-                var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                AllowMultiple = false,
+                FileTypeFilter = new List<FilePickerFileType>
                 {
-                    AllowMultiple = false,
-                    FileTypeFilter = new List<FilePickerFileType>
-                    {
-                        new FilePickerFileType("CSV Files") { Patterns = new[] { "*.csv" } }
-                    }
-                });
-
-                var file = files.FirstOrDefault();
-                if (file != null)
-                {
-                    Console.WriteLine($"File loaded: {file}");
+                    new FilePickerFileType("CSV Files") { Patterns = new[] { "*.csv" } }
                 }
-            }
-            else
+            });
+
+            var file = files.FirstOrDefault();
+            if (file != null)
             {
-                Console.WriteLine("Only .csv files supported");
+                Console.WriteLine($"File loaded: {file}");
+                WindowManager.TriggerDateInputWindow();
             }
         }
+        else
+        {
+            Console.WriteLine("Only .csv files supported");
+        }
+    }
 }

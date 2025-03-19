@@ -2,7 +2,99 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HeatProductionOptimization.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Views.DateInputWindowView">
-  Welcome to Avalonia!
+             x:DataType="vm:DateInputWindowViewModel"
+             x:Class="HeatProductionOptimization.Views.DateInputWindowView">
+  
+  <Design.DataContext>
+      <!--
+          This only sets the DataContext for the previewer in an IDE,
+          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+      -->
+      <vm:DateInputWindowViewModel />
+  </Design.DataContext>
+
+  <UserControl.Styles>
+      <Style Selector="DatePicker">
+          <Setter Property="Foreground" Value="white"/>
+      </Style>
+      <Style Selector="TimePicker">
+          <Setter Property="Foreground" Value="white"/>
+      </Style>
+      <Style Selector="Button:pointerover">
+          <Setter Property="RenderTransform" Value="scale(1.1)"/>
+          <Setter Property="Transitions">
+              <Transitions>
+                  <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
+              </Transitions>
+          </Setter>
+      </Style>
+  </UserControl.Styles>
+
+  <Panel>
+      <ExperimentalAcrylicBorder IsHitTestVisible="False">
+          <ExperimentalAcrylicBorder.Material>
+              <ExperimentalAcrylicMaterial
+                  BackgroundSource="Digger"
+                  MaterialOpacity="0.75"
+                  TintColor="#22092C"
+                  TintOpacity="1" />
+          </ExperimentalAcrylicBorder.Material>
+      </ExperimentalAcrylicBorder>
+
+      <Border 
+          Background="#22092C" 
+          CornerRadius="8" 
+          Padding="30" 
+          MaxWidth="600"
+          BoxShadow="0 4 8 0 #22092C">
+          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+              <TextBlock
+                  FontSize="32"
+                  FontWeight="Bold"
+                  Text="Date Input"
+                  TextAlignment="Center"
+                  Foreground="white" />
+
+              <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" Margin="0,20">
+                  <TextBlock Grid.Row="0" Grid.Column="0" 
+                      Text="Date:" 
+                      VerticalAlignment="Center"
+                      FontWeight="Bold"
+                      Margin="0,0,30,0"
+                      Foreground="white"
+                      FontSize="20"/>
+                  <DatePicker Grid.Row="0" Grid.Column="1" 
+                      Width="400"
+                      Margin="0,0,0,10"
+                      SelectedDate="{Binding SelectedDate}"/>
+                  
+                  <TextBlock Grid.Row="1" Grid.Column="0" 
+                      Text="Time:" 
+                      VerticalAlignment="Center"
+                      FontWeight="Bold"
+                      Margin="0,0,30,0"
+                      Foreground="white"
+                      FontSize="20"/>
+                  <TimePicker Grid.Row="1" Grid.Column="1" 
+                      Width="400"
+                      SelectedTime="{Binding SelectedTime}"/>
+              </Grid>
+              
+              <Button
+                  Click="OnSubmitClick"
+                  Content="Submit"
+                  HorizontalAlignment="Center"
+                  Background="#33FFFFFF"
+                  Padding="20,10"/>
+              
+              <TextBlock
+                  Text="{Binding Result}"
+                  TextAlignment="Center"
+                  Foreground="White"
+                  FontSize="16"/>
+          </StackPanel>
+      </Border>
+  </Panel>
 </UserControl>

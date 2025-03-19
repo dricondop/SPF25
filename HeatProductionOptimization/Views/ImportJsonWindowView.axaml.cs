@@ -10,7 +10,7 @@ public partial class ImportJsonWindowView : UserControl
     private ImportButton _importButton;
     public ImportJsonWindowView()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
         _importButton = new ImportButton(this);
     }
 

@@ -1,45 +1,37 @@
-﻿using System.ComponentModel;
+﻿using ReactiveUI;
 
 namespace HeatProductionOptimization.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase , INotifyPropertyChanged
+public class MainWindowViewModel : ViewModelBase
 {
-    
-    private ViewModelBase _currentPage;
-    public event PropertyChangedEventHandler? PropertyChanged;
-    
-    
-    public MainWindowViewModel()
-    {
-        _currentPage = Windows[0];
-        WindowManager.ImportJsonWindow += () => ImportJsonWindow();
-        WindowManager.DateInputWindow += () => DateInputWindow();
-    }
-    
+    private ViewModelBase _currentPage = null!;
     
     public ViewModelBase CurrentPage
     {
-        get {return _currentPage; }
+        get => _currentPage;
+        private set => this.RaiseAndSetIfChanged(ref _currentPage, value);
     }
-
-    private ViewModelBase[] Windows =
+    
+    private readonly ViewModelBase[] Windows =
     {
         new ImportJsonWindowViewModel(),
         new DateInputWindowViewModel()
     };
 
-    public System.Action ImportJsonWindow()
+    public MainWindowViewModel()
     {
-        _currentPage = Windows[1];
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentPage)));
-        return null;
+        CurrentPage = Windows[1];
+        WindowManager.ImportJsonWindow += () => ImportJsonWindow();
+        WindowManager.DateInputWindow += () => DateInputWindow();
     }
 
-    public System.Action DateInputWindow()
+    public void ImportJsonWindow()
     {
-        _currentPage = Windows[0];
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentPage)));
-        return null;
+        CurrentPage = Windows[0];
     }
 
+    public void DateInputWindow()
+    {
+        CurrentPage = Windows[1];
+    }
 }

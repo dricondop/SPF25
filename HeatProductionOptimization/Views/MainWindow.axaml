@@ -12,7 +12,6 @@
     x:DataType="vm:MainWindowViewModel"
     Icon="/Assets/avalonia-logo.ico"
     RequestedThemeVariant="Light"
-    Height="400" Width="400"
     Title="Heat Production Optimization">
 
     <Design.DataContext>
