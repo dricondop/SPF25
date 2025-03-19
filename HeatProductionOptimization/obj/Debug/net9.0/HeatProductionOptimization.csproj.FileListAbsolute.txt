@@ -341,3 +341,6 @@ C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\ob
 C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProd.6FF94C2F.Up2Date
 C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.genruntimeconfig.cache
 C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\obj\Debug\net9.0\ref\HeatProductionOptimization.dll
+C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.dll
+C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\obj\Debug\net9.0\refint\HeatProductionOptimization.dll
+C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.pdb
