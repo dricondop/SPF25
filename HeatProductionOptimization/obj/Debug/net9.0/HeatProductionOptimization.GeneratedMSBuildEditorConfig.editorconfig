@@ -24,7 +24,13 @@ build_property.EnableCodeStyleSeverity =
 [C:/Users/ender/Desktop/UNI/SEM2/PROJ/project/SPF25/HeatProductionOptimization/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/ender/Desktop/UNI/SEM2/PROJ/project/SPF25/HeatProductionOptimization/Views/AssetManagerView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/ender/Desktop/UNI/SEM2/PROJ/project/SPF25/HeatProductionOptimization/Views/DateInputWindowView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/ender/Desktop/UNI/SEM2/PROJ/project/SPF25/HeatProductionOptimization/Views/HomeWindowView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/ender/Desktop/UNI/SEM2/PROJ/project/SPF25/HeatProductionOptimization/Views/ImportJsonWindowView.axaml]

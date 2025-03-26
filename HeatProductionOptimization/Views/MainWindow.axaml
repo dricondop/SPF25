@@ -33,10 +33,53 @@
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
 
-        <Panel>
-            <TransitioningContentControl Content="{Binding CurrentPage}" />
-        </Panel>
+        <DockPanel>
+            <Border Background="#22092C"
+                Width="100"
+                DockPanel.Dock="Left">
+                <StackPanel Spacing="20" 
+                      Margin="0,20"
+                      VerticalAlignment="Top">
+                    <Button Classes="sidebar-button"
+                        Command="{Binding HomeWindow}"
+                        ToolTip.Tip="Home"
+                        HorizontalAlignment="Center">
+                        <PathIcon Data="{StaticResource home_regular}" />
+                    </Button>
+                    <Button Classes="sidebar-button"
+                        Command="{Binding AssetManagerWindow}"
+                        ToolTip.Tip="Import"
+                        HorizontalAlignment="Center">
+                        <PathIcon Data="{StaticResource document_regular}" />
+                    </Button>
+                    <Button Classes="sidebar-button"
+                        Command="{Binding ImportJsonWindow}"
+                        ToolTip.Tip="Settings"
+                        HorizontalAlignment="Center">
+                        <PathIcon Data="{StaticResource settings_regular}" />
+                    </Button>
+                    <Button Classes="sidebar-button"
+                        Command="{Binding DateInputWindow}"
+                        ToolTip.Tip="Analytics"
+                        HorizontalAlignment="Center">
+                        <PathIcon Data="{StaticResource chart_regular}" />
+                    </Button>
+                    <Button Classes="sidebar-button"
+                        ToolTip.Tip="Calendar"
+                        HorizontalAlignment="Center">
+                        <PathIcon Data="{StaticResource calendar_regular}" />
+                    </Button>
+                    <Button Classes="sidebar-button"
+                        ToolTip.Tip="Help"
+                        HorizontalAlignment="Center">
+                        <PathIcon Data="{StaticResource question_regular}" />
+                    </Button>
+                </StackPanel>
+            </Border>
 
+            <Panel Margin="0,0,0,0">
+                <TransitioningContentControl Content="{Binding CurrentPage}" />
+            </Panel>
+        </DockPanel>
     </Panel>
-
 </Window>

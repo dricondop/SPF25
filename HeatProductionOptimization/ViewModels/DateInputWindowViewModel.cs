@@ -34,6 +34,7 @@ public class DateInputWindowViewModel : ViewModelBase
         {
             var dateTime = SelectedDate.Value.Date + SelectedTime.Value;
             Result = $"Selected DateTime: {dateTime}";
+            Console.WriteLine(Result);
             WindowManager.TriggerImportJsonWindow();
         }
         else
