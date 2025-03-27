@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ender\\Desktop\\UNI\\SEM2\\PROJ\\project\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj": {}
+    "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ender\\Desktop\\UNI\\SEM2\\PROJ\\project\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj": {
+    "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ender\\Desktop\\UNI\\SEM2\\PROJ\\project\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
+        "projectUniqueName": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
         "projectName": "HeatProductionOptimization",
-        "projectPath": "C:\\Users\\ender\\Desktop\\UNI\\SEM2\\PROJ\\project\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
-        "packagesPath": "C:\\Users\\ender\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ender\\Desktop\\UNI\\SEM2\\PROJ\\project\\SPF25\\HeatProductionOptimization\\obj\\",
+        "projectPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
+        "packagesPath": "C:\\Users\\downy\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ender\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\downy\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -93,7 +93,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.104/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
