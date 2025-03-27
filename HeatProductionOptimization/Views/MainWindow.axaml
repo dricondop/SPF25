@@ -28,53 +28,68 @@
                 <ExperimentalAcrylicMaterial
                     BackgroundSource="Digger"
                     MaterialOpacity="0.65"
-                    TintColor="Black"
+                    TintColor="Gray"
                     TintOpacity="1" />
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
 
         <DockPanel>
-            <Border Background="#22092C"
-                Width="100"
+            <Border Background="#131313"
+                Width="70"
                 DockPanel.Dock="Left">
-                <StackPanel Spacing="20" 
-                      Margin="0,20"
-                      VerticalAlignment="Top">
-                    <Button Classes="sidebar-button"
-                        Command="{Binding HomeWindow}"
-                        ToolTip.Tip="Home"
-                        HorizontalAlignment="Center">
-                        <PathIcon Data="{StaticResource home_regular}" />
-                    </Button>
-                    <Button Classes="sidebar-button"
-                        Command="{Binding AssetManagerWindow}"
-                        ToolTip.Tip="Import"
-                        HorizontalAlignment="Center">
-                        <PathIcon Data="{StaticResource document_regular}" />
-                    </Button>
-                    <Button Classes="sidebar-button"
-                        Command="{Binding ImportJsonWindow}"
-                        ToolTip.Tip="Settings"
-                        HorizontalAlignment="Center">
-                        <PathIcon Data="{StaticResource settings_regular}" />
-                    </Button>
-                    <Button Classes="sidebar-button"
-                        Command="{Binding DateInputWindow}"
-                        ToolTip.Tip="Analytics"
-                        HorizontalAlignment="Center">
-                        <PathIcon Data="{StaticResource chart_regular}" />
-                    </Button>
-                    <Button Classes="sidebar-button"
-                        ToolTip.Tip="Calendar"
-                        HorizontalAlignment="Center">
-                        <PathIcon Data="{StaticResource calendar_regular}" />
-                    </Button>
-                    <Button Classes="sidebar-button"
-                        ToolTip.Tip="Help"
-                        HorizontalAlignment="Center">
-                        <PathIcon Data="{StaticResource question_regular}" />
-                    </Button>
-                </StackPanel>
+                <Grid>
+                    <StackPanel Spacing="20" 
+                          Margin="0,20"
+                          VerticalAlignment="Top">
+                        <Button Classes="sidebar-button"
+                            Command="{Binding HomeWindow}"
+                            ToolTip.Tip="Home"
+                            HorizontalAlignment="Center">
+                            <PathIcon Data="{StaticResource home_regular}" />
+                        </Button>
+                        <Button Classes="sidebar-button"
+                            Command="{Binding AssetManagerWindow}"
+                            ToolTip.Tip="Asset Manager"
+                            HorizontalAlignment="Center">
+                            <PathIcon Data="{StaticResource document_regular}" />
+                        </Button>
+                        <Button Classes="sidebar-button"
+                            Command="{Binding SourceDataManagerWindow}"
+                            ToolTip.Tip="Source Data Manager"
+                            HorizontalAlignment="Center">
+                            <PathIcon Data="{StaticResource settings_regular}" />
+                        </Button>
+                        <Button Classes="sidebar-button"
+                            Command="{Binding OptimizerWindow}"
+                            ToolTip.Tip="Optimizer"
+                            HorizontalAlignment="Center">
+                            <PathIcon Data="{StaticResource chart_regular}" />
+                        </Button>
+                        <Button Classes="sidebar-button"
+                            Command="{Binding DataVisualizationWindow}"
+                            ToolTip.Tip="Data Visualization"
+                            HorizontalAlignment="Center">
+                            <PathIcon Data="{StaticResource calendar_regular}" />
+                        </Button>
+                        <Button Classes="sidebar-button"
+                            Command="{Binding ResourceDataManagerWindow}"
+                            ToolTip.Tip="Resource Data Manager"
+                            HorizontalAlignment="Center">
+                            <PathIcon Data="{StaticResource question_regular}" />
+                        </Button>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="20" 
+                          Margin="0,20"
+                          VerticalAlignment="Bottom">
+                        <Button Classes="sidebar-button"
+                            Command="{Binding SettingsWindow}"
+                            ToolTip.Tip="Settings"
+                            HorizontalAlignment="Center">
+                            <PathIcon Data="{StaticResource settings_regular}" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
             </Border>
 
             <Panel Margin="0,0,0,0">

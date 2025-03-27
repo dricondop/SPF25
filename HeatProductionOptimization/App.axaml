@@ -20,13 +20,14 @@
         </Style>
         
         <Style Selector="Button.sidebar-button:pointerover">
-            <Setter Property="Background" Value="#33FFFFFF"/>
+            <Setter Property="Background" Value="Black"/>
             <Setter Property="RenderTransform" Value="scale(1.1)"/>
         </Style>
         
         <Style Selector="PathIcon">
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="20"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style>
     </Application.Styles>
 

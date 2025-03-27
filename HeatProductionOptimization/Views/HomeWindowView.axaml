@@ -11,17 +11,16 @@
         <vm:HomeWindowViewModel/>
     </Design.DataContext>
     
-    <Grid Margin="20">
-        <StackPanel HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" 
-                    Spacing="20">
-            <TextBlock Text="Welcome to Heat Production Optimization"
-                      FontSize="24"
-                      FontWeight="Bold"
-                      HorizontalAlignment="Center"
-                      Margin="0,0,0,20"/>
-            
-            <UniformGrid Columns="2" Rows="2" HorizontalAlignment="Center">
+    <StackPanel Margin="30">
+        <TextBlock DockPanel.Dock="Top"
+                  Text="Heat Production Optimizer / Home"
+                  FontSize="40"
+                  FontWeight="Bold"
+                  HorizontalAlignment="Left"
+                  Margin="0,0,0,30"/>
+
+        <Grid>
+            <UniformGrid Columns="2" Rows="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button Width="200" Height="200" Margin="10">
                     <StackPanel>
                         <TextBlock Text="Option 1" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
@@ -54,6 +53,6 @@
                     </StackPanel>
                 </Button>
             </UniformGrid>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </StackPanel>
 </UserControl>
