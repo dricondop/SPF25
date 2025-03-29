@@ -28,7 +28,7 @@ public class AssetManagerViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _assets, value);
     }
     
-    public ICommand SaveChangesCommand { get; }
+    //public ICommand SaveChangesCommand { get; }
     
     public string StatusMessage
     {

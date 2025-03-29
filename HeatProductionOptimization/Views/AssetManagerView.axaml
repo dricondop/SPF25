@@ -32,6 +32,22 @@
                    HorizontalAlignment="Left"
                    Margin="0,0,0,30"/>
         
+        <!-- Add Save Button at the top -->
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="0,0,0,10">
+            <Button DockPanel.Dock="Right"
+                    Content="Save Changes"
+
+                    Padding="15,10"
+                    Background="#4CAF50"
+                    Foreground="White"/>
+                    
+            <!-- Status Message -->
+            <TextBlock DockPanel.Dock="Left"
+                      Text="Status Message"
+                      VerticalAlignment="Center"
+                      Margin="0,0,10,0"/>
+        </DockPanel>
+        
         <ScrollViewer>
             <ItemsControl ItemsSource="{Binding Assets}">
                 <ItemsControl.ItemsPanel>
@@ -55,32 +71,72 @@
                                            Margin="0,0,0,10"/>
                                            
                                 <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                                    <!-- Unit Type -->
+                                    <!-- Fuel Type -->
                                     <Grid Grid.Row="0" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding UnitType, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                          IsVisible="{Binding FuelType, Converter={StaticResource IsNullOrEmptyConverter}}">
                                         <Grid ColumnDefinitions="*,*,*">
-                                            <TextBlock Grid.Column="0" Text="Unit Type" FontWeight="SemiBold"/>
+                                            <TextBlock Grid.Column="0" Text="Fuel Type" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
-                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                    DoubleTapped="DoubleTapped">
                                                 <Panel>
-                                                    <TextBlock Text="{Binding UnitType}" Name="displayUnitType" />
-                                                    <TextBox Text="{Binding UnitType}" Name="editUnitType" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                    <TextBlock Text="{Binding FuelType}" Name="displayFuelType" />
+                                                    <TextBox Text="{Binding FuelType}" Name="editFuelType" IsVisible="False" 
+                                                           LostFocus="LostFocus" 
+                                                           KeyDown="KeyDown" />
                                                 </Panel>
                                             </Border>
                                             <TextBlock Grid.Column="2" Text="" Margin="5,0,0,0"/>
                                         </Grid>
                                     </Grid>
+
+                                    <!-- Unit Type -->
+                                    <Grid Grid.Row="1" Grid.ColumnSpan="3" 
+                                          IsVisible="{Binding UnitType, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="Unit Type" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
+                                                    DoubleTapped="DoubleTapped">
+                                                <Panel>
+                                                    <TextBlock Text="{Binding UnitType}" Name="displayUnitType" />
+                                                    <TextBox Text="{Binding UnitType}" Name="editUnitType" IsVisible="False" 
+                                                           LostFocus="LostFocus" 
+                                                           KeyDown="KeyDown" />
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="" Margin="5,0,0,0"/>
+                                        </Grid>
+                                    </Grid>
+
+                                                                        <!-- Production Cost -->
+                                    <Grid Grid.Row="2" Grid.ColumnSpan="3" 
+                                          IsVisible="{Binding ProductionCost, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="Production Cost" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
+                                                    DoubleTapped="DoubleTapped">
+                                                <Panel>
+                                                    <TextBlock Text="{Binding ProductionCost}" Name="displayProductionCost" />
+                                                    <TextBox Text="{Binding ProductionCost}" Name="editProductionCost" IsVisible="False" 
+                                                           LostFocus="LostFocus" 
+                                                           KeyDown="KeyDown" />
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="DKK/MWh" Margin="5,0,0,0" Foreground="#505050"/>
+                                        </Grid>
+                                    </Grid>
                                     
                                     <!-- Max Heat -->
-                                    <Grid Grid.Row="1" Grid.ColumnSpan="3" 
+                                    <Grid Grid.Row="3" Grid.ColumnSpan="3" 
                                           IsVisible="{Binding MaxHeat, Converter={StaticResource IsNullOrEmptyConverter}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Max Heat" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
-                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                    DoubleTapped="DoubleTapped">
                                                 <Panel>
                                                     <TextBlock Text="{Binding MaxHeat}" Name="displayMaxHeat" />
-                                                    <TextBox Text="{Binding MaxHeat}" Name="editMaxHeat" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                    <TextBox Text="{Binding MaxHeat}" Name="editMaxHeat" IsVisible="False" 
+                                                           LostFocus="LostFocus" 
+                                                           KeyDown="KeyDown" />
                                                 </Panel>
                                             </Border>
                                             <TextBlock Grid.Column="2" Text="MW" Margin="5,0,0,0" Foreground="#505050"/>
@@ -88,68 +144,42 @@
                                     </Grid>
                                     
                                     <!-- Max Electricity -->
-                                    <Grid Grid.Row="2" Grid.ColumnSpan="3" 
+                                    <Grid Grid.Row="4" Grid.ColumnSpan="3" 
                                           IsVisible="{Binding MaxElectricity, Converter={StaticResource IsNullOrEmptyConverter}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Max Electricity" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
-                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                    DoubleTapped="DoubleTapped">
                                                 <Panel>
                                                     <TextBlock Text="{Binding MaxElectricity}" Name="displayMaxElectricity" />
-                                                    <TextBox Text="{Binding MaxElectricity}" Name="editMaxElectricity" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                    <TextBox Text="{Binding MaxElectricity}" Name="editMaxElectricity" IsVisible="False" 
+                                                           LostFocus="LostFocus" 
+                                                           KeyDown="KeyDown" />
                                                 </Panel>
                                             </Border>
                                             <TextBlock Grid.Column="2" Text="MW" Margin="5,0,0,0" Foreground="#505050"/>
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- Production Cost -->
-                                    <Grid Grid.Row="3" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding ProductionCost, Converter={StaticResource IsNullOrEmptyConverter}}">
-                                        <Grid ColumnDefinitions="*,*,*">
-                                            <TextBlock Grid.Column="0" Text="Production Cost" FontWeight="SemiBold"/>
-                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
-                                                    DoubleTapped="EditableValue_DoubleTapped">
-                                                <Panel>
-                                                    <TextBlock Text="{Binding ProductionCost}" Name="displayProductionCost" />
-                                                    <TextBox Text="{Binding ProductionCost}" Name="editProductionCost" IsVisible="False" LostFocus="EditableValue_LostFocus" />
-                                                </Panel>
-                                            </Border>
-                                            <TextBlock Grid.Column="2" Text="DKK/MWh" Margin="5,0,0,0" Foreground="#505050"/>
-                                        </Grid>
-                                    </Grid>
-                                    
                                     <!-- CO2 Emissions -->
-                                    <Grid Grid.Row="4" Grid.ColumnSpan="3" 
+                                    <Grid Grid.Row="5" Grid.ColumnSpan="3" 
                                           IsVisible="{Binding CO2Emissions, Converter={StaticResource IsNullOrEmptyConverter}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="CO2 Emissions" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
-                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                    DoubleTapped="DoubleTapped">
                                                 <Panel>
                                                     <TextBlock Text="{Binding CO2Emissions}" Name="displayCO2Emissions" />
-                                                    <TextBox Text="{Binding CO2Emissions}" Name="editCO2Emissions" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                    <TextBox Text="{Binding CO2Emissions}" Name="editCO2Emissions" IsVisible="False" 
+                                                           LostFocus="LostFocus" 
+                                                           KeyDown="KeyDown" />
                                                 </Panel>
                                             </Border>
                                             <TextBlock Grid.Column="2" Text="kg/MWh" Margin="5,0,0,0" Foreground="#505050"/>
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- Fuel Type -->
-                                    <Grid Grid.Row="5" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding FuelType, Converter={StaticResource IsNullOrEmptyConverter}}">
-                                        <Grid ColumnDefinitions="*,*,*">
-                                            <TextBlock Grid.Column="0" Text="Fuel Type" FontWeight="SemiBold"/>
-                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
-                                                    DoubleTapped="EditableValue_DoubleTapped">
-                                                <Panel>
-                                                    <TextBlock Text="{Binding FuelType}" Name="displayFuelType" />
-                                                    <TextBox Text="{Binding FuelType}" Name="editFuelType" IsVisible="False" LostFocus="EditableValue_LostFocus" />
-                                                </Panel>
-                                            </Border>
-                                            <TextBlock Grid.Column="2" Text="" Margin="5,0,0,0"/>
-                                        </Grid>
-                                    </Grid>
+
                                     
                                     <!-- Fuel Consumption -->
                                     <Grid Grid.Row="6" Grid.ColumnSpan="3" 
@@ -157,10 +187,12 @@
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Fuel Consumption" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
-                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                    DoubleTapped="DoubleTapped">
                                                 <Panel>
                                                     <TextBlock Text="{Binding FuelConsumption}" Name="displayFuelConsumption" />
-                                                    <TextBox Text="{Binding FuelConsumption}" Name="editFuelConsumption" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                    <TextBox Text="{Binding FuelConsumption}" Name="editFuelConsumption" IsVisible="False" 
+                                                           LostFocus="LostFocus" 
+                                                           KeyDown="KeyDown" />
                                                 </Panel>
                                             </Border>
                                             <TextBlock Grid.Column="2" Text="MWh fuel/MWh heat" Margin="5,0,0,0" Foreground="#505050"/>
