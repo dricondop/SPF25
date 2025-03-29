@@ -9,7 +9,7 @@ public static class WindowManager
     public static event Action? SourceDataManagerWindow;
     public static event Action? OptimizerWindow;
     public static event Action? DataVisualizationWindow;
-    public static event Action? ResourceDataManagerWindow;
+    public static event Action? ResultDataManagerWindow;
     public static event Action? ImportJsonWindow;
     public static event Action? DateInputWindow;
     public static event Action? SettingsWindow;
@@ -41,9 +41,9 @@ public static class WindowManager
     {
         DataVisualizationWindow?.Invoke();
     }
-    public static void TriggerResourceDataManagerWindow()
+    public static void TriggerResultDataManagerWindow()
     {
-        ResourceDataManagerWindow?.Invoke();
+        ResultDataManagerWindow?.Invoke();
     }
     public static void TriggerSettingsWindow()
     {

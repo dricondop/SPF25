@@ -348,3 +348,11 @@ C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\bi
 C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\bin\Debug\net9.0\System.Reactive.dll
 C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.Fody.CopyLocal.cache
 C:\Users\ender\Desktop\UNI\SEM2\PROJ\project\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.Fody.RuntimeCopyLocal.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\DynamicData.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\ReactiveUI.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\ReactiveUI.Fody.Helpers.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Splat.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\System.Reactive.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\System.Text.Json.dll
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.Fody.CopyLocal.cache
+C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.Fody.RuntimeCopyLocal.cache

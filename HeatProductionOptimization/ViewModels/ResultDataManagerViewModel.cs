@@ -2,7 +2,7 @@
 
 namespace HeatProductionOptimization.ViewModels;
 
-public class ResourceDataManagerViewModel : ViewModelBase
+public class ResultDataManagerViewModel : ViewModelBase
 {
 
 }

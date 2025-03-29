@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="using:HeatProductionOptimization.ViewModels"
-             x:Class="HeatProductionOptimization.Views.ResourceDataManagerView"
-             x:DataType="vm:ResourceDataManagerViewModel">
+             x:Class="HeatProductionOptimization.Views.ResultDataManagerView"
+             x:DataType="vm:ResultDataManagerViewModel">
     <StackPanel Margin="30">
         <TextBlock DockPanel.Dock="Top"
-                    Text="Heat Production Optimizer / Resource Data Manager"
+                    Text="Heat Production Optimizer / Result Data Manager"
                     FontSize="40"
                     FontWeight="Bold"
                     HorizontalAlignment="Left"

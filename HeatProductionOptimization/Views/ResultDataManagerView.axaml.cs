@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace HeatProductionOptimization.Views;
 
-public partial class ResourceDataManagerView : UserControl
+public partial class ResultDataManagerView : UserControl
 {
-    public ResourceDataManagerView()
+    public ResultDataManagerView()
     {
         InitializeComponent();
     }

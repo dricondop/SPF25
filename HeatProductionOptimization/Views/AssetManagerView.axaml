@@ -6,12 +6,14 @@
              xmlns:vm="using:HeatProductionOptimization.ViewModels"
              x:Class="HeatProductionOptimization.Views.AssetManagerView"
              x:DataType="vm:AssetManagerViewModel">
-    <StackPanel Margin="30">
+    <DockPanel Margin="30">
         <TextBlock DockPanel.Dock="Top"
-                    Text="Heat Production Optimizer / Asset Manager"
-                    FontSize="40"
-                    FontWeight="Bold"
-                    HorizontalAlignment="Left"
-                    Margin="0,0,0,30"/>
-    </StackPanel>
+                   Text="Heat Production Optimizer / Asset Manager"
+                   FontSize="40"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Left"
+                   Margin="0,0,0,30"/>
+        
+        
+    </DockPanel>
 </UserControl>

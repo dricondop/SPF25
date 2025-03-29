@@ -20,7 +20,7 @@ public class MainWindowViewModel : ViewModelBase
         new SourceDataManagerViewModel(),
         new OptimizerViewModel(),
         new DataVisualizationViewModel(),
-        new ResourceDataManagerViewModel(),
+        new ResultDataManagerViewModel(),
         new SettingsViewModel(),
         new ImportJsonWindowViewModel(),
         new DateInputWindowViewModel(),
@@ -34,7 +34,7 @@ public class MainWindowViewModel : ViewModelBase
         WindowManager.SourceDataManagerWindow += () => SourceDataManagerWindow();
         WindowManager.OptimizerWindow += () => OptimizerWindow();
         WindowManager.DataVisualizationWindow += () => DataVisualizationWindow();
-        WindowManager.ResourceDataManagerWindow += () => ResourceDataManagerWindow();
+        WindowManager.ResultDataManagerWindow += () => ResultDataManagerWindow();
         WindowManager.SettingsWindow += () => SettingsWindow();
         WindowManager.ImportJsonWindow += () => ImportJsonWindow();
         WindowManager.DateInputWindow += () => DateInputWindow();
@@ -61,7 +61,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         CurrentPage = Windows[4];
     }
-    public void ResourceDataManagerWindow()
+    public void ResultDataManagerWindow()
     {
         CurrentPage = Windows[5];
     }
