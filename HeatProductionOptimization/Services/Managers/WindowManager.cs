@@ -13,6 +13,7 @@ public static class WindowManager
     public static event Action? ImportJsonWindow;
     public static event Action? DateInputWindow;
     public static event Action? SettingsWindow;
+    
     public static void TriggerImportJsonWindow()
     {
         ImportJsonWindow?.Invoke();

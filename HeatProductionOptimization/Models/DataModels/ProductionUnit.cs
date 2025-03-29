@@ -17,8 +17,8 @@ public class AssetSpecification
     [JsonPropertyName("ID")]
     public string ID { get; set; }
 
-    [JsonPropertyName("Type")]
-    public string Type { get; set; }
+    [JsonPropertyName("Unit Type")]
+    public string UnitType { get; set; }
 
     [JsonPropertyName("Max Heat (MW)")]
     public double MaxHeat { get; set; }

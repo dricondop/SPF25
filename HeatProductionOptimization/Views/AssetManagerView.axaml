@@ -6,6 +6,24 @@
              xmlns:vm="using:HeatProductionOptimization.ViewModels"
              x:Class="HeatProductionOptimization.Views.AssetManagerView"
              x:DataType="vm:AssetManagerViewModel">
+    <UserControl.Styles>
+        <!-- Style for the editable value container -->
+        <Style Selector="Border.editableValue">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="CornerRadius" Value="2" />
+        </Style>
+        <Style Selector="Border.editableValue:pointerover">
+            <Setter Property="Background" Value="#EEEEEE" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+    </UserControl.Styles>
+    
+    <!-- Add this converter in UserControl.Resources -->
+    <UserControl.Resources>
+        <vm:IsNullOrEmptyConverter x:Key="IsNullOrEmptyConverter"/>
+    </UserControl.Resources>
+
     <DockPanel Margin="30">
         <TextBlock DockPanel.Dock="Top"
                    Text="Heat Production Optimizer / Asset Manager"
@@ -14,6 +32,146 @@
                    HorizontalAlignment="Left"
                    Margin="0,0,0,30"/>
         
-        
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding Assets}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="3" HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="10" 
+                                BorderBrush="Gray" 
+                                BorderThickness="1" 
+                                CornerRadius="5" 
+                                Padding="10"
+                                Background="White">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" 
+                                           FontWeight="Bold" 
+                                           FontSize="18" 
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,10"/>
+                                           
+                                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                                    <!-- Unit Type -->
+                                    <Grid Grid.Row="0" Grid.ColumnSpan="3" 
+                                          IsVisible="{Binding UnitType, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="Unit Type" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
+                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                <Panel>
+                                                    <TextBlock Text="{Binding UnitType}" Name="displayUnitType" />
+                                                    <TextBox Text="{Binding UnitType}" Name="editUnitType" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="" Margin="5,0,0,0"/>
+                                        </Grid>
+                                    </Grid>
+                                    
+                                    <!-- Max Heat -->
+                                    <Grid Grid.Row="1" Grid.ColumnSpan="3" 
+                                          IsVisible="{Binding MaxHeat, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="Max Heat" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
+                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                <Panel>
+                                                    <TextBlock Text="{Binding MaxHeat}" Name="displayMaxHeat" />
+                                                    <TextBox Text="{Binding MaxHeat}" Name="editMaxHeat" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="MW" Margin="5,0,0,0" Foreground="#505050"/>
+                                        </Grid>
+                                    </Grid>
+                                    
+                                    <!-- Max Electricity -->
+                                    <Grid Grid.Row="2" Grid.ColumnSpan="3" 
+                                          IsVisible="{Binding MaxElectricity, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="Max Electricity" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
+                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                <Panel>
+                                                    <TextBlock Text="{Binding MaxElectricity}" Name="displayMaxElectricity" />
+                                                    <TextBox Text="{Binding MaxElectricity}" Name="editMaxElectricity" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="MW" Margin="5,0,0,0" Foreground="#505050"/>
+                                        </Grid>
+                                    </Grid>
+                                    
+                                    <!-- Production Cost -->
+                                    <Grid Grid.Row="3" Grid.ColumnSpan="3" 
+                                          IsVisible="{Binding ProductionCost, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="Production Cost" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
+                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                <Panel>
+                                                    <TextBlock Text="{Binding ProductionCost}" Name="displayProductionCost" />
+                                                    <TextBox Text="{Binding ProductionCost}" Name="editProductionCost" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="DKK/MWh" Margin="5,0,0,0" Foreground="#505050"/>
+                                        </Grid>
+                                    </Grid>
+                                    
+                                    <!-- CO2 Emissions -->
+                                    <Grid Grid.Row="4" Grid.ColumnSpan="3" 
+                                          IsVisible="{Binding CO2Emissions, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="CO2 Emissions" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
+                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                <Panel>
+                                                    <TextBlock Text="{Binding CO2Emissions}" Name="displayCO2Emissions" />
+                                                    <TextBox Text="{Binding CO2Emissions}" Name="editCO2Emissions" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="kg/MWh" Margin="5,0,0,0" Foreground="#505050"/>
+                                        </Grid>
+                                    </Grid>
+                                    
+                                    <!-- Fuel Type -->
+                                    <Grid Grid.Row="5" Grid.ColumnSpan="3" 
+                                          IsVisible="{Binding FuelType, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="Fuel Type" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
+                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                <Panel>
+                                                    <TextBlock Text="{Binding FuelType}" Name="displayFuelType" />
+                                                    <TextBox Text="{Binding FuelType}" Name="editFuelType" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="" Margin="5,0,0,0"/>
+                                        </Grid>
+                                    </Grid>
+                                    
+                                    <!-- Fuel Consumption -->
+                                    <Grid Grid.Row="6" Grid.ColumnSpan="3" 
+                                          IsVisible="{Binding FuelConsumption, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="Fuel Consumption" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
+                                                    DoubleTapped="EditableValue_DoubleTapped">
+                                                <Panel>
+                                                    <TextBlock Text="{Binding FuelConsumption}" Name="displayFuelConsumption" />
+                                                    <TextBox Text="{Binding FuelConsumption}" Name="editFuelConsumption" IsVisible="False" LostFocus="EditableValue_LostFocus" />
+                                                </Panel>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="MWh fuel/MWh heat" Margin="5,0,0,0" Foreground="#505050"/>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </DockPanel>
 </UserControl>
