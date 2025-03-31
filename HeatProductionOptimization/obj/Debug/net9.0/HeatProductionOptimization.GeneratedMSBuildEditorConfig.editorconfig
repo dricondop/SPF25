@@ -15,12 +15,17 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = HeatProductionOptimization
+<<<<<<< Updated upstream
 build_property.ProjectDir = C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\
+=======
+build_property.ProjectDir = C:\Users\sanch\OneDrive\Escritorio\Nueva carpeta (2)\SPF25\HeatProductionOptimization\
+>>>>>>> Stashed changes
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
+<<<<<<< Updated upstream
 [C:/Users/downy/Documents/SDU/SEMS2/PROJ/SPF25/HeatProductionOptimization/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
@@ -52,4 +57,10 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/downy/Documents/SDU/SEMS2/PROJ/SPF25/HeatProductionOptimization/Views/SourceDataManagerView.axaml]
+=======
+[C:/Users/sanch/OneDrive/Escritorio/Nueva carpeta (2)/SPF25/HeatProductionOptimization/App.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/sanch/OneDrive/Escritorio/Nueva carpeta (2)/SPF25/HeatProductionOptimization/Views/MainWindow.axaml]
+>>>>>>> Stashed changes
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
