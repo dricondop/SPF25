@@ -77,4 +77,20 @@ public partial class AssetManagerView : UserControl
             }
         }
     }
+
+    private void AddUnit_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is AssetManagerViewModel viewModel)
+        {
+            viewModel.AddNewUnit();
+        }
+    }
+    
+    private void SaveChanges_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is AssetManagerViewModel viewModel)
+        {
+            viewModel.SaveChanges();
+        }
+    }
 }

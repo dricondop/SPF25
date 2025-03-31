@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
-using ReactiveUI;
 using HeatProductionOptimization.Models;
 using HeatProductionOptimization.Models.DataModels;
 using HeatProductionOptimization.Services.Managers;
 using Avalonia.Controls;
+using ReactiveUI;
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -14,7 +13,7 @@ public class AssetManagerViewModel : ViewModelBase
 {
     private readonly AssetManager _assetManager;
     private ObservableCollection<AssetSpecification> _assets;
-    private string _statusMessage;
+    private string _statusMessage = "Do not forget to save any changes :)";
 
     public AssetManagerViewModel()
     {
@@ -28,8 +27,6 @@ public class AssetManagerViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _assets, value);
     }
     
-    //public ICommand SaveChangesCommand { get; }
-    
     public string StatusMessage
     {
         get => _statusMessage;
@@ -42,10 +39,33 @@ public class AssetManagerViewModel : ViewModelBase
         Assets = new ObservableCollection<AssetSpecification>(assetDict.Values);
     }
     
-    /*private void SaveChanges()
+    public void AddNewUnit()
     {
         try
         {
+            var newUnit = _assetManager.CreateNewUnit();
+            
+            Assets.Add(newUnit);
+            
+            StatusMessage = "New unit added.";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Error adding new unit: {ex.Message}";
+            Console.WriteLine($"Error adding new unit: {ex}");
+        }
+    }
+    
+    public void SaveChanges()
+    {
+        try
+        {
+            if (Assets == null || Assets.Count == 0)
+            {
+                StatusMessage = "No assets to save.";
+                return;
+            }
+            
             bool result = _assetManager.SaveAssets(Assets);
             
             if (result)
@@ -60,6 +80,7 @@ public class AssetManagerViewModel : ViewModelBase
         catch (Exception ex)
         {
             StatusMessage = $"Error: {ex.Message}";
+            Console.WriteLine($"Save error: {ex}");
         }
-    }*/
+    }
 }

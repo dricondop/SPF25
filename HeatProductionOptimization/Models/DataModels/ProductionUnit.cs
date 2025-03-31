@@ -9,6 +9,7 @@ namespace HeatProductionOptimization.Models.DataModels;
 
 public class AssetSpecification
 {
+    [JsonIgnore]
     public Dictionary<string, AssetSpecification> _assets;
 
     [JsonPropertyName("Name")]

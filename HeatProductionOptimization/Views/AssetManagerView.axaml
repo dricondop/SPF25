@@ -32,18 +32,23 @@
                    HorizontalAlignment="Left"
                    Margin="0,0,0,30"/>
         
-        <!-- Add Save Button at the top -->
-        <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="0,0,0,10">
-            <Button DockPanel.Dock="Right"
-                    Content="Save Changes"
-
-                    Padding="15,10"
-                    Background="#4CAF50"
-                    Foreground="White"/>
-                    
+        <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="0,0,0,20">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="10">
+                <Button Content="Add Unit"
+                        Click="AddUnit_Click"
+                        Padding="15,10"
+                        Background="#2196F3"
+                        Foreground="White"/>
+                        
+                <Button Content="Save Changes"
+                        Click="SaveChanges_Click"
+                        Padding="15,10"
+                        Background="#4CAF50"
+                        Foreground="White"/>
+            </StackPanel>
+            
             <!-- Status Message -->
-            <TextBlock DockPanel.Dock="Left"
-                      Text="Status Message"
+            <TextBlock Text="{Binding StatusMessage}"
                       VerticalAlignment="Center"
                       Margin="0,0,10,0"/>
         </DockPanel>
@@ -64,11 +69,27 @@
                                 Padding="10"
                                 Background="White">
                             <StackPanel>
-                                <TextBlock Text="{Binding Name}" 
-                                           FontWeight="Bold" 
-                                           FontSize="18" 
-                                           HorizontalAlignment="Center"
-                                           Margin="0,0,0,10"/>
+                                <!-- Replace the static Name TextBlock with an editable one -->
+                                <Border Classes="editableValue" 
+                                        DoubleTapped="DoubleTapped"
+                                        Margin="0,0,0,10"
+                                        HorizontalAlignment="Center">
+                                    <Panel>
+                                        <TextBlock Text="{Binding Name}" 
+                                                  FontWeight="Bold" 
+                                                  FontSize="18" 
+                                                  HorizontalAlignment="Center"
+                                                  Name="displayName" />
+                                        <TextBox Text="{Binding Name}" 
+                                                Name="editName" 
+                                                IsVisible="False" 
+                                                LostFocus="LostFocus" 
+                                                KeyDown="KeyDown"
+                                                FontWeight="Bold"
+                                                FontSize="18"
+                                                HorizontalAlignment="Center" />
+                                    </Panel>
+                                </Border>
                                            
                                 <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                                     <!-- Fuel Type -->
@@ -107,7 +128,7 @@
                                         </Grid>
                                     </Grid>
 
-                                                                        <!-- Production Cost -->
+                                    <!-- Production Cost -->
                                     <Grid Grid.Row="2" Grid.ColumnSpan="3" 
                                           IsVisible="{Binding ProductionCost, Converter={StaticResource IsNullOrEmptyConverter}}">
                                         <Grid ColumnDefinitions="*,*,*">
@@ -178,8 +199,6 @@
                                             <TextBlock Grid.Column="2" Text="kg/MWh" Margin="5,0,0,0" Foreground="#505050"/>
                                         </Grid>
                                     </Grid>
-                                    
-
                                     
                                     <!-- Fuel Consumption -->
                                     <Grid Grid.Row="6" Grid.ColumnSpan="3" 

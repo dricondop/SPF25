@@ -34,7 +34,6 @@ public class AssetManager
         {
             var json = File.ReadAllText(_assetsFilePath);
             
-            // Parse the array of dictionaries and merge them into a single dictionary
             var jsonArray = JsonSerializer.Deserialize<List<Dictionary<string, AssetSpecification>>>(json);
             if (jsonArray != null)
             {
@@ -68,8 +67,8 @@ public class AssetManager
     {
         return _assets;
     }
-
-    /*public bool SaveAssets(IEnumerable<AssetSpecification> assets)
+    
+    public bool SaveAssets(IEnumerable<AssetSpecification> assets)
     {
         try
         {
@@ -78,6 +77,17 @@ public class AssetManager
             
             foreach (var asset in assets)
             {
+                // Skip assets with null or empty ID
+                if (string.IsNullOrEmpty(asset.ID))
+                {
+                    Console.WriteLine("Warning: Skipping asset with null or empty ID");
+                    continue;
+                }
+                
+                // Ensure Name matches ID for consistency
+                asset.Name = asset.ID;
+                
+                // Create a dictionary entry for this asset
                 var assetDict = new Dictionary<string, AssetSpecification>
                 {
                     { asset.ID, asset }
@@ -93,10 +103,17 @@ public class AssetManager
             };
             
             // Serialize to JSON and write to file
-            var json = JsonSerializer.Serialize(jsonArray, options);
+            string json = JsonSerializer.Serialize(jsonArray, options);
+            
+            // Make sure directory exists
+            string directory = Path.GetDirectoryName(_assetsFilePath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            
             File.WriteAllText(_assetsFilePath, json);
             
-            // Update the internal dictionary
             _assets = assets.ToDictionary(a => a.ID);
             
             return true;
@@ -106,5 +123,63 @@ public class AssetManager
             Console.WriteLine($"Error saving assets to JSON: {ex.Message}");
             return false;
         }
-    }*/
+    }
+
+    public AssetSpecification CreateNewUnit()
+    {
+        string defaultUnitType = "Boiler";
+        
+        string newId = GenerateUniqueId(defaultUnitType);
+        
+        var newUnit = new AssetSpecification
+        {
+            ID = newId,
+            Name = newId,
+            UnitType = defaultUnitType,
+            MaxHeat = 1.0,
+            ProductionCost = 1.0,
+            CO2Emissions = 1.0,
+            FuelType = "Fuel Type",
+            FuelConsumption = 1.0
+        };
+        
+        _assets[newId] = newUnit;
+        
+        return newUnit;
+    }
+    
+    private string GenerateUniqueId(string unitType)
+    {
+        // Split the unit type into words
+        string[] words = unitType.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        
+        // Generate the prefix: first char of first word + (first char of second word if exists)
+        string prefix = words.Length > 0 ? words[0].Substring(0, 1).ToUpper() : "U";
+        if (words.Length > 1)
+        {
+            prefix += words[1].Substring(0, 1).ToUpper();
+        }
+        
+        // Count the existing units of this type
+        int count = 1;
+        foreach (var asset in _assets.Values)
+        {
+            if (asset.UnitType.Equals(unitType, StringComparison.OrdinalIgnoreCase))
+            {
+                count++;
+            }
+        }
+        
+        // Generate the new ID
+        string newId = $"{prefix}{count}";
+        
+        // Make sure the ID is unique
+        while (_assets.ContainsKey(newId))
+        {
+            count++;
+            newId = $"{prefix}{count}";
+        }
+        
+        return newId;
+    }
 }
