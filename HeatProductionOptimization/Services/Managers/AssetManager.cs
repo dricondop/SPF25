@@ -72,40 +72,27 @@ public class AssetManager
     {
         try
         {
-            // Transform the assets back to the required JSON format
             var jsonArray = new List<Dictionary<string, AssetSpecification>>();
             
             foreach (var asset in assets)
             {
-                // Skip assets with null or empty ID
                 if (string.IsNullOrEmpty(asset.ID))
                 {
                     Console.WriteLine("Warning: Skipping asset with null or empty ID");
                     continue;
                 }
-                
-                // Ensure Name matches ID for consistency
+
                 asset.Name = asset.ID;
-                
-                // Create a dictionary entry for this asset
+
                 var assetDict = new Dictionary<string, AssetSpecification>
                 {
                     { asset.ID, asset }
                 };
                 jsonArray.Add(assetDict);
             }
-            
-            // Define serialization options
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            };
-            
-            // Serialize to JSON and write to file
-            string json = JsonSerializer.Serialize(jsonArray, options);
-            
-            // Make sure directory exists
+
+            string json = JsonSerializer.Serialize(jsonArray);
+
             string directory = Path.GetDirectoryName(_assetsFilePath);
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
@@ -150,17 +137,14 @@ public class AssetManager
     
     private string GenerateUniqueId(string unitType)
     {
-        // Split the unit type into words
         string[] words = unitType.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        
-        // Generate the prefix: first char of first word + (first char of second word if exists)
+
         string prefix = words.Length > 0 ? words[0].Substring(0, 1).ToUpper() : "U";
         if (words.Length > 1)
         {
             prefix += words[1].Substring(0, 1).ToUpper();
         }
-        
-        // Count the existing units of this type
+
         int count = 1;
         foreach (var asset in _assets.Values)
         {
@@ -170,10 +154,8 @@ public class AssetManager
             }
         }
         
-        // Generate the new ID
         string newId = $"{prefix}{count}";
-        
-        // Make sure the ID is unique
+
         while (_assets.ContainsKey(newId))
         {
             count++;
