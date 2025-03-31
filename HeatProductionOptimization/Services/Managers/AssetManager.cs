@@ -16,7 +16,7 @@ public class AssetManager
 
     public AssetManager(string assetsFilePath = "Resources/Data/Production_Units.json")
     {
-        _assetsFilePath = assetsFilePath;
+        _assetsFilePath = Path.GetFullPath(assetsFilePath);
         _assets = LoadAssetsSpecifications();
     }
 
@@ -123,6 +123,7 @@ public class AssetManager
             ID = newId,
             Name = newId,
             UnitType = defaultUnitType,
+            IsActive = true,
             MaxHeat = 1.0,
             ProductionCost = 1.0,
             CO2Emissions = 1.0,
@@ -163,5 +164,10 @@ public class AssetManager
         }
         
         return newId;
+    }
+    
+    public string GetFilePath()
+    {
+        return _assetsFilePath;
     }
 }

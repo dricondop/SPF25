@@ -34,6 +34,12 @@
         
         <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="0,0,0,20">
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="10">
+                <Button Content="Load File"
+                        Click="LoadFile_Click"
+                        Padding="15,10"
+                        Background="#FF9800"
+                        Foreground="White"/>
+                        
                 <Button Content="Add Unit"
                         Click="AddUnit_Click"
                         Padding="15,10"
@@ -69,27 +75,38 @@
                                 Padding="10"
                                 Background="White">
                             <StackPanel>
-                                <!-- Replace the static Name TextBlock with an editable one -->
-                                <Border Classes="editableValue" 
-                                        DoubleTapped="DoubleTapped"
-                                        Margin="0,0,0,10"
-                                        HorizontalAlignment="Center">
-                                    <Panel>
-                                        <TextBlock Text="{Binding Name}" 
-                                                  FontWeight="Bold" 
-                                                  FontSize="18" 
-                                                  HorizontalAlignment="Center"
-                                                  Name="displayName" />
-                                        <TextBox Text="{Binding Name}" 
-                                                Name="editName" 
-                                                IsVisible="False" 
-                                                LostFocus="LostFocus" 
-                                                KeyDown="KeyDown"
-                                                FontWeight="Bold"
-                                                FontSize="18"
-                                                HorizontalAlignment="Center" />
-                                    </Panel>
-                                </Border>
+                                <!-- Name and Active Toggle in a row -->
+                                <Grid ColumnDefinitions="*, Auto" Margin="0,0,0,10">
+                                    <!-- Replace the static Name TextBlock with an editable one -->
+                                    <Border Grid.Column="0" Classes="editableValue" 
+                                            DoubleTapped="DoubleTapped"
+                                            HorizontalAlignment="Center">
+                                        <Panel>
+                                            <TextBlock Text="{Binding Name}" 
+                                                      FontWeight="Bold" 
+                                                      FontSize="18" 
+                                                      HorizontalAlignment="Center"
+                                                      Name="displayName" />
+                                            <TextBox Text="{Binding Name}" 
+                                                    Name="editName" 
+                                                    IsVisible="False" 
+                                                    LostFocus="LostFocus" 
+                                                    KeyDown="KeyDown"
+                                                    FontWeight="Bold"
+                                                    FontSize="18"
+                                                    HorizontalAlignment="Center" />
+                                        </Panel>
+                                    </Border>
+                                    
+                                    <!-- Active Toggle -->
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Active" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <ToggleSwitch IsChecked="{Binding IsActive}" 
+                                                OnContent="" OffContent=""
+                                                Margin="0" Padding="0"
+                                                VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
                                            
                                 <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                                     <!-- Fuel Type -->

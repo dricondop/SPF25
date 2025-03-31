@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using HeatProductionOptimization.Models;
 using HeatProductionOptimization.Models.DataModels;
@@ -11,13 +12,15 @@ namespace HeatProductionOptimization.ViewModels;
 
 public class AssetManagerViewModel : ViewModelBase
 {
-    private readonly AssetManager _assetManager;
+    private AssetManager _assetManager;
     private ObservableCollection<AssetSpecification> _assets;
     private string _statusMessage = "Do not forget to save any changes :)";
+    private string _currentFilePath;
 
     public AssetManagerViewModel()
     {
-        _assetManager = new AssetManager();
+        _currentFilePath = Path.GetFullPath("Resources/Data/Production_Units.json");
+        _assetManager = new AssetManager(_currentFilePath);
         LoadAssets();
     }
 
@@ -81,6 +84,40 @@ public class AssetManagerViewModel : ViewModelBase
         {
             StatusMessage = $"Error: {ex.Message}";
             Console.WriteLine($"Save error: {ex}");
+        }
+    }
+
+    public string CurrentFilePath 
+    { 
+        get => _currentFilePath; 
+        private set => this.RaiseAndSetIfChanged(ref _currentFilePath, value); 
+    }
+    
+    public void LoadFromFile(string filePath)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            {
+                StatusMessage = "Invalid file path specified.";
+                return;
+            }
+            
+            // Create a new AssetManager with the specified file path
+            _assetManager = new AssetManager(filePath);
+            
+            // Update the current file path
+            CurrentFilePath = filePath;
+            
+            // Load assets from the new file
+            LoadAssets();
+            
+            StatusMessage = $"Successfully loaded assets from: {Path.GetFileName(filePath)}";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Error loading file: {ex.Message}";
+            Console.WriteLine($"Error loading file: {ex}");
         }
     }
 }

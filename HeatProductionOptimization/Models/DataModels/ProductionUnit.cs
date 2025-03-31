@@ -17,6 +17,9 @@ public class AssetSpecification
 
     [JsonPropertyName("ID")]
     public string ID { get; set; }
+    
+    [JsonPropertyName("IsActive")]
+    public bool IsActive { get; set; } = true;
 
     [JsonPropertyName("Unit Type")]
     public string UnitType { get; set; }
