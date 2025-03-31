@@ -75,9 +75,8 @@
                                 Padding="10"
                                 Background="White">
                             <StackPanel>
-                                <!-- Name and Active Toggle in a row -->
+                                <!-- Name and Active Toggle in same row -->
                                 <Grid ColumnDefinitions="*, Auto" Margin="0,0,0,10">
-                                    <!-- Replace the static Name TextBlock with an editable one -->
                                     <Border Grid.Column="0" Classes="editableValue" 
                                             DoubleTapped="DoubleTapped"
                                             HorizontalAlignment="Center">

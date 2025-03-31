@@ -103,13 +103,10 @@ public class AssetManagerViewModel : ViewModelBase
                 return;
             }
             
-            // Create a new AssetManager with the specified file path
             _assetManager = new AssetManager(filePath);
             
-            // Update the current file path
             CurrentFilePath = filePath;
             
-            // Load assets from the new file
             LoadAssets();
             
             StatusMessage = $"Successfully loaded assets from: {Path.GetFileName(filePath)}";
