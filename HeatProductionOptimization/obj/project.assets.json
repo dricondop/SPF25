@@ -1950,11 +1950,16 @@
     ]
   },
   "packageFolders": {
+<<<<<<< Updated upstream
     "C:\\Users\\downy\\.nuget\\packages\\": {}
+=======
+    "C:\\Users\\sanch\\.nuget\\packages\\": {}
+>>>>>>> Stashed changes
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< Updated upstream
       "projectUniqueName": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
       "projectName": "HeatProductionOptimization",
       "projectPath": "C:\\Users\\downy\\Documents\\SDU\\SEMS2\\PROJ\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
@@ -1963,6 +1968,16 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\downy\\AppData\\Roaming\\NuGet\\NuGet.Config"
+=======
+      "projectUniqueName": "C:\\Users\\sanch\\OneDrive\\Escritorio\\Nueva carpeta (2)\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
+      "projectName": "HeatProductionOptimization",
+      "projectPath": "C:\\Users\\sanch\\OneDrive\\Escritorio\\Nueva carpeta (2)\\SPF25\\HeatProductionOptimization\\HeatProductionOptimization.csproj",
+      "packagesPath": "C:\\Users\\sanch\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\sanch\\OneDrive\\Escritorio\\Nueva carpeta (2)\\SPF25\\HeatProductionOptimization\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\sanch\\AppData\\Roaming\\NuGet\\NuGet.Config"
+>>>>>>> Stashed changes
       ],
       "originalTargetFrameworks": [
         "net9.0"
