@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HeatProductionOptimization.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="HeatProductionOptimization.Views.ImportJsonWindowView">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE -->
+        <vm:ImportJsonWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Please import your .csv file" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+            <Button Content="Import File" Click="ImportButton_Click" Background="Blue" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Margin="10"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -9,10 +9,10 @@ using System.Text.Json.Serialization;
     {
         //This Dictionary has to be in other class, 
         // but it is going to be here for now
-        public Dictionary<string, BoilerSpecification> _boilers;
-
+        public Dictionary<string, BoilerSpecification>? _boilers;
+ 
         [JsonPropertyName("Type")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         [JsonPropertyName("Max Heat (MW)")]
         public double MaxHeat { get; set; }
@@ -24,13 +24,15 @@ using System.Text.Json.Serialization;
         public double ProductionCost { get; set; }
 
         [JsonPropertyName("CO2 Emissions (kg/MWh)")]
-        public double? CO2Emissions { get; set; }
+        public double CO2Emissions { get; set; }
 
         [JsonPropertyName("Fuel Type")]
-        public string FuelType { get; set; }
+        public string? FuelType { get; set; }
 
         [JsonPropertyName("Fuel Consumption (MWh fuel/MWh heat)")]
-        public double? FuelConsumption { get; set; }
+        public double FuelConsumption { get; set; }
+        
+        public double ProducedHeat { get; set; } = 0.0;
 
     // Method to load boiler specifications from a JSON file
     public Dictionary<string, BoilerSpecification> LoadBoilerSpecifications()
@@ -51,7 +53,7 @@ using System.Text.Json.Serialization;
             
             // Deserialize the JSON content to a dictionary
             var boiler_dictionary = JsonSerializer.Deserialize<Dictionary<string, BoilerSpecification>>(json);
-            return boiler_dictionary;
+            return boiler_dictionary ?? new Dictionary<string, BoilerSpecification>();
           
         }
         catch (Exception ex)  // Handle exceptions
@@ -68,7 +70,7 @@ using System.Text.Json.Serialization;
     // Method to get a specific boiler specification by name
     public BoilerSpecification GetBoilerSpecification(string name, Dictionary<string, BoilerSpecification> boiler)
     {
-        return boiler.TryGetValue(name, out var spec) ? spec : null;
+        return boiler.TryGetValue(name, out var spec) ? spec : throw new KeyNotFoundException($"Boiler specification '{name}' not found.");
     }
 
 }
