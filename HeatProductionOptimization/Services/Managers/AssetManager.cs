@@ -58,16 +58,21 @@ public class AssetManager
         return assets;
     }
 
-    public AssetSpecification GetAssetSpecification(string name)
-    {
-        return _assets.TryGetValue(name, out var spec) ? spec : null;
-    }
-
     public Dictionary<string, AssetSpecification> GetAllAssets()
     {
         return _assets;
     }
+
+    public AssetSpecification GetAssetSpecification(string name)
+    {
+        return _assets.TryGetValue(name, out var spec) ? spec : null;
+    }
     
+    public string GetFilePath()
+    {
+        return _assetsFilePath;
+    }
+
     public bool SaveAssets(IEnumerable<AssetSpecification> assets)
     {
         try
@@ -81,18 +86,21 @@ public class AssetManager
                     Console.WriteLine("Warning: Skipping asset with null or empty ID");
                     continue;
                 }
-
-                asset.Name = asset.ID;
-
+                
                 var assetDict = new Dictionary<string, AssetSpecification>
                 {
-                    { asset.ID, asset }
+                    { asset.Name, asset }
                 };
                 jsonArray.Add(assetDict);
             }
 
-            string json = JsonSerializer.Serialize(jsonArray);
-
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            };
+            
+            string json = JsonSerializer.Serialize(jsonArray, options);
+            
             string directory = Path.GetDirectoryName(_assetsFilePath);
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
@@ -101,7 +109,7 @@ public class AssetManager
             
             File.WriteAllText(_assetsFilePath, json);
             
-            _assets = assets.ToDictionary(a => a.ID);
+            UpdateAssetDictionary(assets);
             
             return true;
         }
@@ -112,6 +120,21 @@ public class AssetManager
         }
     }
 
+        private void UpdateAssetDictionary(IEnumerable<AssetSpecification> assets)
+    {
+        var newAssets = new Dictionary<string, AssetSpecification>();
+        
+        foreach (var asset in assets)
+        {
+            if (!string.IsNullOrEmpty(asset.Name))
+            {
+                newAssets[asset.Name] = asset;
+            }
+        }
+        
+        _assets = newAssets;
+    }
+
     public AssetSpecification CreateNewUnit()
     {
         string defaultUnitType = "Boiler";
@@ -120,8 +143,8 @@ public class AssetManager
         
         var newUnit = new AssetSpecification
         {
-            ID = newId,
             Name = newId,
+            ID = newId,
             UnitType = defaultUnitType,
             IsActive = true,
             MaxHeat = 1.0,
@@ -139,24 +162,29 @@ public class AssetManager
     private string GenerateUniqueId(string unitType)
     {
         string[] words = unitType.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
+        
         string prefix = words.Length > 0 ? words[0].Substring(0, 1).ToUpper() : "U";
         if (words.Length > 1)
         {
             prefix += words[1].Substring(0, 1).ToUpper();
         }
-
+        
         int count = 1;
+        
         foreach (var asset in _assets.Values)
         {
-            if (asset.UnitType.Equals(unitType, StringComparison.OrdinalIgnoreCase))
+            if (asset.ID != null && asset.ID.Length >= 2)
             {
-                count++;
+                string assetPrefix = asset.ID.Substring(0, Math.Min(2, asset.ID.Length));
+                if (assetPrefix == prefix)
+                {
+                    count++;
+                }
             }
         }
         
         string newId = $"{prefix}{count}";
-
+        
         while (_assets.ContainsKey(newId))
         {
             count++;
@@ -164,10 +192,5 @@ public class AssetManager
         }
         
         return newId;
-    }
-    
-    public string GetFilePath()
-    {
-        return _assetsFilePath;
     }
 }

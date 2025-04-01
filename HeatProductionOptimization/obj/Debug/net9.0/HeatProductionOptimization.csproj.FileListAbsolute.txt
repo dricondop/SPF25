@@ -354,5 +354,3 @@ C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Deb
 C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\Splat.dll
 C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\System.Reactive.dll
 C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\bin\Debug\net9.0\System.Text.Json.dll
-C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.Fody.CopyLocal.cache
-C:\Users\downy\Documents\SDU\SEMS2\PROJ\SPF25\HeatProductionOptimization\obj\Debug\net9.0\HeatProductionOptimization.csproj.Fody.RuntimeCopyLocal.cache

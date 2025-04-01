@@ -20,33 +20,33 @@
                   Margin="0,0,0,30"/>
 
         <Grid>
-            <UniformGrid Columns="2" Rows="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Width="200" Height="200" Margin="10">
-                    <StackPanel>
+            <UniformGrid Columns="2" Rows="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="450">
+                <Button Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="200">
+                    <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="Option 1" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
                         <!--<Image Source="/Assets/icon1.png" Width="100" Height="100" Margin="0,10"/>-->
                         <TextBlock Text="Description 1" FontSize="14" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 
-                <Button Width="200" Height="200" Margin="10">
-                    <StackPanel>
+                <Button Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="200">
+                    <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="Option 2" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
                         <!--<Image Source="/Assets/icon2.png" Width="100" Height="100" Margin="0,10"/>-->
                         <TextBlock Text="Description 2" FontSize="14" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 
-                <Button Width="200" Height="200" Margin="10">
-                    <StackPanel>
+                <Button Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="200">
+                    <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="Option 3" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
                         <!--<Image Source="/Assets/icon3.png" Width="100" Height="100" Margin="0,10"/>-->
                         <TextBlock Text="Description 3" FontSize="14" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 
-                <Button Width="200" Height="200" Margin="10">
-                    <StackPanel>
+                <Button Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="200">
+                    <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="Option 4" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
                         <!--<Image Source="/Assets/icon4.png" Width="100" Height="100" Margin="0,10"/>-->
                         <TextBlock Text="Description 4" FontSize="14" HorizontalAlignment="Center"/>
