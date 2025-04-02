@@ -7,6 +7,8 @@ using HeatProductionOptimization.Models.DataModels;
 using HeatProductionOptimization.Services.Managers;
 using Avalonia.Controls;
 using ReactiveUI;
+using System.Diagnostics;
+
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -40,6 +42,7 @@ public class AssetManagerViewModel : ViewModelBase
     {
         var assetDict = _assetManager.GetAllAssets();
         Assets = new ObservableCollection<AssetSpecification>(assetDict.Values);
+        Debug.WriteLine("I am a Nigger");
     }
     
     public void AddNewUnit()

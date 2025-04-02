@@ -6,16 +6,16 @@ using Avalonia.Controls.Platform;
 using HeatProductionOptimization.Models.DataModels;
 
 namespace HeatProductionOptimization.Models;
-/*
+
 public class OptAlgorithm
 {
-    public Dictionary<double, AssetSpecification>? Objective;
+    public Dictionary<double?, AssetSpecification>? Objective;
     
     //The method will ask for the list of specifications and also if the different parameters(par) are to be considered or not.
-    public Dictionary<double, AssetSpecification> GetObjective(List<AssetSpecification> boilers, int[] par)
+    public Dictionary<double?, AssetSpecification> GetObjective(List<AssetSpecification> boilers, int[] par)
     {
-        Dictionary<double, AssetSpecification> obj = [];
-        double objective = 0.0;
+        Dictionary<double?, AssetSpecification> obj = [];
+        double? objective = 0.0;
         int n = par.Where(n => n == 1 ).Count();
         if (n == 0)
         {
@@ -31,18 +31,18 @@ public class OptAlgorithm
         return obj ?? [];
     }
 
-    public void CalculateHeat(List<AssetSpecification> boilers, Dictionary<double,AssetSpecification> boilerdict, double heat)
+    public void CalculateHeat(List<AssetSpecification> boilers, Dictionary<double?,AssetSpecification> boilerdict, double heat)
     {
         foreach( var boiler in boilers)
         {
             boiler.ProducedHeat = 0.0;
         }
 
-        double[] order = boilerdict.Keys.ToArray();
+        double?[] order = boilerdict.Keys.ToArray();
 
         order =  order.OrderBy(o => o).ToArray();
 
-        double heatneeded = heat;
+        double? heatneeded = heat;
 
         for(int i = 0; i<order.Count(); i++)
         {
@@ -68,4 +68,3 @@ public class OptAlgorithm
         }
     }
 }
-*/

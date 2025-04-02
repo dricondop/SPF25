@@ -22,13 +22,13 @@ public class AssetSpecification
     public string UnitType { get; set; }
 
     [JsonPropertyName("Max Heat (MW)")]
-    public double MaxHeat { get; set; }
+    public double? MaxHeat { get; set; }
 
     [JsonPropertyName("Max Electricity (MW)")]
     public double? MaxElectricity { get; set; }
 
     [JsonPropertyName("Production Cost (DKK/MWh)")]
-    public double ProductionCost { get; set; }
+    public double? ProductionCost { get; set; }
 
     [JsonPropertyName("CO2 Emissions (kg/MWh)")]
     public double? CO2Emissions { get; set; }
@@ -39,6 +39,5 @@ public class AssetSpecification
     [JsonPropertyName("Fuel Consumption (MWh fuel/MWh heat)")]
     public double? FuelConsumption { get; set; }
 
-    [JsonIgnore]
-    public double ProducedHeat { get; set; } = 0.0;
+    public double? ProducedHeat { get; set; } = 0.0;
 }
