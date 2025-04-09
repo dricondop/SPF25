@@ -6,95 +6,133 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:DateInputWindowViewModel"
              x:Class="HeatProductionOptimization.Views.DateInputWindowView">
-  
-  <Design.DataContext>
-      <!--
-          This only sets the DataContext for the previewer in an IDE,
-          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
-      -->
-      <vm:DateInputWindowViewModel />
-  </Design.DataContext>
 
-  <UserControl.Styles>
-      <Style Selector="DatePicker">
-          <Setter Property="Foreground" Value="white"/>
-      </Style>
-      <Style Selector="TimePicker">
-          <Setter Property="Foreground" Value="white"/>
-      </Style>
-      <Style Selector="Button:pointerover">
-          <Setter Property="RenderTransform" Value="scale(1.1)"/>
-          <Setter Property="Transitions">
-              <Transitions>
-                  <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
-              </Transitions>
-          </Setter>
-      </Style>
-  </UserControl.Styles>
+    <Design.DataContext>
+        <vm:DateInputWindowViewModel />
+    </Design.DataContext>
 
-  <Panel>
-      <ExperimentalAcrylicBorder IsHitTestVisible="False">
-          <ExperimentalAcrylicBorder.Material>
-              <ExperimentalAcrylicMaterial
-                  BackgroundSource="Digger"
-                  MaterialOpacity="0.75"
-                  TintColor="#22092C"
-                  TintOpacity="1" />
-          </ExperimentalAcrylicBorder.Material>
-      </ExperimentalAcrylicBorder>
+    <UserControl.Styles>
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Margin" Value="0 0 0 20"/>
+        </Style>
 
-      <Border 
-          Background="#22092C" 
-          CornerRadius="8" 
-          Padding="30" 
-          MaxWidth="600"
-          BoxShadow="0 4 8 0 #22092C">
-          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
-              <TextBlock
-                  FontSize="32"
-                  FontWeight="Bold"
-                  Text="Date Input"
-                  TextAlignment="Center"
-                  Foreground="white" />
+        <Style Selector="DatePicker, ComboBox, CheckBox">
+            <Setter Property="Background" Value="#3A3A3A"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#5E5E5E"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Margin" Value="0 0 0 10"/>
+        </Style>
 
-              <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" Margin="0,20">
-                  <TextBlock Grid.Row="0" Grid.Column="0" 
-                      Text="Date:" 
-                      VerticalAlignment="Center"
-                      FontWeight="Bold"
-                      Margin="0,0,30,0"
-                      Foreground="white"
-                      FontSize="20"/>
-                  <DatePicker Grid.Row="0" Grid.Column="1" 
-                      Width="400"
-                      Margin="0,0,0,10"
-                      SelectedDate="{Binding SelectedDate}"/>
-                  
-                  <TextBlock Grid.Row="1" Grid.Column="0" 
-                      Text="Time:" 
-                      VerticalAlignment="Center"
-                      FontWeight="Bold"
-                      Margin="0,0,30,0"
-                      Foreground="white"
-                      FontSize="20"/>
-                  <TimePicker Grid.Row="1" Grid.Column="1" 
-                      Width="400"
-                      SelectedTime="{Binding SelectedTime}"/>
-              </Grid>
-              
-              <Button
-                  Click="OnSubmitClick"
-                  Content="Submit"
-                  HorizontalAlignment="Center"
-                  Background="#33FFFFFF"
-                  Padding="20,10"/>
-              
-              <TextBlock
-                  Text="{Binding Result}"
-                  TextAlignment="Center"
-                  Foreground="White"
-                  FontSize="16"/>
-          </StackPanel>
-      </Border>
-  </Panel>
+        <Style Selector="Button.submit-button">
+            <Setter Property="Background" Value="#4CAF50"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="20 10"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Margin" Value="0 20 0 0"/>
+            <Setter Property="IsEnabled" Value="{Binding CanProceed}"/>
+        </Style>
+
+        <Style Selector="Button.submit-button:pointerover">
+            <Setter Property="Background" Value="#45a049"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style Selector="Button.submit-button:disabled">
+            <Setter Property="Background" Value="#555555"/>
+            <Setter Property="Foreground" Value="#AAAAAA"/>
+        </Style>
+
+        <Style Selector="TextBlock.status-message">
+            <Setter Property="Foreground" Value="#FFD700"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="0 15 0 0"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style Selector="StackPanel.data-selection">
+            <Setter Property="Margin" Value="0 0 0 20"/>
+            <Setter Property="Spacing" Value="10"/>
+        </Style>
+
+        <Style Selector="CheckBox.data-group">
+            <Setter Property="Background" Value="#3A3A3A"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#5E5E5E"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Margin" Value="0 0 0 10"/>
+        </Style>
+
+        <Style Selector="CheckBox.data-group:checked">
+            <Setter Property="Background" Value="#4E7EB5"/>
+            <Setter Property="BorderBrush" Value="#6FA8DC"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="CheckBox.data-group:checked /template/ ContentPresenter">
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style Selector="CheckBox.data-group:pointerover">
+            <Setter Property="Background" Value="#4A4A4A"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style Selector="CheckBox.data-group:checked:pointerover">
+            <Setter Property="Background" Value="#5A8FC5"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid Background="#2D2D2D">
+        <Border Background="#1E1E1E" CornerRadius="10" Padding="30" BoxShadow="0 5 15 0 #00000050" Margin="40">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="500">
+                <TextBlock Text="Select Time Period" Classes="title" HorizontalAlignment="Center"/>
+
+                <StackPanel Orientation="Vertical" Classes="data-selection">
+                    <TextBlock Text="Select Data Groups:" Foreground="White" FontWeight="Bold"/>
+                    <CheckBox Content="Winter Data" Classes="data-group" 
+                             IsChecked="{Binding UseWinterData}"/>
+                    <CheckBox Content="Summer Data" Classes="data-group" 
+                             IsChecked="{Binding UseSummerData}"/>
+                </StackPanel>
+
+                <StackPanel IsVisible="{Binding ShowDateSelection}">
+                    <Grid ColumnDefinitions="Auto,1*" RowDefinitions="Auto,Auto,Auto,Auto">
+                        <TextBlock Text="Start Date:" Grid.Row="0" Grid.Column="0"
+                                   VerticalAlignment="Center" Foreground="White" Margin="0 0 15 10"/>
+                        <DatePicker SelectedDate="{Binding StartDate}" Grid.Row="0" Grid.Column="1" Margin="0 0 0 10"/>
+
+                        <TextBlock Text="Start Hour:" Grid.Row="1" Grid.Column="0"
+                                   VerticalAlignment="Center" Foreground="White" Margin="0 0 15 10"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0 0 0 10"
+                                  ItemsSource="{Binding HourOptions}"
+                                  SelectedIndex="{Binding StartHour}"/>
+
+                        <TextBlock Text="End Date:" Grid.Row="2" Grid.Column="0"
+                                   VerticalAlignment="Center" Foreground="White" Margin="0 0 15 10"/>
+                        <DatePicker SelectedDate="{Binding EndDate}" Grid.Row="2" Grid.Column="1" Margin="0 0 0 10"/>
+
+                        <TextBlock Text="End Hour:" Grid.Row="3" Grid.Column="0"
+                                   VerticalAlignment="Center" Foreground="White" Margin="0 0 15 0"/>
+                        <ComboBox Grid.Row="3" Grid.Column="1"
+                                  ItemsSource="{Binding HourOptions}"
+                                  SelectedIndex="{Binding EndHour}"/>
+                    </Grid>
+                </StackPanel>
+
+                <Button Content="PROCESS PERIOD" Command="{Binding SubmitDates}"
+                        Classes="submit-button" HorizontalAlignment="Center"/>
+
+                <TextBlock Text="{Binding StatusMessage}" Classes="status-message"
+                           HorizontalAlignment="Center" TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
+    </Grid>
 </UserControl>

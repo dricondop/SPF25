@@ -2,16 +2,49 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm="using:HeatProductionOptimization.ViewModels"
+             xmlns:vm="clr-namespace:HeatProductionOptimization.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
              x:Class="HeatProductionOptimization.Views.SourceDataManagerView"
              x:DataType="vm:SourceDataManagerViewModel">
-    <StackPanel Margin="30">
-        <TextBlock DockPanel.Dock="Top"
-                    Text="Heat Production Optimizer / Source Data Manager"
-                    FontSize="40"
-                    FontWeight="Bold"
-                    HorizontalAlignment="Left"
-                    Margin="0,0,0,30"/>
-    </StackPanel>
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border Background="#f0f0f0" CornerRadius="10" Padding="30" BoxShadow="5 5 15 #888888">
+            <StackPanel Spacing="20" MinWidth="300">
+                <Button Content="📁 Load CSV File" 
+                        Click="LoadFile_Click"
+                        FontSize="16"
+                        Padding="20,10"
+                        HorizontalAlignment="Center"
+                        Background="#4a6da7"
+                        Foreground="White"/>
+                
+                <!-- Date Range Display -->
+                <Border Background="#e8e8f8" CornerRadius="5" Padding="10">
+                    <TextBlock Text="{Binding DateRange}" 
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               FontSize="14"
+                               FontWeight="Bold"/>
+                </Border>
+                
+                <!-- Status Message -->
+                <Border Background="#e8f4f8" CornerRadius="5" Padding="10">
+                    <TextBlock Text="{Binding StatusMessage}" 
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               FontSize="14"/>
+                </Border>
+
+                <!-- Continue button -->
+                <Button Content="CONTINUE" 
+                        Click="Continue_Click"
+                        Classes="continue-button"
+                        HorizontalAlignment="Center"
+                        Margin="0 20 0 0"
+                        IsEnabled="{Binding HasValidData}"/>
+
+            </StackPanel>
+        </Border>
+    </Grid>
 </UserControl>

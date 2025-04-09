@@ -4,88 +4,103 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-public class SourceDataManager
+namespace HeatProductionOptimization.Services.Managers
 {
-    public List<HeatDemandRecord> WinterRecords { get; private set; }
-    public List<HeatDemandRecord> SummerRecords { get; private set; }
-
-    public SourceDataManager()
+    public class SourceDataManager
     {
-        WinterRecords = new List<HeatDemandRecord>();
-        SummerRecords = new List<HeatDemandRecord>();
-    }
+        public List<HeatDemandRecord> WinterRecords { get; }
+        public List<HeatDemandRecord> SummerRecords { get; }
 
-    public void ImportHeatDemandData(string filePath, bool displayData = false, int displayLimit = 6)
-    {
-        WinterRecords.Clear();
-        SummerRecords.Clear();
-
-        try
+        public SourceDataManager()
         {
-            using (var reader = new StreamReader(filePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    var columns = line.Split(',');
+            WinterRecords = new List<HeatDemandRecord>();
+            SummerRecords = new List<HeatDemandRecord>();
+        }
 
+        public void ImportHeatDemandData(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+                throw new FileNotFoundException("CSV file not found", filePath);
+
+            WinterRecords.Clear();
+            SummerRecords.Clear();
+
+            try
+            {
+                var lines = File.ReadAllLines(filePath);
+                
+                // Skip header rows (first 3 lines)
+                foreach (var line in lines.Skip(3))
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    var columns = line.Split(',');
                     if (columns.Length >= 10)
                     {
-                        WinterRecords.Add(ParseHeatDemandRecord(columns, 1));
-                        SummerRecords.Add(ParseHeatDemandRecord(columns, 6));
+                        // Winter data (columns 1-4)
+                        if (TryParseRecord(columns, 1, out var winterRecord))
+                            WinterRecords.Add(winterRecord);
+
+                        // Summer data (columns 6-9)
+                        if (TryParseRecord(columns, 6, out var summerRecord))
+                            SummerRecords.Add(summerRecord);
                     }
                 }
-            }
 
-            if (displayData)
+                if (WinterRecords.Count == 0 && SummerRecords.Count == 0)
+                    throw new InvalidDataException("No valid data records found in CSV file");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("First 6 Winter Periods:");
-                DisplayLimitedRecords(WinterRecords, displayLimit);
-
-                Console.WriteLine("\nFirst 6 Summer Periods:");
-                DisplayLimitedRecords(SummerRecords, displayLimit);
+                Console.WriteLine($"Error loading CSV data: {ex}");
+                throw;
             }
         }
-        catch (FileNotFoundException ex)
+
+        private static bool TryParseRecord(string[] columns, int startIndex, out HeatDemandRecord record)
         {
-            Console.WriteLine($"File not found: {ex.Message}");
+            record = new HeatDemandRecord();
+            
+            try
+            {
+                if (columns.Length <= startIndex + 3)
+                {
+                    Console.WriteLine($"Not enough columns (need {startIndex + 4}, got {columns.Length})");
+                    return false;
+                }
+
+                // Debug: Print the columns we're trying to parse
+                Console.WriteLine($"Parsing: {string.Join("|", columns.Skip(startIndex).Take(4))}");
+
+                record.TimeFrom = DateTime.ParseExact(columns[startIndex].Trim(), "M/d/yyyy H:mm", CultureInfo.InvariantCulture);
+                record.TimeTo = DateTime.ParseExact(columns[startIndex + 1].Trim(), "M/d/yyyy H:mm", CultureInfo.InvariantCulture);
+                record.HeatDemand = double.Parse(columns[startIndex + 2].Trim(), CultureInfo.InvariantCulture);
+                record.ElectricityPrice = double.Parse(columns[startIndex + 3].Trim(), CultureInfo.InvariantCulture);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to parse record: {ex.Message}");
+                Console.WriteLine($"Problematic columns: {string.Join("|", columns.Skip(startIndex).Take(4))}");
+                return false;
+            }
         }
-        catch (FormatException ex)
+
+        public (DateTime StartDate, DateTime EndDate) GetDataRange(bool winter)
         {
-            Console.WriteLine($"Data format error: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error importing heat demand data: {ex.Message}");
+            var records = winter ? WinterRecords : SummerRecords;
+            if (records.Count == 0)
+                return (DateTime.MinValue, DateTime.MaxValue);
+
+            return (records.Min(r => r.TimeFrom), records.Max(r => r.TimeTo));
         }
     }
 
-    private HeatDemandRecord ParseHeatDemandRecord(string[] columns, int startIndex)
+    public class HeatDemandRecord
     {
-        string dateFormat = "M/d/yyyy H:mm";
-
-        return new HeatDemandRecord
-        {
-            TimeFrom = DateTime.ParseExact(columns[startIndex].Trim(), dateFormat, CultureInfo.InvariantCulture),
-            TimeTo = DateTime.ParseExact(columns[startIndex + 1].Trim(), dateFormat, CultureInfo.InvariantCulture),
-            HeatDemand = double.Parse(columns[startIndex + 2].Trim(), CultureInfo.InvariantCulture),
-            ElectricityPrice = double.Parse(columns[startIndex + 3].Trim(), CultureInfo.InvariantCulture)
-        };
+        public DateTime TimeFrom { get; set; }
+        public DateTime TimeTo { get; set; }
+        public double HeatDemand { get; set; }
+        public double ElectricityPrice { get; set; }
     }
-
-    private void DisplayLimitedRecords(List<HeatDemandRecord> records, int limit)
-    {
-        foreach (var record in records.Take(limit))
-        {
-            Console.WriteLine($"Time From: {record.TimeFrom}, Time To: {record.TimeTo}, Heat Demand: {record.HeatDemand}, Electricity Price: {record.ElectricityPrice}");
-        }
-    }
-}
-
-public class HeatDemandRecord
-{
-    public DateTime TimeFrom { get; set; }
-    public DateTime TimeTo { get; set; }
-    public double HeatDemand { get; set; }
-    public double ElectricityPrice { get; set; }
 }

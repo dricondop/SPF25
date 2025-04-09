@@ -1,8 +1,7 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.Interactivity;
 using HeatProductionOptimization.ViewModels;
+using HeatProductionOptimization.Services.Managers;
 
 namespace HeatProductionOptimization.Views;
 
@@ -10,14 +9,11 @@ public partial class DateInputWindowView : UserControl
 {
     public DateInputWindowView()
     {
-        AvaloniaXamlLoader.Load(this);
+        InitializeComponent();
     }
 
-    private void OnSubmitClick(object? sender, RoutedEventArgs e)
+    private void InitializeComponent()
     {
-        if (DataContext is DateInputWindowViewModel vm)
-        {
-            vm.OnSubmitClick();
-        }
+        AvaloniaXamlLoader.Load(this);
     }
 }
