@@ -10,7 +10,8 @@
       "Production Cost (DKK/MWh)": 520,
       "CO2 Emissions (kg/MWh)": 175,
       "Fuel Type": "Gas",
-      "Fuel Consumption (MWh fuel/MWh heat)": 0.9
+      "Fuel Consumption (MWh fuel/MWh heat)": 0.9,
+      "ProducedHeat": 0
     }
   },
   {
@@ -24,7 +25,8 @@
       "Production Cost (DKK/MWh)": 560,
       "CO2 Emissions (kg/MWh)": 130,
       "Fuel Type": "Gas",
-      "Fuel Consumption (MWh fuel/MWh heat)": 0.7
+      "Fuel Consumption (MWh fuel/MWh heat)": 0.7,
+      "ProducedHeat": 0
     }
   },
   {
@@ -38,7 +40,8 @@
       "Production Cost (DKK/MWh)": 670,
       "CO2 Emissions (kg/MWh)": 330,
       "Fuel Type": "Oil",
-      "Fuel Consumption (MWh fuel/MWh heat)": 1.5
+      "Fuel Consumption (MWh fuel/MWh heat)": 1.5,
+      "ProducedHeat": 0
     }
   },
   {
@@ -52,7 +55,8 @@
       "Production Cost (DKK/MWh)": 990,
       "CO2 Emissions (kg/MWh)": 650,
       "Fuel Type": "Gas",
-      "Fuel Consumption (MWh fuel/MWh heat)": 1.8
+      "Fuel Consumption (MWh fuel/MWh heat)": 1.8,
+      "ProducedHeat": 0
     }
   },
   {
@@ -66,7 +70,8 @@
       "Production Cost (DKK/MWh)": 60,
       "CO2 Emissions (kg/MWh)": null,
       "Fuel Type": null,
-      "Fuel Consumption (MWh fuel/MWh heat)": null
+      "Fuel Consumption (MWh fuel/MWh heat)": null,
+      "ProducedHeat": 0
     }
   }
 ]
