@@ -51,31 +51,31 @@
                             Command="{Binding AssetManagerWindow}"
                             ToolTip.Tip="Asset Manager"
                             HorizontalAlignment="Center">
-                            <PathIcon Data="{StaticResource document_regular}" />
+                            <PathIcon Data="{StaticResource tabs_regular}" />
                         </Button>
                         <Button Classes="sidebar-button"
                             Command="{Binding SourceDataManagerWindow}"
                             ToolTip.Tip="Source Data Manager"
                             HorizontalAlignment="Center">
-                            <PathIcon Data="{StaticResource settings_regular}" />
+                            <PathIcon Data="{StaticResource database_regular}" />
                         </Button>
                         <Button Classes="sidebar-button"
                             Command="{Binding OptimizerWindow}"
                             ToolTip.Tip="Optimizer"
                             HorizontalAlignment="Center">
-                            <PathIcon Data="{StaticResource chart_regular}" />
+                            <PathIcon Data="{StaticResource options_regular}" />
                         </Button>
                         <Button Classes="sidebar-button"
                             Command="{Binding DataVisualizationWindow}"
                             ToolTip.Tip="Data Visualization"
                             HorizontalAlignment="Center">
-                            <PathIcon Data="{StaticResource calendar_regular}" />
+                            <PathIcon Data="{StaticResource data_pie_regular}" />
                         </Button>
                         <Button Classes="sidebar-button"
                             Command="{Binding ResultDataManagerWindow}"
                             ToolTip.Tip="Result Data Manager"
                             HorizontalAlignment="Center">
-                            <PathIcon Data="{StaticResource question_regular}" />
+                            <PathIcon Data="{StaticResource document_catch_up_regular}" />
                         </Button>
                     </StackPanel>
                     
