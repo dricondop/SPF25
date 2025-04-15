@@ -12,7 +12,8 @@ namespace HeatProductionOptimization.Services.Managers;
 public class AssetManager
 {
     private readonly string _assetsFilePath;
-    private Dictionary<string, AssetSpecification> _assets;
+    private Dictionary<int, AssetSpecifications> _assets; // Use int keys
+    private int _nextAvailableId = 1;
 
     public AssetManager(string assetsFilePath = "Resources/Data/Production_Units.json")
     {
@@ -20,9 +21,10 @@ public class AssetManager
         _assets = LoadAssetsSpecifications();
     }
 
-    public Dictionary<string, AssetSpecification> LoadAssetsSpecifications()
+    public Dictionary<int, AssetSpecifications> LoadAssetsSpecifications()
     {
-        var assets = new Dictionary<string, AssetSpecification>();
+        var assets = new Dictionary<int, AssetSpecifications>();
+        _nextAvailableId = 1; // Initialize counter
 
         if (!File.Exists(_assetsFilePath))
         {
@@ -34,17 +36,35 @@ public class AssetManager
         {
             var json = File.ReadAllText(_assetsFilePath);
             
-            var jsonArray = JsonSerializer.Deserialize<List<Dictionary<string, AssetSpecification>>>(json);
+            var jsonArray = JsonSerializer.Deserialize<List<Dictionary<string, AssetSpecifications>>>(json);
             if (jsonArray != null)
             {
                 foreach (var dict in jsonArray)
                 {
                     foreach (var kvp in dict)
                     {
+                        // Convert string ID to int or generate a new one
+                        int assetId;
+                        if (!int.TryParse(kvp.Value.ID, out assetId))
+                        {
+                            assetId = _nextAvailableId++;
+                        }
+                        else
+                        {
+                            // Update next ID to be greater than any existing
+                            _nextAvailableId = Math.Max(_nextAvailableId, assetId + 1);
+                        }
+
                         // Set ID and Name properties
-                        kvp.Value.ID = kvp.Key;
-                        kvp.Value.Name = kvp.Key;
-                        assets[kvp.Key] = kvp.Value;
+                        kvp.Value.ID = assetId.ToString();
+                        
+                        // If name is empty, use the unit type + ID
+                        if (string.IsNullOrEmpty(kvp.Value.Name))
+                        {
+                            kvp.Value.Name = $"{kvp.Value.UnitType} {assetId}";
+                        }
+                        
+                        assets[assetId] = kvp.Value;
                     }
                 }
             }
@@ -58,14 +78,14 @@ public class AssetManager
         return assets;
     }
 
-    public Dictionary<string, AssetSpecification> GetAllAssets()
+    public Dictionary<int, AssetSpecifications> GetAllAssets()
     {
         return _assets;
     }
 
-    public AssetSpecification GetAssetSpecification(string name)
+    public AssetSpecifications GetAssetSpecifications(int id)
     {
-        return _assets.TryGetValue(name, out var spec) ? spec : null;
+        return _assets.TryGetValue(id, out var spec) ? spec : null;
     }
     
     public string GetFilePath()
@@ -73,11 +93,11 @@ public class AssetManager
         return _assetsFilePath;
     }
 
-    public bool SaveAssets(IEnumerable<AssetSpecification> assets)
+    public bool SaveAssets(IEnumerable<AssetSpecifications> assets)
     {
         try
         {
-            var jsonArray = new List<Dictionary<string, AssetSpecification>>();
+            var jsonArray = new List<Dictionary<string, AssetSpecifications>>();
             
             foreach (var asset in assets)
             {
@@ -87,7 +107,7 @@ public class AssetManager
                     continue;
                 }
                 
-                var assetDict = new Dictionary<string, AssetSpecification>
+                var assetDict = new Dictionary<string, AssetSpecifications>
                 {
                     { asset.Name, asset }
                 };
@@ -120,77 +140,65 @@ public class AssetManager
         }
     }
 
-        private void UpdateAssetDictionary(IEnumerable<AssetSpecification> assets)
+    private void UpdateAssetDictionary(IEnumerable<AssetSpecifications> assets)
     {
-        var newAssets = new Dictionary<string, AssetSpecification>();
+        var newAssets = new Dictionary<int, AssetSpecifications>();
         
         foreach (var asset in assets)
         {
-            if (!string.IsNullOrEmpty(asset.Name))
+            if (!string.IsNullOrEmpty(asset.ID))
             {
-                newAssets[asset.Name] = asset;
+                // Try to parse ID as integer
+                if (int.TryParse(asset.ID, out int id))
+                {
+                    newAssets[id] = asset;
+                    // Update next available ID
+                    _nextAvailableId = Math.Max(_nextAvailableId, id + 1);
+                }
+                else
+                {
+                    // If parsing fails, assign a new ID
+                    int newId = _nextAvailableId++;
+                    asset.ID = newId.ToString();
+                    newAssets[newId] = asset;
+                }
+            }
+            else
+            {
+                // If ID is null/empty, assign a new ID
+                int newId = _nextAvailableId++;
+                asset.ID = newId.ToString();
+                newAssets[newId] = asset;
             }
         }
         
         _assets = newAssets;
     }
 
-    public AssetSpecification CreateNewUnit()
+    public AssetSpecifications CreateNewUnit(string unitType = "Boiler")
     {
-        string defaultUnitType = "Boiler";
+        int newId = _nextAvailableId++;
+        string idString = newId.ToString();
         
-        string newId = GenerateUniqueId(defaultUnitType);
+        // Create the appropriate template based on unit type
+        AssetSpecifications newUnit;
         
-        var newUnit = new AssetSpecification
+        switch (unitType?.Trim())
         {
-            Name = newId,
-            ID = newId,
-            UnitType = defaultUnitType,
-            IsActive = true,
-            MaxHeat = 1.0,
-            ProductionCost = 1.0,
-            CO2Emissions = 1.0,
-            FuelType = "Fuel Type",
-            FuelConsumption = 1.0
-        };
+            case "Motor":
+                newUnit = AssetSpecifications.CreateMotor(idString);
+                break;
+            case "Heat Pump":
+                newUnit = AssetSpecifications.CreateHeatPump(idString);
+                break;
+            case "Boiler":
+            default:
+                newUnit = AssetSpecifications.CreateBoiler(idString);
+                break;
+        }
         
+        // Add to assets dictionary with integer key
         _assets[newId] = newUnit;
-        
         return newUnit;
-    }
-    
-    private string GenerateUniqueId(string unitType)
-    {
-        string[] words = unitType.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        
-        string prefix = words.Length > 0 ? words[0].Substring(0, 1).ToUpper() : "U";
-        if (words.Length > 1)
-        {
-            prefix += words[1].Substring(0, 1).ToUpper();
-        }
-        
-        int count = 1;
-        
-        foreach (var asset in _assets.Values)
-        {
-            if (asset.ID != null && asset.ID.Length >= 2)
-            {
-                string assetPrefix = asset.ID.Substring(0, Math.Min(2, asset.ID.Length));
-                if (assetPrefix == prefix)
-                {
-                    count++;
-                }
-            }
-        }
-        
-        string newId = $"{prefix}{count}";
-        
-        while (_assets.ContainsKey(newId))
-        {
-            count++;
-            newId = $"{prefix}{count}";
-        }
-        
-        return newId;
     }
 }

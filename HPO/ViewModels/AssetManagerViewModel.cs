@@ -9,15 +9,16 @@ using Avalonia.Controls;
 using ReactiveUI;
 using System.Diagnostics;
 
-
 namespace HeatProductionOptimization.ViewModels;
 
 public class AssetManagerViewModel : ViewModelBase
 {
     private AssetManager _assetManager;
-    private ObservableCollection<AssetSpecification> _assets;
+    private ObservableCollection<AssetSpecifications> _assets;
     private string _statusMessage = "Do not forget to save any changes :)";
     private string _currentFilePath;
+    private string _selectedUnitType = "Boiler"; // Default unit type
+    private ComboBoxItem _selectedUnitTypeItem;
 
     public AssetManagerViewModel()
     {
@@ -26,7 +27,7 @@ public class AssetManagerViewModel : ViewModelBase
         LoadAssets();
     }
 
-    public ObservableCollection<AssetSpecification> Assets
+    public ObservableCollection<AssetSpecifications> Assets
     {
         get => _assets;
         set => this.RaiseAndSetIfChanged(ref _assets, value);
@@ -38,22 +39,45 @@ public class AssetManagerViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _statusMessage, value);
     }
     
+    public string SelectedUnitType
+    {
+        get => _selectedUnitType;
+        set => this.RaiseAndSetIfChanged(ref _selectedUnitType, value);
+    }
+    
+    public ComboBoxItem SelectedUnitTypeItem
+    {
+        get => _selectedUnitTypeItem;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedUnitTypeItem, value);
+            if (value != null && value.Content is string content)
+            {
+                SelectedUnitType = content;
+            }
+        }
+    }
+
     private void LoadAssets()
     {
         var assetDict = _assetManager.GetAllAssets();
-        Assets = new ObservableCollection<AssetSpecification>(assetDict.Values);
-        Debug.WriteLine("I am a Nigger");
+        Assets = new ObservableCollection<AssetSpecifications>(assetDict.Values);
     }
     
     public void AddNewUnit()
     {
         try
         {
-            var newUnit = _assetManager.CreateNewUnit();
+            // Extract the actual unit type text from the ComboBoxItem if needed
+            string unitType = _selectedUnitType;
             
+            // Create new unit with the selected type
+            var newUnit = _assetManager.CreateNewUnit(unitType);
+            
+            // Add to observable collection
             Assets.Add(newUnit);
             
-            StatusMessage = "New unit added.";
+            StatusMessage = $"New {unitType} unit added.";
         }
         catch (Exception ex)
         {

@@ -9,12 +9,12 @@ namespace HeatProductionOptimization.Models;
 
 public class OptAlgorithm
 {
-    public Dictionary<double?, AssetSpecification>? Objective;
+    public Dictionary<double?, AssetSpecifications>? Objective;
     
     //The method will ask for the list of specifications and also if the different parameters(par) are to be considered or not.
-    public Dictionary<double?, AssetSpecification> GetObjective(List<AssetSpecification> boilers, int[] par)
+    public Dictionary<double?, AssetSpecifications> GetObjective(List<AssetSpecifications> boilers, int[] par)
     {
-        Dictionary<double?, AssetSpecification> obj = [];
+        Dictionary<double?, AssetSpecifications> obj = [];
         double? objective = 0.0;
         int n = par.Where(n => n == 1 ).Count();
         if (n == 0)
@@ -31,7 +31,7 @@ public class OptAlgorithm
         return obj ?? [];
     }
 
-    public void CalculateHeat(List<AssetSpecification> boilers, Dictionary<double?,AssetSpecification> boilerdict, double heat)
+    public void CalculateHeat(List<AssetSpecifications> boilers, Dictionary<double?,AssetSpecifications> boilerdict, double heat)
     {
         foreach( var boiler in boilers)
         {

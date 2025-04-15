@@ -18,11 +18,6 @@
             <Setter Property="Cursor" Value="Hand" />
         </Style>
     </UserControl.Styles>
-    
-    <!-- Add this converter in UserControl.Resources -->
-    <UserControl.Resources>
-        <vm:IsNullOrEmptyConverter x:Key="IsNullOrEmptyConverter"/>
-    </UserControl.Resources>
 
     <DockPanel Margin="30">
         <TextBlock DockPanel.Dock="Top"
@@ -34,16 +29,24 @@
         
         <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="0,0,0,20">
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="10">
-                <Button Content="Load File"
-                        Click="LoadFile_Click"
-                        Padding="15,10"
-                        Background="#FF9800"
-                        Foreground="White"/>
-                        
+                <ComboBox Name="UnitTypeComboBox" Width="150" 
+                          SelectedItem="{Binding SelectedUnitTypeItem}"
+                          Padding="15,10">
+                    <ComboBoxItem>Boiler</ComboBoxItem>
+                    <ComboBoxItem>Motor</ComboBoxItem>
+                    <ComboBoxItem>Heat Pump</ComboBoxItem>
+                </ComboBox>
+
                 <Button Content="Add Unit"
                         Click="AddUnit_Click"
                         Padding="15,10"
                         Background="#2196F3"
+                        Foreground="White"/>
+                
+                <Button Content="Load File"
+                        Click="LoadFile_Click"
+                        Padding="15,10"
+                        Background="#FF9800"
                         Foreground="White"/>
                         
                 <Button Content="Save Changes"
@@ -108,9 +111,9 @@
                                 </Grid>
                                            
                                 <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                                    <!-- Fuel Type -->
+                                    <!-- Fuel Type - Only show if property exists -->
                                     <Grid Grid.Row="0" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding FuelType, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                          IsVisible="{Binding FuelType, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Fuel Type" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
@@ -126,9 +129,8 @@
                                         </Grid>
                                     </Grid>
 
-                                    <!-- Unit Type -->
-                                    <Grid Grid.Row="1" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding UnitType, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                    <!-- Unit Type - Always shown -->
+                                    <Grid Grid.Row="1" Grid.ColumnSpan="3">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Unit Type" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
@@ -144,9 +146,9 @@
                                         </Grid>
                                     </Grid>
 
-                                    <!-- Production Cost -->
+                                    <!-- Production Cost - Only show if property exists -->
                                     <Grid Grid.Row="2" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding ProductionCost, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                          IsVisible="{Binding ProductionCost, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Production Cost" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
@@ -162,9 +164,9 @@
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- Max Heat -->
+                                    <!-- Max Heat - Only show if property exists -->
                                     <Grid Grid.Row="3" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding MaxHeat, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                          IsVisible="{Binding MaxHeat, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Max Heat" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
@@ -180,9 +182,9 @@
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- Max Electricity -->
+                                    <!-- Max Electricity - Only show if property exists -->
                                     <Grid Grid.Row="4" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding MaxElectricity, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                          IsVisible="{Binding MaxElectricity, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Max Electricity" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
@@ -198,9 +200,9 @@
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- CO2 Emissions -->
+                                    <!-- CO2 Emissions - Only show if property exists -->
                                     <Grid Grid.Row="5" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding CO2Emissions, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                          IsVisible="{Binding CO2Emissions, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="CO2 Emissions" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
@@ -216,9 +218,9 @@
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- Fuel Consumption -->
+                                    <!-- Fuel Consumption - Only show if property exists -->
                                     <Grid Grid.Row="6" Grid.ColumnSpan="3" 
-                                          IsVisible="{Binding FuelConsumption, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                          IsVisible="{Binding FuelConsumption, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Fuel Consumption" FontWeight="SemiBold"/>
                                             <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
