@@ -9,13 +9,18 @@ namespace HeatProductionOptimization.Models;
 
 public class OptAlgorithm
 {
-    public Dictionary<double?, AssetSpecification>? Objective;
+    public Dictionary<double, AssetSpecification> Objective = [];
     
     //The method will ask for the list of specifications and also if the different parameters(par) are to be considered or not.
-    public Dictionary<double?, AssetSpecification> GetObjective(List<AssetSpecification> boilers, int[] par)
+    public Dictionary<double, AssetSpecification> GetObjective(List<AssetSpecification> boilers, int[] par, double ElectricityPrice)
     {
-        Dictionary<double?, AssetSpecification> obj = [];
-        double? objective = 0.0;
+        List<AssetSpecification> HeatPumps = boilers.Where( n => n.UnitType == "Motor").ToList();
+        HeatPumps = HeatPumps.Select(n => {n.ProductionCost += ElectricityPrice; return n;}).ToList();
+        List<AssetSpecification> GasMotors =  boilers.Where( n => n.UnitType == "Heat Pump").ToList();
+        GasMotors = GasMotors.Select(n => {n.ProductionCost -= ElectricityPrice; return n;}).ToList();
+
+        Dictionary<double, AssetSpecification> obj = [];
+        double objective = 0.0;
         int n = par.Where(n => n == 1 ).Count();
         if (n == 0)
         {
@@ -23,7 +28,7 @@ public class OptAlgorithm
         }
         for(int i = 0; i < boilers.Count; i++)
         {
-            objective = (boilers[i].ProductionCost * par[i] + boilers[i].CO2Emissions * par[i] + boilers[i].FuelConsumption* par[i])/ n;
+            objective = ((boilers[i].ProductionCost ?? 0.0) * par[i] + (boilers[i].CO2Emissions ?? 0.0) * par[i] + (boilers[i].FuelConsumption ?? 0.0) * par[i])/ n;
 
             obj[objective] = boilers[i];
         } 
@@ -31,14 +36,14 @@ public class OptAlgorithm
         return obj ?? [];
     }
 
-    public void CalculateHeat(List<AssetSpecification> boilers, Dictionary<double?,AssetSpecification> boilerdict, double heat)
+    public void CalculateUnits(List<AssetSpecification> boilers, Dictionary<double,AssetSpecification> boilerdict, double heat)
     {
         foreach( var boiler in boilers)
         {
-            boiler.ProducedHeat = 0.0;
+            boiler.UnitsProduction = 0.0;
         }
 
-        double?[] order = boilerdict.Keys.ToArray();
+        double[] order = boilerdict.Keys.ToArray();
 
         order =  order.OrderBy(o => o).ToArray();
 
@@ -53,18 +58,23 @@ public class OptAlgorithm
             {
                 if(heatneeded > boilers[indexes[j]].MaxHeat)
                 {
-                    boilers[indexes[j]].ProducedHeat = boilers[indexes[j]].MaxHeat;
+                    boilers[indexes[j]].UnitsProduction = boilers[indexes[j]].MaxHeat;
                     heatneeded -=  boilers[indexes[j]].MaxHeat;
                 }
                 else
                 {
-                    boilers[indexes[j]].ProducedHeat = heatneeded;
+                    boilers[indexes[j]].UnitsProduction = heatneeded;
                     heatneeded = 0;
                     return;
                 }
-
             }
-            
         }
+    }
+    public void CalculateElectricity(List<AssetSpecification> HeatPumps, List<AssetSpecification> GasMotors, double ElectricityPrice)
+    {
+        double? ElectricityProduced = GasMotors.Sum(n => n.UnitsProduction)*0.742857;
+        double? ElectricityConsumed = HeatPumps.Sum(n => n.UnitsProduction);
+        double? Mwh = ElectricityProduced - ElectricityConsumed;
+        double? Cost_Benefit = Mwh * ElectricityPrice;
     }
 }
