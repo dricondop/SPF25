@@ -47,7 +47,10 @@
                     </ComboBox>
                     
                     <Button Grid.Row="0" Grid.Column="2" 
-                            Content="Refresh Data" 
+                            Content="Refresh Data"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" 
                             Padding="10,5"/>
                     
                     <!-- Visualization Type -->
@@ -68,9 +71,11 @@
                     </ComboBox>
                     
                     <Button Grid.Row="1" Grid.Column="2" 
-                            Content="Apply" 
-                            Padding="10,5"
-                            Margin="0,10,0,0"/>
+                            Content="Apply"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Padding="10,5"/>
                 </Grid>
                 
                 <Grid ColumnDefinitions="*,*,*,*" Margin="0,5">
@@ -128,13 +133,13 @@
                         
                         <!-- Chart Placeholder -->
                         <Canvas Margin="40,0,0,30">
-                            <!-- Placeholder visual elements for demonstration -->
+                            <!-- Placeholder visual elements for demonstration
                             <Polyline Points="0,150 50,120 100,140 150,90 200,100 250,70 300,85 350,40 400,60 450,30 500,50"
                                       Stroke="Blue"
                                       StrokeThickness="2"/>
                             <Polyline Points="0,180 50,160 100,170 150,140 200,150 250,130 300,145 350,110 400,130 450,90 500,100"
                                       Stroke="Red"
-                                      StrokeThickness="2"/>
+                                      StrokeThickness="2"/> -->
                         </Canvas>
                     </Grid>
                 </Border>
@@ -142,31 +147,24 @@
         </Border>
         
         <!-- Action Buttons -->
-        <UniformGrid Grid.Row="3" Columns="4" Margin="0,10,0,0">
+        <UniformGrid Grid.Row="3" Columns="3" HorizontalAlignment="Stretch">
             <Button Content="Export Data"
-                    Height="80"
-                    Margin="5"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"/>
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Margin="5"/>
             
             <Button Content="Print Report"
-                    Height="80"
-                    Margin="5"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"/>
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Margin="5"/>
             
             <Button Content="Compare Results"
-                    Height="80"
-                    Margin="5"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"/>
-            
-            <Button Content="View Optimizer"
-                    Height="80"
-                    Margin="5"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    Click="ViewOptimizer_Click"/>
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Margin="5"/>
         </UniformGrid>
     </Grid>
 </UserControl>

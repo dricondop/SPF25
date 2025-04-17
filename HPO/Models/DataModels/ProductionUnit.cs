@@ -11,10 +11,10 @@ namespace HeatProductionOptimization.Models.DataModels;
 public class AssetSpecifications
 {
     [JsonPropertyName("Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonPropertyName("ID")]
-    public string ID { get; set; }
+    public required string ID { get; set; }
     
     [JsonPropertyName("IsActive")]
     public bool IsActive { get; set; } = true;
