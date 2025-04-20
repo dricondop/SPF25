@@ -111,8 +111,17 @@
                                 </Grid>
                                            
                                 <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                                    <!-- Unit Type - Always shown (not editable) -->
+                                    <Grid Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,8">
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0" Text="Unit Type" FontWeight="SemiBold"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding UnitType}" Margin="5,0,0,0" />
+                                            <TextBlock Grid.Column="2" Text="" Margin="5,0,0,0"/>
+                                        </Grid>
+                                    </Grid>
+
                                     <!-- Fuel Type - Only show if property exists -->
-                                    <Grid Grid.Row="0" Grid.ColumnSpan="3" 
+                                    <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding FuelType, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Fuel Type" FontWeight="SemiBold"/>
@@ -129,25 +138,8 @@
                                         </Grid>
                                     </Grid>
 
-                                    <!-- Unit Type - Always shown -->
-                                    <Grid Grid.Row="1" Grid.ColumnSpan="3">
-                                        <Grid ColumnDefinitions="*,*,*">
-                                            <TextBlock Grid.Column="0" Text="Unit Type" FontWeight="SemiBold"/>
-                                            <Border Grid.Column="1" Classes="editableValue" Margin="5,0,0,0"
-                                                    DoubleTapped="DoubleTapped">
-                                                <Panel>
-                                                    <TextBlock Text="{Binding UnitType}" Name="displayUnitType" />
-                                                    <TextBox Text="{Binding UnitType}" Name="editUnitType" IsVisible="False" 
-                                                           LostFocus="LostFocus" 
-                                                           KeyDown="KeyDown" />
-                                                </Panel>
-                                            </Border>
-                                            <TextBlock Grid.Column="2" Text="" Margin="5,0,0,0"/>
-                                        </Grid>
-                                    </Grid>
-
                                     <!-- Production Cost - Only show if property exists -->
-                                    <Grid Grid.Row="2" Grid.ColumnSpan="3" 
+                                    <Grid Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding ProductionCost, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Production Cost" FontWeight="SemiBold"/>
@@ -165,7 +157,7 @@
                                     </Grid>
                                     
                                     <!-- Max Heat - Only show if property exists -->
-                                    <Grid Grid.Row="3" Grid.ColumnSpan="3" 
+                                    <Grid Grid.Row="3" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding MaxHeat, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Max Heat" FontWeight="SemiBold"/>
@@ -183,7 +175,7 @@
                                     </Grid>
                                     
                                     <!-- Max Electricity - Only show if property exists -->
-                                    <Grid Grid.Row="4" Grid.ColumnSpan="3" 
+                                    <Grid Grid.Row="4" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding MaxElectricity, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Max Electricity" FontWeight="SemiBold"/>
@@ -201,7 +193,7 @@
                                     </Grid>
                                     
                                     <!-- CO2 Emissions - Only show if property exists -->
-                                    <Grid Grid.Row="5" Grid.ColumnSpan="3" 
+                                    <Grid Grid.Row="5" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding CO2Emissions, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="CO2 Emissions" FontWeight="SemiBold"/>
@@ -219,7 +211,7 @@
                                     </Grid>
                                     
                                     <!-- Fuel Consumption - Only show if property exists -->
-                                    <Grid Grid.Row="6" Grid.ColumnSpan="3" 
+                                    <Grid Grid.Row="6" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding FuelConsumption, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Fuel Consumption" FontWeight="SemiBold"/>
