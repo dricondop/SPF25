@@ -16,6 +16,7 @@ public class OptAlgorithm
     {
         Dictionary<double?, AssetSpecifications> obj = [];
         double? objective = 0.0;
+        boilers = boilers.Where(n => n.IsActive==true).ToList();
         int n = par.Where(n => n == 1 ).Count();
         if (n == 0)
         {
@@ -33,6 +34,7 @@ public class OptAlgorithm
 
     public void CalculateHeat(List<AssetSpecifications> boilers, Dictionary<double?,AssetSpecifications> boilerdict, double heat)
     {
+        boilers = boilers.Where(n => n.IsActive==true).ToList();
         foreach( var boiler in boilers)
         {
             boiler.ProducedHeat = 0.0;

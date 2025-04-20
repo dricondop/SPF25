@@ -3,7 +3,12 @@ using ReactiveUI;
 using System.Threading.Tasks;
 using HeatProductionOptimization.Models;
 using System.Collections.Generic;
+using HeatProductionOptimization.Services.Managers;
 using HeatProductionOptimization.Models.DataModels;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using System.Linq;
+
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -85,21 +90,19 @@ public class OptimizerViewModel : ViewModelBase
             StatusMessage = "Optimization in progress...";
             
             // Create parameter array for the algorithm
-            int[] parameters = new int[5];
+            int[] parameters = new int[3];
             parameters[0] = ConsiderProductionCost ? 1 : 0;
             parameters[1] = ConsiderCO2Emissions ? 1 : 0;
             parameters[2] = ConsiderFuelConsumption ? 1 : 0;
-            parameters[3] = ConsiderElectricity ? 1 : 0;
-            parameters[4] = PrioritizeRenewable ? 1 : 0;
             
             // This would be replaced with actual data in a real implementation
             await Task.Delay(2000); // Simulate processing time
-            
-            // TODO: Implement actual optimization algorithm call
-            // var algorithm = new OptAlgorithm();
-            // var boilers = LoadBoilersFromAssetManager();
-            // algorithm.Objective = algorithm.GetObjective(boilers, parameters);
-            // algorithm.CalculateHeat(boilers, algorithm.Objective, demandData);
+            OptAlgorithm alg = new();
+            AssetManager assetManager = new();
+            Dictionary<int,AssetSpecifications> boilerdict = assetManager.LoadAssetsSpecifications();
+            List<AssetSpecifications> boilers = boilerdict.Values.ToList();
+            var obj = alg.GetObjective(boilers,parameters);
+            alg.CalculateHeat(boilers, obj, 10);
             
             StatusMessage = "Optimization completed successfully";
         }
