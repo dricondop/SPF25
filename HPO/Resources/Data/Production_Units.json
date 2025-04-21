@@ -45,6 +45,7 @@
       "IsActive": true,
       "Unit Type": "Motor",
       "Max Heat (MW)": 3.5,
+      "Max Electricity (MW)": 2.6,
       "Production Cost (DKK/MWh)": 990,
       "CO2 Emissions (kg/MWh)": 650,
       "Fuel Type": "Gas",

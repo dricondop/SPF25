@@ -11,16 +11,16 @@ namespace HeatProductionOptimization.Models.DataModels;
 public class AssetSpecifications
 {
     [JsonPropertyName("Name")]
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [JsonPropertyName("ID")]
-    public required string ID { get; set; }
+    public string ID { get; set; }  = string.Empty;
     
     [JsonPropertyName("IsActive")]
     public bool IsActive { get; set; } = true;
 
     [JsonPropertyName("Unit Type")]
-    public string UnitType { get; set; }
+    public string UnitType { get; set; } = string.Empty;
 
     [JsonPropertyName("Max Heat (MW)")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -39,8 +39,7 @@ public class AssetSpecifications
     public double? CO2Emissions { get; set; }
 
     [JsonPropertyName("Fuel Type")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string FuelType { get; set; }
+    public string FuelType { get; set; } = string.Empty;
 
     [JsonPropertyName("Fuel Consumption (MWh fuel/MWh heat)")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -114,4 +113,6 @@ public class AssetSpecifications
                 return CreateBoiler(id, name); // Default to boiler
         }
     }
+
+    public double? UnitsProduction { get; set; } = 0.0;
 }
