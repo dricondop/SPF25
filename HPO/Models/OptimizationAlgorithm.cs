@@ -28,6 +28,7 @@ public class OptAlgorithm
 
         Dictionary<double, AssetSpecification> obj = [];
         double objective = 0.0;
+
         int n = par.Where(n => n == 1 ).Count();
         if (n == 0)
         {

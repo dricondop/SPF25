@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using HeatProductionOptimization.Models.DataModels;
 using HeatProductionOptimization.ViewModels;
 
 namespace HeatProductionOptimization.Views;
@@ -85,6 +87,19 @@ public partial class AssetManagerView : UserControl
     {
         if (DataContext is AssetManagerViewModel viewModel)
         {
+            // If the ComboBox selection isn't set in the ViewModel, try to get it directly
+            var comboBox = this.FindControl<ComboBox>("UnitTypeComboBox");
+            
+            if (comboBox != null && comboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                // Extract text content from the ComboBoxItem
+                string unitType = selectedItem.Content?.ToString() ?? "Boiler";
+                
+                // Set it in the ViewModel
+                viewModel.SelectedUnitType = unitType;
+            }
+            
+            // Add the unit
             viewModel.AddNewUnit();
         }
     }
