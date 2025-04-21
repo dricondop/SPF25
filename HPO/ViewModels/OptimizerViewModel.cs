@@ -14,6 +14,8 @@ namespace HeatProductionOptimization.ViewModels;
 
 public class OptimizerViewModel : ViewModelBase
 {
+    OptAlgorithm alg = new();
+    AssetManager assetManager = new();
     private bool _isOptimizationRunning;
     private string _statusMessage = "Ready to optimize";
     
@@ -97,12 +99,10 @@ public class OptimizerViewModel : ViewModelBase
             
             // This would be replaced with actual data in a real implementation
             await Task.Delay(2000); // Simulate processing time
-            OptAlgorithm alg = new();
-            AssetManager assetManager = new();
+
             Dictionary<int,AssetSpecifications> boilerdict = assetManager.LoadAssetsSpecifications();
             List<AssetSpecifications> boilers = boilerdict.Values.ToList();
-            var obj = alg.GetObjective(boilers,parameters);
-            alg.CalculateHeat(boilers, obj, 10);
+            alg.OptimizationAlgorithm(boilers, parameters, 650, 100);
             
             StatusMessage = "Optimization completed successfully";
         }
