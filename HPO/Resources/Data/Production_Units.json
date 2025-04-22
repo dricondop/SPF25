@@ -1,0 +1,15 @@
+[
+  {
+    "Heat Pump 1": {
+      "Name": "Heat Pump 1",
+      "ID": "1",
+      "IsActive": true,
+      "Unit Type": "Heat Pump",
+      "Max Heat (MW)": 6,
+      "Max Electricity (MW)": -6,
+      "Production Cost (DKK/MWh)": 60,
+      "Fuel Type": "",
+      "UnitsProduction": 0
+    }
+  }
+]
