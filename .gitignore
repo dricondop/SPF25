@@ -1,12 +1,17 @@
-# Ignore this folders
-bin/
+# Ignore VS Code config and obj folder:
+.vscode/
 obj/
 
-# Ignore VS Code config
-.vscode/
+#Ignore these extensions:
 *.user
 *.suo
 *.sln.cache
 *.csproj.user
 *.cache
-*.sln
+*.so
+*.dll
+*.dylib
+*.exe
+*.pdb
+*.runtimeconfig.json
+*.deps.json
