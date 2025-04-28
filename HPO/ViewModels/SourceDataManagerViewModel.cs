@@ -13,6 +13,9 @@ public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
     private string _statusMessage = "Select a CSV file to begin";
     private string? _currentFilePath;
     private string _dateRange = "Date range: Not available";
+    
+    private DateTime _selectedStartDate = DateTime.MinValue;
+    private DateTime _selectedEndDate = DateTime.MinValue;
 
     public SourceDataManagerViewModel(SourceDataManager sourceDataManager)
     {
@@ -22,6 +25,28 @@ public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
 
     public SourceDataManagerViewModel() : this(new SourceDataManager())
     {
+    }
+
+    public (DateTime start, DateTime end) GetSelectedDateRange()
+    {
+        if (_selectedStartDate == DateTime.MinValue || _selectedEndDate == DateTime.MinValue)
+        {
+            var winterRange = GetWinterDataRange();
+            var summerRange = GetSummerDataRange();
+            
+            DateTime start = winterRange.start < summerRange.start ? winterRange.start : summerRange.start;
+            DateTime end = winterRange.end > summerRange.end ? winterRange.end : summerRange.end;
+            
+            return (start, end);
+        }
+        
+        return (_selectedStartDate, _selectedEndDate);
+    }
+
+    public void SetSelectedDateRange(DateTime start, DateTime end)
+    {
+        _selectedStartDate = start;
+        _selectedEndDate = end;
     }
 
     private void Initialize()

@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using ReactiveUI;
 using System.Threading.Tasks;
 using HeatProductionOptimization.Models;
@@ -8,7 +8,7 @@ using HeatProductionOptimization.Models.DataModels;
 using Avalonia.Interactivity;
 using Avalonia.Controls;
 using System.Linq;
-
+using HeatProductionOptimization.Services.DataProviders;
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -18,7 +18,7 @@ public class OptimizerViewModel : ViewModelBase
     AssetManager assetManager = new();
     private bool _isOptimizationRunning;
     private string _statusMessage = "Ready to optimize";
-    
+    private readonly IDataRangeProvider _dataRangeProvider; //Accede al Rango de Fechas
     
     // Optimization parameters
     private bool _considerProductionCost = true;
@@ -30,8 +30,12 @@ public class OptimizerViewModel : ViewModelBase
     // Optimization strategy
     private bool _isCostOptimization = true;
     
-    public OptimizerViewModel()
+    public OptimizerViewModel(IDataRangeProvider dataRangeProvider)
     {
+        _dataRangeProvider = dataRangeProvider;
+        
+        var (startDate, endDate) = _dataRangeProvider.GetSelectedDateRange();
+        // Accede al rango desde DataProviders
     }
     
     public bool IsOptimizationRunning

@@ -24,14 +24,13 @@ public class MainWindowViewModel : ViewModelBase
             new HomeWindowViewModel(),
             new AssetManagerViewModel(),
             new SourceDataManagerViewModel(),
-            new OptimizerViewModel(),
+            new OptimizerViewModel(_dataRangeProvider), 
             new DataVisualizationViewModel(),
             new ResultDataManagerViewModel(),
             new SettingsViewModel(),
             new ImportJsonWindowViewModel(),
             new DateInputWindowViewModel(_dataRangeProvider)
         };
-
         CurrentPage = Windows[0];
         _currentPage = CurrentPage;
         

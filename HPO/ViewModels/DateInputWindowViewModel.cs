@@ -227,6 +227,13 @@ public class DateInputWindowViewModel : ViewModelBase
         ValidateDates();
         if (!CanProceed) return;
 
+        // Calculate the full DateTime objects including hours
+        var startDateTime = StartDate.Value.DateTime.AddHours(StartHour);
+        var endDateTime = EndDate.Value.DateTime.AddHours(EndHour);
+
+        // Guardar las fechas seleccionadas en el proveedor de datos
+        _dataRangeProvider.SetSelectedDateRange(startDateTime, endDateTime);
+
         WindowManager.TriggerOptimizerWindow();
     }
 }
