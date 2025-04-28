@@ -19,6 +19,7 @@ public class OptimizerViewModel : ViewModelBase
     private bool _isOptimizationRunning;
     private string _statusMessage = "Ready to optimize";
     
+    
     // Optimization parameters
     private bool _considerProductionCost = true;
     private bool _considerCO2Emissions = true;
@@ -102,8 +103,22 @@ public class OptimizerViewModel : ViewModelBase
 
             Dictionary<int,AssetSpecifications> boilerdict = assetManager.LoadAssetsSpecifications();
             List<AssetSpecifications> boilers = boilerdict.Values.ToList();
-            alg.OptimizationAlgorithm(boilers, parameters, 650, 100);
+            foreach(var boiler in boilers)
+            {
+                boiler.ProducedHeat.Clear();
+            }
             
+            /* This is a placeholder for what the optimization in the viewModel will look like later, don't worry about it
+            Dictionary<DateTime, double> electricityPrices = dynamicElectricityPrices.CurrentElectricityPrice();
+            List<AssetSpecifications> Units=[];
+            double? cost = 0;
+            foreach(KeyValuePair<DateTime,double> price in electricityPrices)
+            {
+                //TODO: Change this 10 static value for the observable property that is going to get the heat needed from the UI.
+                (Units, double ? newcost) = alg.OptimizationAlgorithm(boilers, parameters, price.Value, 10, price.Key);
+                cost += newcost; 
+            }
+            */
             StatusMessage = "Optimization completed successfully";
         }
         catch (Exception ex)

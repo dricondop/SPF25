@@ -13,8 +13,8 @@ namespace HeatProductionOptimization.Services.Managers
 
         public SourceDataManager()
         {
-            WinterRecords = new List<HeatDemandRecord>();
-            SummerRecords = new List<HeatDemandRecord>();
+                WinterRecords = new List<HeatDemandRecord>();
+                SummerRecords = new List<HeatDemandRecord>();
         }
 
         public void ImportHeatDemandData(string filePath)
@@ -29,20 +29,20 @@ namespace HeatProductionOptimization.Services.Managers
             {
                 var lines = File.ReadAllLines(filePath);
                 
-                // Skip header rows (first 3 lines)
-                foreach (var line in lines.Skip(3))
+                // Skip header rows (first line)
+                foreach (var line in lines.Skip(1))
                 {
                     if (string.IsNullOrWhiteSpace(line)) continue;
 
                     var columns = line.Split(',');
-                    if (columns.Length >= 10)
+                    if (columns.Length >= 8)
                     {
                         // Winter data (columns 1-4)
-                        if (TryParseRecord(columns, 1, out var winterRecord))
+                        if (TryParseRecord(columns, 0, out var winterRecord))
                             WinterRecords.Add(winterRecord);
 
-                        // Summer data (columns 6-9)
-                        if (TryParseRecord(columns, 6, out var summerRecord))
+                        // Summer data (columns 5-8)
+                        if (TryParseRecord(columns, 4, out var summerRecord))
                             SummerRecords.Add(summerRecord);
                     }
                 }
@@ -93,6 +93,58 @@ namespace HeatProductionOptimization.Services.Managers
                 return (DateTime.MinValue, DateTime.MaxValue);
 
             return (records.Min(r => r.TimeFrom), records.Max(r => r.TimeTo));
+        }
+        
+        //This method is not being used and may disappear depending on David's datarange selection
+        //For David: Don't worry about this method
+        public Dictionary<DateTime, double> CurrentElectricityPrice(string filePath, List<HeatDemandRecord>? WinterData, List<HeatDemandRecord>? SummerData)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                throw new InvalidOperationException("File path is null or empty.");
+            } 
+            ImportHeatDemandData(filePath);
+
+            Dictionary<DateTime, double> pricesList = new();
+            if(WinterData != null && SummerData == null)
+            {
+                foreach(HeatDemandRecord data in WinterData)
+                {
+                    pricesList[data.TimeFrom] = data.ElectricityPrice;
+                }
+            }
+            else if(WinterData == null && SummerData != null)
+            {
+                foreach(HeatDemandRecord data in SummerData)
+                {
+                    pricesList[data.TimeFrom] = data.ElectricityPrice;
+                }
+            }
+            else if(WinterData == null && SummerData == null)
+            {
+                Console.WriteLine("No electricity prices found");
+            }
+            else if(WinterData != null && SummerData != null)
+            {
+                foreach(HeatDemandRecord data in WinterData)
+                {
+                    pricesList[data.TimeFrom] = data.ElectricityPrice;
+                }
+                foreach(HeatDemandRecord data in SummerData)
+                {
+                    pricesList[data.TimeFrom] = data.ElectricityPrice;
+                }
+            }
+            else
+            {
+                Console.WriteLine("No electricity prices found");
+            }
+            
+            foreach(KeyValuePair<DateTime,double> price in pricesList)
+            {
+                Console.WriteLine($"Day and time: {price.Key}, electricity price: {price.Value}");
+            }
+            return pricesList;
         }
     }
 

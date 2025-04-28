@@ -14,7 +14,7 @@ public class AssetSpecifications
     public string Name { get; set; } = string.Empty;
 
     [JsonPropertyName("ID")]
-    public string ID { get; set; }  = string.Empty;
+    public int ID { get; set; } 
     
     [JsonPropertyName("IsActive")]
     public bool IsActive { get; set; } = true;
@@ -45,11 +45,12 @@ public class AssetSpecifications
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public double? FuelConsumption { get; set; }
 
+
     [JsonIgnore]
-    public double? ProducedHeat { get; set; } = 0.0;
+    public Dictionary<DateTime, double?> ProducedHeat = [];
 
     // Factory methods to create specific unit types
-    public static AssetSpecifications CreateBoiler(string id, string name = null)
+    public static AssetSpecifications CreateBoiler(int id, string? name = null)
     {
         return new AssetSpecifications
         {
@@ -62,11 +63,11 @@ public class AssetSpecifications
             CO2Emissions = 150.0,
             FuelType = "Gas",
             FuelConsumption = 0.9,
-            ProducedHeat = 0.0
+            ProducedHeat = new Dictionary<DateTime, double?> { { DateTime.MinValue, 0.0 } }
         };
     }
 
-    public static AssetSpecifications CreateMotor(string id, string name = null)
+    public static AssetSpecifications CreateMotor(int id, string? name = null)
     {
         return new AssetSpecifications
         {
@@ -79,11 +80,11 @@ public class AssetSpecifications
             CO2Emissions = 400.0,
             FuelType = "Gas",
             FuelConsumption = 1.8,
-            ProducedHeat = 0.0
+            ProducedHeat = new Dictionary<DateTime, double?> { { DateTime.MinValue, 0.0 } }
         };
     }
 
-    public static AssetSpecifications CreateHeatPump(string id, string name = null)
+    public static AssetSpecifications CreateHeatPump(int id, string? name = null)
     {
         return new AssetSpecifications
         {
@@ -94,12 +95,12 @@ public class AssetSpecifications
             MaxHeat = 6.0,
             MaxElectricity = -6.0,
             ProductionCost = 60.0,
-            ProducedHeat = 0.0
+            ProducedHeat = new Dictionary<DateTime, double?> { { DateTime.MinValue, 0.0 } }
         };
     }
 
     // General factory method based on type
-    public static AssetSpecifications CreateForType(string unitType, string id, string name = null)
+    public static AssetSpecifications CreateForType(string unitType, int id, string? name = null)
     {
         switch (unitType?.Trim())
         {
@@ -113,6 +114,4 @@ public class AssetSpecifications
                 return CreateBoiler(id, name); // Default to boiler
         }
     }
-
-    public double? UnitsProduction { get; set; } = 0.0;
 }

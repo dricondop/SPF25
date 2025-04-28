@@ -42,15 +42,8 @@ public class OptAlgorithm
         return obj;
     }
 
-    public void CalculateUnits(List<AssetSpecifications> Boilers, Dictionary<double,AssetSpecifications> boilerdict, double heat)
+    public List<AssetSpecifications> CalculateUnits(List<AssetSpecifications> Boilers, Dictionary<double,AssetSpecifications> boilerdict, double heat, DateTime hour)
     {
-
-        
-        foreach( var boiler in Boilers)
-        {
-            boiler.UnitsProduction = 0.0;
-        }
-
         double[] order = boilerdict.Keys.ToArray();
 
         order =  order.OrderBy(o => o).ToArray();
@@ -66,32 +59,47 @@ public class OptAlgorithm
             {
                 if(heatneeded > Boilers[indexes[j]].MaxHeat)
                 {
-                    Boilers[indexes[j]].UnitsProduction = Boilers[indexes[j]].MaxHeat;
+                    Boilers[indexes[j]].ProducedHeat[hour] = Boilers[indexes[j]].MaxHeat;
                     heatneeded -=  Boilers[indexes[j]].MaxHeat;
                 }
                 else
                 {
-                    Boilers[indexes[j]].UnitsProduction = heatneeded;
+                    Boilers[indexes[j]].ProducedHeat[hour] = heatneeded;
                     heatneeded = 0;
-                    return;
                 }
             }
         }
+        return Boilers;
     }
     public double? CalculateElectricity(List<AssetSpecifications> HeatPumps, List<AssetSpecifications> GasMotors, double ElectricityPrice)
     {
-        double? ElectricityProduced = GasMotors.Sum(n => n.UnitsProduction) * 0.742857;
-        double? ElectricityConsumed = HeatPumps.Sum(n => n.UnitsProduction);
+        double? ElectricityProduced = GasMotors.SelectMany(n => n.ProducedHeat.Values).Sum() * 0.742857;
+        double? ElectricityConsumed = HeatPumps.SelectMany(n => n.ProducedHeat.Values).Sum();
         double? Mwh = ElectricityProduced - ElectricityConsumed;
         return  Mwh * ElectricityPrice;
     }
 
-    public void OptimizationAlgorithm(List<AssetSpecifications> boilers, int[] par, double ElectricityPrice,double heat)
+    public (List<AssetSpecifications>,double?) OptimizationAlgorithm(List<AssetSpecifications> boilers, int[] par, double ElectricityPrice,double heat, DateTime time)
     {
         List<AssetSpecifications> Boilers = boilers.Where(n => n.IsActive == true).ToList();
         List<AssetSpecifications> HeatPumps = Boilers.Where( n => n.UnitType == "Heat Pump").ToList();
         List<AssetSpecifications> GasMotors =  Boilers.Where( n => n.UnitType == "Motor").ToList();
-        CalculateUnits(Boilers, GetObjective(Boilers, par, ElectricityPrice, HeatPumps, GasMotors), heat);
-        CalculateElectricity(HeatPumps, GasMotors, ElectricityPrice); 
+        var Units = CalculateUnits(Boilers, GetObjective(Boilers, par, ElectricityPrice, HeatPumps, GasMotors), heat, time);
+        var Electricity =  CalculateElectricity(HeatPumps, GasMotors, ElectricityPrice);
+        double? Cost = CalculateTotalCost(Boilers,Electricity);
+
+        return (Units, Cost);
+    }
+
+    public double? CalculateTotalCost(List<AssetSpecifications> boilers, double? Electricity)
+    {
+        List<AssetSpecifications> Boilers = boilers.Where(n => n.IsActive == true).ToList();
+        double? TotalCost = 0;
+        foreach(var boiler in boilers)
+        {
+            TotalCost += boiler.ProductionCost * boiler.ProducedHeat.Values.Sum();
+        }
+        TotalCost += Electricity; 
+        return TotalCost;
     }
 }

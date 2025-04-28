@@ -33,6 +33,7 @@ public class MainWindowViewModel : ViewModelBase
         };
 
         CurrentPage = Windows[0];
+        _currentPage = CurrentPage;
         
         WindowManager.HomeWindow += () => CurrentPage = Windows[0];
         WindowManager.AssetManagerWindow += () => CurrentPage = Windows[1];
@@ -42,7 +43,7 @@ public class MainWindowViewModel : ViewModelBase
         WindowManager.ResultDataManagerWindow += () => CurrentPage = Windows[5];
         WindowManager.SettingsWindow += () => CurrentPage = Windows[6];
         WindowManager.ImportJsonWindow += () => CurrentPage = Windows[7];
-        WindowManager.DateInputWindow += () => CurrentPage = Windows[8];
+        WindowManager.DateInputWindow += () => CurrentPage = Windows[8];  
     }
 
     public void HomeWindow()
