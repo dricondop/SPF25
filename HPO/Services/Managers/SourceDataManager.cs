@@ -8,13 +8,17 @@ namespace HeatProductionOptimization.Services.Managers
 {
     public class SourceDataManager
     {
+        private static SourceDataManager? sourceDataManager;
+
+        public static SourceDataManager sourceDataManagerInstance => sourceDataManager ??= new SourceDataManager();
+
         public List<HeatDemandRecord> WinterRecords { get; }
         public List<HeatDemandRecord> SummerRecords { get; }
 
         public SourceDataManager()
         {
-                WinterRecords = new List<HeatDemandRecord>();
-                SummerRecords = new List<HeatDemandRecord>();
+            WinterRecords = new List<HeatDemandRecord>();
+            SummerRecords = new List<HeatDemandRecord>();
         }
 
         public void ImportHeatDemandData(string filePath)
@@ -90,69 +94,19 @@ namespace HeatProductionOptimization.Services.Managers
         {
             var records = winter ? WinterRecords : SummerRecords;
             if (records.Count == 0)
+            {
                 return (DateTime.MinValue, DateTime.MaxValue);
-
+            }
             return (records.Min(r => r.TimeFrom), records.Max(r => r.TimeTo));
         }
         
-        //This method is not being used and may disappear depending on David's datarange selection
-        //For David: Don't worry about this method
-        public Dictionary<DateTime, double> CurrentElectricityPrice(string filePath, List<HeatDemandRecord>? WinterData, List<HeatDemandRecord>? SummerData)
-        {
-            if (string.IsNullOrEmpty(filePath))
-            {
-                throw new InvalidOperationException("File path is null or empty.");
-            } 
-            ImportHeatDemandData(filePath);
-
-            Dictionary<DateTime, double> pricesList = new();
-            if(WinterData != null && SummerData == null)
-            {
-                foreach(HeatDemandRecord data in WinterData)
-                {
-                    pricesList[data.TimeFrom] = data.ElectricityPrice;
-                }
-            }
-            else if(WinterData == null && SummerData != null)
-            {
-                foreach(HeatDemandRecord data in SummerData)
-                {
-                    pricesList[data.TimeFrom] = data.ElectricityPrice;
-                }
-            }
-            else if(WinterData == null && SummerData == null)
-            {
-                Console.WriteLine("No electricity prices found");
-            }
-            else if(WinterData != null && SummerData != null)
-            {
-                foreach(HeatDemandRecord data in WinterData)
-                {
-                    pricesList[data.TimeFrom] = data.ElectricityPrice;
-                }
-                foreach(HeatDemandRecord data in SummerData)
-                {
-                    pricesList[data.TimeFrom] = data.ElectricityPrice;
-                }
-            }
-            else
-            {
-                Console.WriteLine("No electricity prices found");
-            }
-            
-            foreach(KeyValuePair<DateTime,double> price in pricesList)
-            {
-                Console.WriteLine($"Day and time: {price.Key}, electricity price: {price.Value}");
-            }
-            return pricesList;
-        }
     }
 
     public class HeatDemandRecord
     {
         public DateTime TimeFrom { get; set; }
         public DateTime TimeTo { get; set; }
-        public double HeatDemand { get; set; }
-        public double ElectricityPrice { get; set; }
+        public double? HeatDemand { get; set; }
+        public double? ElectricityPrice { get; set; }
     }
 }

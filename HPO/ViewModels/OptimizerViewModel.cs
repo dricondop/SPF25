@@ -9,12 +9,14 @@ using Avalonia.Interactivity;
 using Avalonia.Controls;
 using System.Linq;
 using HeatProductionOptimization.Services.DataProviders;
+using CommunityToolkit.Mvvm.Input;
 
 namespace HeatProductionOptimization.ViewModels;
 
-public class OptimizerViewModel : ViewModelBase
+public partial class OptimizerViewModel : ViewModelBase
 {
     OptAlgorithm alg = new();
+    SourceDataManager sourceDataManager = SourceDataManager.sourceDataManagerInstance;
     AssetManager assetManager = new();
     private bool _isOptimizationRunning;
     private string _statusMessage = "Ready to optimize";
@@ -29,12 +31,16 @@ public class OptimizerViewModel : ViewModelBase
     
     // Optimization strategy
     private bool _isCostOptimization = true;
+    DateTime winterStart;
+    DateTime winterEnd;
+    DateTime summerStart;
+    DateTime summerEnd;
     
     public OptimizerViewModel(IDataRangeProvider dataRangeProvider)
     {
         _dataRangeProvider = dataRangeProvider;
         
-        var (startDate, endDate) = _dataRangeProvider.GetSelectedDateRange();
+        (winterStart, winterEnd, summerStart, summerEnd) = _dataRangeProvider.GetSelectedDateRange();
         // Accede al rango desde DataProviders
     }
     
@@ -86,13 +92,15 @@ public class OptimizerViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _isCostOptimization, value);
     }
     
-    public async void RunOptimization()
+    [RelayCommand]
+    public void RunOptimization()
     {
         if (IsOptimizationRunning)
             return;
         
         try
         {
+            Console.WriteLine("ninjas");
             IsOptimizationRunning = true;
             StatusMessage = "Optimization in progress...";
             
@@ -102,27 +110,47 @@ public class OptimizerViewModel : ViewModelBase
             parameters[1] = ConsiderCO2Emissions ? 1 : 0;
             parameters[2] = ConsiderFuelConsumption ? 1 : 0;
             
-            // This would be replaced with actual data in a real implementation
-            await Task.Delay(2000); // Simulate processing time
-
+            Console.WriteLine("ninjas2");
             Dictionary<int,AssetSpecifications> boilerdict = assetManager.LoadAssetsSpecifications();
             List<AssetSpecifications> boilers = boilerdict.Values.ToList();
             foreach(var boiler in boilers)
             {
+                Console.WriteLine("ninjasaaa");
                 boiler.ProducedHeat.Clear();
             }
-            
-            /* This is a placeholder for what the optimization in the viewModel will look like later, don't worry about it
-            Dictionary<DateTime, double> electricityPrices = dynamicElectricityPrices.CurrentElectricityPrice();
-            List<AssetSpecifications> Units=[];
+            Console.WriteLine("ninjas3");
             double? cost = 0;
-            foreach(KeyValuePair<DateTime,double> price in electricityPrices)
+            List<AssetSpecifications> Units = [];
+            List<HeatDemandRecord> WinterData = sourceDataManager.WinterRecords;
+            List<HeatDemandRecord> SummerData = sourceDataManager.SummerRecords;
+            if(WinterData.Count == 0 && SummerData.Count == 0)
             {
-                //TODO: Change this 10 static value for the observable property that is going to get the heat needed from the UI.
-                (Units, double ? newcost) = alg.OptimizationAlgorithm(boilers, parameters, price.Value, 10, price.Key);
-                cost += newcost; 
+                Console.WriteLine("I am a null ninja");
             }
-            */
+            Console.WriteLine("ninjas4");
+            Dictionary<DateTime, double?> ElectricityPrices = WinterData.Where(n => n.TimeTo <= winterEnd).Where(n => n.TimeFrom >= winterStart).Concat(SummerData.Where(n => n.TimeTo <= summerEnd).Where(n => n.TimeFrom >= summerStart)).ToDictionary(v => v.TimeFrom, v => v.ElectricityPrice);
+            if(ElectricityPrices.Count == 0)
+            {
+                Console.WriteLine("I am not null nigga 2");
+                foreach(var nigga in ElectricityPrices)
+                {
+                    Console.WriteLine(nigga.Value);
+                }
+            }
+            Console.WriteLine("ninjas5");
+            foreach(KeyValuePair<DateTime,double?> price in ElectricityPrices)
+            {
+                Console.WriteLine("ninjasrepeat");
+                (List<AssetSpecifications> newUnits, double? newcost) = alg.OptimizationAlgorithm(boilers, parameters, price.Value, 10, price.Key);
+                Units.AddRange(newUnits);
+                cost += newcost;
+            }
+            foreach(AssetSpecifications unit in Units)
+            {
+                Console.WriteLine("ninjasrepeat2");
+                Console.WriteLine($"Boiler: {unit.Name}, Heat to be produced: {unit.ProducedHeat}");
+            }
+            
             StatusMessage = "Optimization completed successfully";
         }
         catch (Exception ex)

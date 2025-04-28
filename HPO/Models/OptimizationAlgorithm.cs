@@ -12,7 +12,7 @@ public class OptAlgorithm
     public Dictionary<double, AssetSpecifications> Objective = [];
     
     //The method will ask for the list of specifications and also if the different parameters(par) are to be considered or not.
-    public Dictionary<double, AssetSpecifications> GetObjective(List<AssetSpecifications> Boilers, int[] par, double ElectricityPrice, List<AssetSpecifications> HeatPumps, List<AssetSpecifications> GasMotors )
+    public Dictionary<double, AssetSpecifications> GetObjective(List<AssetSpecifications> Boilers, int[] par, double? ElectricityPrice, List<AssetSpecifications> HeatPumps, List<AssetSpecifications> GasMotors )
     {
         foreach(var hp in HeatPumps)
         {
@@ -71,7 +71,7 @@ public class OptAlgorithm
         }
         return Boilers;
     }
-    public double? CalculateElectricity(List<AssetSpecifications> HeatPumps, List<AssetSpecifications> GasMotors, double ElectricityPrice)
+    public double? CalculateElectricity(List<AssetSpecifications> HeatPumps, List<AssetSpecifications> GasMotors, double? ElectricityPrice)
     {
         double? ElectricityProduced = GasMotors.SelectMany(n => n.ProducedHeat.Values).Sum() * 0.742857;
         double? ElectricityConsumed = HeatPumps.SelectMany(n => n.ProducedHeat.Values).Sum();
@@ -79,7 +79,7 @@ public class OptAlgorithm
         return  Mwh * ElectricityPrice;
     }
 
-    public (List<AssetSpecifications>,double?) OptimizationAlgorithm(List<AssetSpecifications> boilers, int[] par, double ElectricityPrice,double heat, DateTime time)
+    public (List<AssetSpecifications>,double?) OptimizationAlgorithm(List<AssetSpecifications> boilers, int[] par, double? ElectricityPrice,double heat, DateTime time)
     {
         List<AssetSpecifications> Boilers = boilers.Where(n => n.IsActive == true).ToList();
         List<AssetSpecifications> HeatPumps = Boilers.Where( n => n.UnitType == "Heat Pump").ToList();

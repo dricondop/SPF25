@@ -9,7 +9,7 @@ namespace HeatProductionOptimization.ViewModels;
 
 public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
 {
-    private readonly SourceDataManager _sourceDataManager;
+    private SourceDataManager _sourceDataManager = SourceDataManager.sourceDataManagerInstance;
     private string _statusMessage = "Select a CSV file to begin";
     private string? _currentFilePath;
     private string _dateRange = "Date range: Not available";
@@ -17,30 +17,14 @@ public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
     private DateTime _selectedStartDate = DateTime.MinValue;
     private DateTime _selectedEndDate = DateTime.MinValue;
 
-    public SourceDataManagerViewModel(SourceDataManager sourceDataManager)
-    {
-        _sourceDataManager = sourceDataManager ?? throw new ArgumentNullException(nameof(sourceDataManager));
-        Initialize();
-    }
 
-    public SourceDataManagerViewModel() : this(new SourceDataManager())
+    public (DateTime winterStart, DateTime winterEnd, DateTime summerStart, DateTime summerEnd) GetSelectedDateRange()
     {
-    }
 
-    public (DateTime start, DateTime end) GetSelectedDateRange()
-    {
-        if (_selectedStartDate == DateTime.MinValue || _selectedEndDate == DateTime.MinValue)
-        {
-            var winterRange = GetWinterDataRange();
-            var summerRange = GetSummerDataRange();
+            (DateTime winterStart, DateTime winterEnd)  = GetWinterDataRange();
+            (DateTime summerStart, DateTime summerEnd)  = GetSummerDataRange();
             
-            DateTime start = winterRange.start < summerRange.start ? winterRange.start : summerRange.start;
-            DateTime end = winterRange.end > summerRange.end ? winterRange.end : summerRange.end;
-            
-            return (start, end);
-        }
-        
-        return (_selectedStartDate, _selectedEndDate);
+        return (winterStart, winterEnd, summerStart, summerEnd);
     }
 
     public void SetSelectedDateRange(DateTime start, DateTime end)
