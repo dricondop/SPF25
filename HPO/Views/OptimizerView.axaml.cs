@@ -14,14 +14,14 @@ public partial class OptimizerView : UserControl
         InitializeComponent();
     }
 
-    private void RunOptimization_Click(object sender, RoutedEventArgs e)
+    /*private void RunOptimization_Click(object sender, RoutedEventArgs e)
     {
         // In a real implementation, this would trigger the optimization algorithm
         if (DataContext is OptimizerViewModel viewModel)
         {
             viewModel.RunOptimization();
         }
-    }
+    }*/
 
     private void ViewResults_Click(object sender, RoutedEventArgs e)
     {

@@ -79,7 +79,7 @@ public class OptimizerViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _isCostOptimization, value);
     }
     
-    public async void RunOptimization()
+    /*public async void RunOptimization()
     {
         if (IsOptimizationRunning)
             return;
@@ -114,5 +114,5 @@ public class OptimizerViewModel : ViewModelBase
         {
             IsOptimizationRunning = false;
         }
-    }
+    }*/
 }
