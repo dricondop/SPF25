@@ -10,6 +10,7 @@ using Avalonia.Controls;
 using System.Linq;
 using HeatProductionOptimization.Services.DataProviders;
 using CommunityToolkit.Mvvm.Input;
+using HeatProductionOptimization.ViewModels;
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -20,7 +21,6 @@ public partial class OptimizerViewModel : ViewModelBase
     AssetManager assetManager = new();
     private bool _isOptimizationRunning;
     private string _statusMessage = "Ready to optimize";
-    private readonly IDataRangeProvider _dataRangeProvider; //Accede al Rango de Fechas
     
     // Optimization parameters
     private bool _considerProductionCost = true;
@@ -31,18 +31,8 @@ public partial class OptimizerViewModel : ViewModelBase
     
     // Optimization strategy
     private bool _isCostOptimization = true;
-    DateTime winterStart;
-    DateTime winterEnd;
-    DateTime summerStart;
-    DateTime summerEnd;
     
-    public OptimizerViewModel(IDataRangeProvider dataRangeProvider)
-    {
-        _dataRangeProvider = dataRangeProvider;
-        
-        (winterStart, winterEnd, summerStart, summerEnd) = _dataRangeProvider.GetSelectedDateRange();
-        // Accede al rango desde DataProviders
-    }
+    public OptimizerViewModel() {}
     
     public bool IsOptimizationRunning
     {
@@ -100,54 +90,56 @@ public partial class OptimizerViewModel : ViewModelBase
         
         try
         {
-            Console.WriteLine("ninjas");
             IsOptimizationRunning = true;
             StatusMessage = "Optimization in progress...";
             
+            // DateRange -->
+            var selectedRange = DateInputWindowViewModel.SelectedDateRange;
+            DateTime startDate = selectedRange.StartDate;
+            DateTime endDate = selectedRange.EndDate;
+            bool useWinterData = selectedRange.UseWinterData;
+            bool useSummerData = selectedRange.UseSummerData;
+
             // Create parameter array for the algorithm
             int[] parameters = new int[3];
             parameters[0] = ConsiderProductionCost ? 1 : 0;
             parameters[1] = ConsiderCO2Emissions ? 1 : 0;
             parameters[2] = ConsiderFuelConsumption ? 1 : 0;
             
-            Console.WriteLine("ninjas2");
             Dictionary<int,AssetSpecifications> boilerdict = assetManager.LoadAssetsSpecifications();
             List<AssetSpecifications> boilers = boilerdict.Values.ToList();
             foreach(var boiler in boilers)
             {
-                Console.WriteLine("ninjasaaa");
                 boiler.ProducedHeat.Clear();
             }
-            Console.WriteLine("ninjas3");
+            
             double? cost = 0;
             List<AssetSpecifications> Units = [];
             List<HeatDemandRecord> WinterData = sourceDataManager.WinterRecords;
             List<HeatDemandRecord> SummerData = sourceDataManager.SummerRecords;
-            if(WinterData.Count == 0 && SummerData.Count == 0)
-            {
-                Console.WriteLine("I am a null ninja");
-            }
-            Console.WriteLine("ninjas4");
-            Dictionary<DateTime, double?> ElectricityPrices = WinterData.Where(n => n.TimeTo <= winterEnd).Where(n => n.TimeFrom >= winterStart).Concat(SummerData.Where(n => n.TimeTo <= summerEnd).Where(n => n.TimeFrom >= summerStart)).ToDictionary(v => v.TimeFrom, v => v.ElectricityPrice);
-            if(ElectricityPrices.Count == 0)
-            {
-                Console.WriteLine("I am not null nigga 2");
-                foreach(var nigga in ElectricityPrices)
-                {
-                    Console.WriteLine(nigga.Value);
-                }
-            }
-            Console.WriteLine("ninjas5");
+            
+            // Filter Data -->
+            var filteredWinterData = useWinterData ? 
+                WinterData.Where(r => r.TimeFrom >= startDate && r.TimeTo <= endDate).ToList() : 
+                new List<HeatDemandRecord>();
+                
+            var filteredSummerData = useSummerData ? 
+                SummerData.Where(r => r.TimeFrom >= startDate && r.TimeTo <= endDate).ToList() : 
+                new List<HeatDemandRecord>();
+                
+            var allData = filteredWinterData.Concat(filteredSummerData).ToList();
+            
+            Dictionary<DateTime, double?> ElectricityPrices = allData.ToDictionary(v => v.TimeFrom, v => v.ElectricityPrice);
+            
             foreach(KeyValuePair<DateTime,double?> price in ElectricityPrices)
             {
-                Console.WriteLine("ninjasrepeat");
                 (List<AssetSpecifications> newUnits, double? newcost) = alg.OptimizationAlgorithm(boilers, parameters, price.Value, 10, price.Key);
                 Units.AddRange(newUnits);
                 cost += newcost;
             }
+            
             foreach(AssetSpecifications unit in Units)
             {
-                Console.WriteLine("ninjasrepeat2");
                 Console.WriteLine($"Boiler: {unit.Name}, Heat to be produced: {unit.ProducedHeat}");
             }
             
