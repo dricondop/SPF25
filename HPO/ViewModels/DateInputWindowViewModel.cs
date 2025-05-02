@@ -108,12 +108,22 @@ namespace HeatProductionOptimization.ViewModels
         private void UpdateDefaultDates()
         {
             var (startDate, endDate) = GetAvailableDataRange();
-            StartDate = startDate;
-            EndDate = endDate;
+            
+            // Check if dates are valid before assigning
+            if (startDate == DateTime.MinValue || startDate == DateTime.MaxValue)
+                startDate = DateTime.Today;
+            
+            if (endDate == DateTime.MinValue || endDate == DateTime.MaxValue)
+                endDate = DateTime.Today.AddDays(1);
+            
+            // Use constructor with explicit date
+            StartDate = new DateTimeOffset(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, TimeSpan.Zero);
+            EndDate = new DateTimeOffset(endDate.Year, endDate.Month, endDate.Day, 0, 0, 0, TimeSpan.Zero);
+            
             ValidateDates();
         }
 
-        private (DateTimeOffset start, DateTimeOffset end) GetAvailableDataRange()
+        private (DateTime start, DateTime end) GetAvailableDataRange()
         {
             DateTime minDate = DateTime.MaxValue;
             DateTime maxDate = DateTime.MinValue;
@@ -140,8 +150,15 @@ namespace HeatProductionOptimization.ViewModels
                 minDate = DateTime.Today;
                 maxDate = DateTime.Today.AddDays(1);
             }
-
+            
+            if (minDate == DateTime.MinValue || minDate == DateTime.MaxValue)
+                minDate = DateTime.Today;
+            
+            if (maxDate == DateTime.MinValue || maxDate == DateTime.MaxValue)
+                maxDate = DateTime.Today.AddDays(1);
+            
             return (minDate, maxDate);
+            
         }
 
         private void ValidateDates()
@@ -226,11 +243,17 @@ namespace HeatProductionOptimization.ViewModels
 
         public void SubmitDates()
         {
+            Console.WriteLine("SubmitDates called");
             ValidateDates();
-            if (!CanProceed) return;
+            if (!CanProceed) 
+            {
+                Console.WriteLine("Cannot proceed - dates invalid");
+                return;
+            }
 
             SaveSelectedDateRange();
-
+            Console.WriteLine("Date range saved, proceeding to optimizer");
+            
             WindowManager.TriggerOptimizerWindow();
         }
 
@@ -239,21 +262,34 @@ namespace HeatProductionOptimization.ViewModels
             if (UseWinterData && UseSummerData)
             {
                 var (startDate, endDate) = GetAvailableDataRange();
-                SelectedDateRange.StartDate = startDate.DateTime;
-                SelectedDateRange.EndDate = endDate.DateTime;
+                SelectedDateRange.StartDate = startDate;
+                SelectedDateRange.EndDate = endDate;
                 SelectedDateRange.UseWinterData = true;
                 SelectedDateRange.UseSummerData = true;
+                
+                // Add this line to update IDataRangeProvider
+                _dataRangeProvider.SetSelectedDateRange(startDate, endDate);
             }
             else if (ShowDateSelection)
             {
-                SelectedDateRange.StartDate = StartDate.Value.DateTime.AddHours(StartHour);
-                SelectedDateRange.EndDate = EndDate.Value.DateTime.AddHours(EndHour);
+                DateTime start = StartDate.Value.DateTime.AddHours(StartHour);
+                DateTime end = EndDate.Value.DateTime.AddHours(EndHour);
+                
+                SelectedDateRange.StartDate = start; 
+                SelectedDateRange.EndDate = end;
                 SelectedDateRange.UseWinterData = UseWinterData;
                 SelectedDateRange.UseSummerData = UseSummerData;
+                
+                // Add this line to update IDataRangeProvider
+                _dataRangeProvider.SetSelectedDateRange(start, end);
             }
 
             SelectedDateRange.StartHour = StartHour;
             SelectedDateRange.EndHour = EndHour;
+            
+            // Add debug message
+            Console.WriteLine($"Saved date range: {SelectedDateRange.StartDate} to {SelectedDateRange.EndDate}");
+            Console.WriteLine($"Using Winter: {SelectedDateRange.UseWinterData}, Summer: {SelectedDateRange.UseSummerData}");
         }
     }
 

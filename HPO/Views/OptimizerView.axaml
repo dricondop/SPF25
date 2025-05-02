@@ -64,7 +64,7 @@
                 HorizontalAlignment="Center"
                 Padding="20,10"
                 Margin="0,10,0,30"
-                Command="{Binding RunOptimization}"/>
+                Command="{Binding RunOptimizationCommand}"/>
         
         <!-- Optimization Status -->
         <TextBlock Grid.Row="3" 

@@ -17,6 +17,10 @@ public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
     private DateTime _selectedStartDate = DateTime.MinValue;
     private DateTime _selectedEndDate = DateTime.MinValue;
 
+    public SourceDataManagerViewModel()
+    {
+        Initialize();
+    }
 
     public (DateTime winterStart, DateTime winterEnd, DateTime summerStart, DateTime summerEnd) GetSelectedDateRange()
     {

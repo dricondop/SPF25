@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using Avalonia.Controls;
 using ReactiveUI;
 using HeatProductionOptimization.Services.DataProviders;
 
@@ -18,13 +19,14 @@ public class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
+
         _dataRangeProvider = new SourceDataManagerViewModel();
         Windows = new ViewModelBase[]
         {
             new HomeWindowViewModel(),
             new AssetManagerViewModel(),
             new SourceDataManagerViewModel(),
-            new OptimizerViewModel(_dataRangeProvider), 
+            new OptimizerViewModel(), 
             new DataVisualizationViewModel(),
             new ResultDataManagerViewModel(),
             new SettingsViewModel(),
