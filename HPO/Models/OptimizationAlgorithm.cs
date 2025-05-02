@@ -14,19 +14,9 @@ public class OptAlgorithm
     //The method will ask for the list of specifications and also if the different parameters(par) are to be considered or not.
     public Dictionary<double, AssetSpecifications> GetObjective(List<AssetSpecifications> Boilers, int[] par, double? ElectricityPrice, List<AssetSpecifications> HeatPumps, List<AssetSpecifications> GasMotors )
     {
-        foreach(var hp in HeatPumps)
-        {
-            hp.ProductionCost = 60;
-            hp.ProductionCost += ElectricityPrice;
-        }
-        
-        foreach(var gm in GasMotors)
-        {
-            gm.ProductionCost = 990;
-            gm.ProductionCost -= ElectricityPrice;
-        }
-
         Dictionary<double, AssetSpecifications> obj = [];
+        double? TemporalPumpCost=0;
+        double? TemporalMotorCost=0;
         double objective = 0.0;
 
         int n = par.Where(n => n == 1 ).Count();
@@ -34,11 +24,31 @@ public class OptAlgorithm
         {
             throw new DivideByZeroException("No parameters selected for optimization.");
         }
+        
+        foreach(var hp in HeatPumps)
+        {
+            TemporalPumpCost = hp.ProductionCost;
+            TemporalPumpCost += ElectricityPrice;
+            objective = ((TemporalPumpCost ?? 0.0) * par[0] + (hp.CO2Emissions ?? 0.0) * par[1] + (hp.FuelConsumption ?? 0.0) * par[2])/ n;
+            obj[objective] = hp;
+        }
+        
+        foreach(var gm in GasMotors)
+        {
+            TemporalMotorCost = gm.ProductionCost;
+            TemporalMotorCost += ElectricityPrice;
+            objective = ((TemporalMotorCost ?? 0.0) * par[0] + (gm.CO2Emissions ?? 0.0) * par[1] + (gm.FuelConsumption ?? 0.0) * par[2])/ n;
+            obj[objective] = gm;
+        }
+
         for(int i = 0; i < Boilers.Count; i++)
         {
+            if(Boilers[i].UnitType == "Boiler")
+            {
             objective = ((Boilers[i].ProductionCost ?? 0.0) * par[0] + (Boilers[i].CO2Emissions ?? 0.0) * par[1] + (Boilers[i].FuelConsumption ?? 0.0) * par[2])/ n;
 
             obj[objective] = Boilers[i];
+            }
         } 
 
         return obj;
