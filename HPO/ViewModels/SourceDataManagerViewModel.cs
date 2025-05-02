@@ -9,19 +9,32 @@ namespace HeatProductionOptimization.ViewModels;
 
 public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
 {
-    private readonly SourceDataManager _sourceDataManager;
+    private SourceDataManager _sourceDataManager = SourceDataManager.sourceDataManagerInstance;
     private string _statusMessage = "Select a CSV file to begin";
     private string? _currentFilePath;
     private string _dateRange = "Date range: Not available";
+    
+    private DateTime _selectedStartDate = DateTime.MinValue;
+    private DateTime _selectedEndDate = DateTime.MinValue;
 
-    public SourceDataManagerViewModel(SourceDataManager sourceDataManager)
+    public SourceDataManagerViewModel()
     {
-        _sourceDataManager = sourceDataManager ?? throw new ArgumentNullException(nameof(sourceDataManager));
         Initialize();
     }
 
-    public SourceDataManagerViewModel() : this(new SourceDataManager())
+    public (DateTime winterStart, DateTime winterEnd, DateTime summerStart, DateTime summerEnd) GetSelectedDateRange()
     {
+
+            (DateTime winterStart, DateTime winterEnd)  = GetWinterDataRange();
+            (DateTime summerStart, DateTime summerEnd)  = GetSummerDataRange();
+            
+        return (winterStart, winterEnd, summerStart, summerEnd);
+    }
+
+    public void SetSelectedDateRange(DateTime start, DateTime end)
+    {
+        _selectedStartDate = start;
+        _selectedEndDate = end;
     }
 
     private void Initialize()

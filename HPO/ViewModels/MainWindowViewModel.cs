@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using Avalonia.Controls;
 using ReactiveUI;
 using HeatProductionOptimization.Services.DataProviders;
 
@@ -18,21 +19,22 @@ public class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
+
         _dataRangeProvider = new SourceDataManagerViewModel();
         Windows = new ViewModelBase[]
         {
             new HomeWindowViewModel(),
             new AssetManagerViewModel(),
             new SourceDataManagerViewModel(),
-            new OptimizerViewModel(),
+            new OptimizerViewModel(), 
             new DataVisualizationViewModel(),
             new ResultDataManagerViewModel(),
             new SettingsViewModel(),
             new ImportJsonWindowViewModel(),
             new DateInputWindowViewModel(_dataRangeProvider)
         };
-
         CurrentPage = Windows[0];
+        _currentPage = CurrentPage;
         
         WindowManager.HomeWindow += () => CurrentPage = Windows[0];
         WindowManager.AssetManagerWindow += () => CurrentPage = Windows[1];
@@ -42,7 +44,7 @@ public class MainWindowViewModel : ViewModelBase
         WindowManager.ResultDataManagerWindow += () => CurrentPage = Windows[5];
         WindowManager.SettingsWindow += () => CurrentPage = Windows[6];
         WindowManager.ImportJsonWindow += () => CurrentPage = Windows[7];
-        WindowManager.DateInputWindow += () => CurrentPage = Windows[8];
+        WindowManager.DateInputWindow += () => CurrentPage = Windows[8];  
     }
 
     public void HomeWindow()

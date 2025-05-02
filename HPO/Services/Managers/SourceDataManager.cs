@@ -8,6 +8,10 @@ namespace HeatProductionOptimization.Services.Managers
 {
     public class SourceDataManager
     {
+        private static SourceDataManager? sourceDataManager;
+
+        public static SourceDataManager sourceDataManagerInstance => sourceDataManager ??= new SourceDataManager();
+
         public List<HeatDemandRecord> WinterRecords { get; }
         public List<HeatDemandRecord> SummerRecords { get; }
 
@@ -29,20 +33,20 @@ namespace HeatProductionOptimization.Services.Managers
             {
                 var lines = File.ReadAllLines(filePath);
                 
-                // Skip header rows (first 3 lines)
-                foreach (var line in lines.Skip(3))
+                // Skip header rows (first line)
+                foreach (var line in lines.Skip(1))
                 {
                     if (string.IsNullOrWhiteSpace(line)) continue;
 
                     var columns = line.Split(',');
-                    if (columns.Length >= 10)
+                    if (columns.Length >= 8)
                     {
                         // Winter data (columns 1-4)
-                        if (TryParseRecord(columns, 1, out var winterRecord))
+                        if (TryParseRecord(columns, 0, out var winterRecord))
                             WinterRecords.Add(winterRecord);
 
-                        // Summer data (columns 6-9)
-                        if (TryParseRecord(columns, 6, out var summerRecord))
+                        // Summer data (columns 5-8)
+                        if (TryParseRecord(columns, 4, out var summerRecord))
                             SummerRecords.Add(summerRecord);
                     }
                 }
@@ -90,17 +94,19 @@ namespace HeatProductionOptimization.Services.Managers
         {
             var records = winter ? WinterRecords : SummerRecords;
             if (records.Count == 0)
+            {
                 return (DateTime.MinValue, DateTime.MaxValue);
-
+            }
             return (records.Min(r => r.TimeFrom), records.Max(r => r.TimeTo));
         }
+        
     }
 
     public class HeatDemandRecord
     {
         public DateTime TimeFrom { get; set; }
         public DateTime TimeTo { get; set; }
-        public double HeatDemand { get; set; }
-        public double ElectricityPrice { get; set; }
+        public double? HeatDemand { get; set; }
+        public double? ElectricityPrice { get; set; }
     }
 }

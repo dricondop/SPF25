@@ -45,18 +45,10 @@ public class AssetManager
                     {
                         // Convert string ID to int or generate a new one
                         int assetId;
-                        if (!int.TryParse(kvp.Value.ID, out assetId))
-                        {
-                            assetId = _nextAvailableId++;
-                        }
-                        else
-                        {
-                            // Update next ID to be greater than any existing
-                            _nextAvailableId = Math.Max(_nextAvailableId, assetId + 1);
-                        }
+                        assetId = _nextAvailableId++;
 
                         // Set ID and Name properties
-                        kvp.Value.ID = assetId.ToString();
+                        kvp.Value.ID = assetId;
                         
                         // If name is empty, use the unit type + ID
                         if (string.IsNullOrEmpty(kvp.Value.Name))
@@ -83,7 +75,7 @@ public class AssetManager
         return _assets;
     }
 
-    public AssetSpecifications GetAssetSpecifications(int id)
+    public AssetSpecifications? GetAssetSpecifications(int id)
     {
         return _assets.TryGetValue(id, out var spec) ? spec : null;
     }
@@ -101,12 +93,7 @@ public class AssetManager
             
             foreach (var asset in assets)
             {
-                if (string.IsNullOrEmpty(asset.ID))
-                {
-                    Console.WriteLine("Warning: Skipping asset with null or empty ID");
-                    continue;
-                }
-                
+   
                 var assetDict = new Dictionary<string, AssetSpecifications>
                 {
                     { asset.Name, asset }
@@ -121,7 +108,7 @@ public class AssetManager
             
             string json = JsonSerializer.Serialize(jsonArray, options);
             
-            string directory = Path.GetDirectoryName(_assetsFilePath);
+            string directory = Path.GetDirectoryName(_assetsFilePath) ?? string.Empty;
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
@@ -139,46 +126,51 @@ public class AssetManager
             return false;
         }
     }
-
     private void UpdateAssetDictionary(IEnumerable<AssetSpecifications> assets)
     {
         var newAssets = new Dictionary<int, AssetSpecifications>();
-        
+        // Reset next available ID based on the maximum existing ID + 1
+        // Handle the case where the input list might be empty
+        _nextAvailableId = assets.Any() ? assets.Max(a => a.ID) + 1 : 1; 
+
         foreach (var asset in assets)
         {
-            if (!string.IsNullOrEmpty(asset.ID))
+            // Assuming IDs should be positive. If an asset has an invalid ID (e.g., 0 or less), 
+            // or if it somehow duplicates an ID already processed (though Dictionary handles this),
+            // we might need a strategy. Here, we trust incoming IDs if they are valid (>0).
+            // If an asset comes with ID <= 0, it implies it's new or needs an ID assigned.
+            if (asset.ID > 0)
             {
-                // Try to parse ID as integer
-                if (int.TryParse(asset.ID, out int id))
+                // Use the existing valid ID
+                if (!newAssets.ContainsKey(asset.ID))
                 {
-                    newAssets[id] = asset;
-                    // Update next available ID
-                    _nextAvailableId = Math.Max(_nextAvailableId, id + 1);
+                    newAssets[asset.ID] = asset;
+                    // Ensure _nextAvailableId is always ahead of the highest seen ID
+                    _nextAvailableId = Math.Max(_nextAvailableId, asset.ID + 1); 
                 }
                 else
                 {
-                    // If parsing fails, assign a new ID
-                    int newId = _nextAvailableId++;
-                    asset.ID = newId.ToString();
-                    newAssets[newId] = asset;
+                    // Handle duplicate ID scenario if necessary (e.g., log a warning)
+                    Console.WriteLine($"Warning: Duplicate asset ID {asset.ID} encountered during update. Skipping duplicate.");
                 }
             }
             else
             {
-                // If ID is null/empty, assign a new ID
+                // Assign a new ID if the current one is invalid (0 or less)
                 int newId = _nextAvailableId++;
-                asset.ID = newId.ToString();
+                asset.ID = newId; // Update the asset's ID property
                 newAssets[newId] = asset;
             }
         }
         
+        // Replace the old dictionary with the newly constructed one
         _assets = newAssets;
     }
+
 
     public AssetSpecifications CreateNewUnit(string unitType = "Boiler")
     {
         int newId = _nextAvailableId++;
-        string idString = newId.ToString();
         
         // Create the appropriate template based on unit type
         AssetSpecifications newUnit;
@@ -186,14 +178,14 @@ public class AssetManager
         switch (unitType?.Trim())
         {
             case "Motor":
-                newUnit = AssetSpecifications.CreateMotor(idString);
+                newUnit = AssetSpecifications.CreateMotor(newId);
                 break;
             case "Heat Pump":
-                newUnit = AssetSpecifications.CreateHeatPump(idString);
+                newUnit = AssetSpecifications.CreateHeatPump(newId);
                 break;
             case "Boiler":
-            default:
-                newUnit = AssetSpecifications.CreateBoiler(idString);
+            default: //Default to Boiler if type is null, empty, whitespace or unknown
+                newUnit = AssetSpecifications.CreateBoiler(newId);
                 break;
         }
         
