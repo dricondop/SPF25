@@ -15,7 +15,7 @@ public class AssetManager
     private Dictionary<int, AssetSpecifications> _assets; // Use int keys
     private int _nextAvailableId = 1;
 
-    public AssetManager(string assetsFilePath = "Resources/Data/Production_Units.json")
+    public AssetManager(string assetsFilePath = "../Resources/Data/Production_Units.json")
     {
         _assetsFilePath = Path.GetFullPath(assetsFilePath);
         _assets = LoadAssetsSpecifications();
