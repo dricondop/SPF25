@@ -31,7 +31,8 @@
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="10">
                 <ComboBox Name="UnitTypeComboBox" Width="150" 
                           SelectedItem="{Binding SelectedUnitTypeItem}"
-                          Padding="15,10">
+                          Padding="15,10"
+                          PlaceholderText="Boiler">
                     <ComboBoxItem>Boiler</ComboBoxItem>
                     <ComboBoxItem>Motor</ComboBoxItem>
                     <ComboBoxItem>Heat Pump</ComboBoxItem>

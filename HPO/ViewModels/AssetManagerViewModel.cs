@@ -23,8 +23,9 @@ public class AssetManagerViewModel : ViewModelBase
 
     public AssetManagerViewModel()
     {
-        _currentFilePath = Path.GetFullPath("Resources/Data/Production_Units.json");
-        _assetManager = new AssetManager(_currentFilePath);
+        // Initialize AssetManager with null to use the default path
+        _assetManager = new AssetManager();
+        _currentFilePath = _assetManager.GetFilePath();
         LoadAssets();
     }
 

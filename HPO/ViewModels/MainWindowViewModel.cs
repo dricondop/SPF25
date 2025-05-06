@@ -80,9 +80,8 @@ public class MainWindowViewModel : ViewModelBase
         CurrentPage = Windows[7];
     }
 
-    public void DateInputWindow()
+    /*public void DateInputWindow()
     {
         CurrentPage = Windows[8];
-    }
-
+    }*/
 }
