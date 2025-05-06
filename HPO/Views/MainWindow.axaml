@@ -41,7 +41,8 @@
                     <StackPanel Spacing="20" 
                           Margin="0,20"
                           VerticalAlignment="Top">
-                        <Button Classes="sidebar-button"
+                        <Button x:Name="HomeButton"
+                            Classes="sidebar-button"
                             Command="{Binding HomeWindow}"
                             ToolTip.Tip="Home"
                             HorizontalAlignment="Center">
@@ -82,7 +83,8 @@
                     <StackPanel Spacing="20" 
                           Margin="0,20"
                           VerticalAlignment="Bottom">
-                        <Button Classes="sidebar-button"
+                        <Button x:Name="SettingsButton"
+                            Classes="sidebar-button"
                             Command="{Binding SettingsWindow}"
                             ToolTip.Tip="Settings"
                             HorizontalAlignment="Center">
