@@ -43,9 +43,7 @@ public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
         {
             var locations = new[]
             {
-                Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Data", "ElectricityData.csv"),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Data", "ElectricityData.csv"),
-                Path.Combine(Environment.CurrentDirectory, "Resources", "Data", "ElectricityData.csv")
+                Path.GetFullPath("../../../Resources/Data/ElectricityData.csv")
             };
 
             _currentFilePath = locations.FirstOrDefault(File.Exists);
