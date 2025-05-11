@@ -31,6 +31,7 @@ public class MainWindowViewModel : ViewModelBase
             new ResultDataManagerViewModel(),
             new SettingsViewModel(),
             new ImportJsonWindowViewModel(),
+            //Keep DateInputWindowViewModel in array to prevent null references but don't use it for navigation anymore
             new DateInputWindowViewModel(_dataRangeProvider)
         };
         CurrentPage = Windows[0];
@@ -44,7 +45,7 @@ public class MainWindowViewModel : ViewModelBase
         WindowManager.ResultDataManagerWindow += () => CurrentPage = Windows[5];
         WindowManager.SettingsWindow += () => CurrentPage = Windows[6];
         WindowManager.ImportJsonWindow += () => CurrentPage = Windows[7];
-        WindowManager.DateInputWindow += () => CurrentPage = Windows[8];  
+        //WindowManager.DateInputWindow += () => CurrentPage = Windows[8];  
     }
 
     public void HomeWindow()
@@ -80,6 +81,7 @@ public class MainWindowViewModel : ViewModelBase
         CurrentPage = Windows[7];
     }
 
+    // Disable DateInputWindow method
     /*public void DateInputWindow()
     {
         CurrentPage = Windows[8];
