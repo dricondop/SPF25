@@ -15,7 +15,7 @@ public class AssetManager
     private Dictionary<int, AssetSpecifications> _assets; // Use int keys
     private int _nextAvailableId = 1;
 
-    public AssetManager(string assetsFilePath = "../Resources/Data/Production_Units.json")
+    public AssetManager(string assetsFilePath = "../../../Resources/Data/Production_Units.json")
     {
         _assetsFilePath = Path.GetFullPath(assetsFilePath);
         _assets = LoadAssetsSpecifications();
@@ -35,7 +35,7 @@ public class AssetManager
         try
         {
             var json = File.ReadAllText(_assetsFilePath);
-            
+
             var jsonArray = JsonSerializer.Deserialize<List<Dictionary<string, AssetSpecifications>>>(json);
             if (jsonArray != null)
             {
@@ -49,13 +49,13 @@ public class AssetManager
 
                         // Set ID and Name properties
                         kvp.Value.ID = assetId;
-                        
+
                         // If name is empty, use the unit type + ID
                         if (string.IsNullOrEmpty(kvp.Value.Name))
                         {
                             kvp.Value.Name = $"{kvp.Value.UnitType} {assetId}";
                         }
-                        
+
                         assets[assetId] = kvp.Value;
                     }
                 }
@@ -79,7 +79,7 @@ public class AssetManager
     {
         return _assets.TryGetValue(id, out var spec) ? spec : null;
     }
-    
+
     public string GetFilePath()
     {
         return _assetsFilePath;
@@ -90,10 +90,10 @@ public class AssetManager
         try
         {
             var jsonArray = new List<Dictionary<string, AssetSpecifications>>();
-            
+
             foreach (var asset in assets)
             {
-   
+
                 var assetDict = new Dictionary<string, AssetSpecifications>
                 {
                     { asset.Name, asset }
@@ -105,19 +105,19 @@ public class AssetManager
             {
                 WriteIndented = true,
             };
-            
+
             string json = JsonSerializer.Serialize(jsonArray, options);
-            
+
             string directory = Path.GetDirectoryName(_assetsFilePath) ?? string.Empty;
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
-            
+
             File.WriteAllText(_assetsFilePath, json);
-            
+
             UpdateAssetDictionary(assets);
-            
+
             return true;
         }
         catch (Exception ex)
@@ -131,7 +131,7 @@ public class AssetManager
         var newAssets = new Dictionary<int, AssetSpecifications>();
         // Reset next available ID based on the maximum existing ID + 1
         // Handle the case where the input list might be empty
-        _nextAvailableId = assets.Any() ? assets.Max(a => a.ID) + 1 : 1; 
+        _nextAvailableId = assets.Any() ? assets.Max(a => a.ID) + 1 : 1;
 
         foreach (var asset in assets)
         {
@@ -146,7 +146,7 @@ public class AssetManager
                 {
                     newAssets[asset.ID] = asset;
                     // Ensure _nextAvailableId is always ahead of the highest seen ID
-                    _nextAvailableId = Math.Max(_nextAvailableId, asset.ID + 1); 
+                    _nextAvailableId = Math.Max(_nextAvailableId, asset.ID + 1);
                 }
                 else
                 {
@@ -162,7 +162,7 @@ public class AssetManager
                 newAssets[newId] = asset;
             }
         }
-        
+
         // Replace the old dictionary with the newly constructed one
         _assets = newAssets;
     }
@@ -171,10 +171,10 @@ public class AssetManager
     public AssetSpecifications CreateNewUnit(string unitType = "Boiler")
     {
         int newId = _nextAvailableId++;
-        
+
         // Create the appropriate template based on unit type
         AssetSpecifications newUnit;
-        
+
         switch (unitType?.Trim())
         {
             case "Motor":
@@ -188,7 +188,7 @@ public class AssetManager
                 newUnit = AssetSpecifications.CreateBoiler(newId);
                 break;
         }
-        
+
         // Add to assets dictionary with integer key
         _assets[newId] = newUnit;
         return newUnit;

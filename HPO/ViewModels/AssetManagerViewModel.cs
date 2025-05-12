@@ -23,8 +23,7 @@ public class AssetManagerViewModel : ViewModelBase
 
     public AssetManagerViewModel()
     {
-        _currentFilePath = Path.GetFullPath("Resources/Data/Production_Units.json");
-        _assetManager = new AssetManager(_currentFilePath);
+        _currentFilePath = Path.GetFullPath("../../../Resources/Data/Production_Units.json"); _assetManager = new AssetManager(_currentFilePath);
         LoadAssets();
     }
 
@@ -33,19 +32,19 @@ public class AssetManagerViewModel : ViewModelBase
         get => _assets;
         set => this.RaiseAndSetIfChanged(ref _assets, value);
     }
-    
+
     public string StatusMessage
     {
         get => _statusMessage;
         set => this.RaiseAndSetIfChanged(ref _statusMessage, value);
     }
-    
+
     public string SelectedUnitType
     {
         get => _selectedUnitType;
         set => this.RaiseAndSetIfChanged(ref _selectedUnitType, value);
     }
-    
+
     public ComboBoxItem SelectedUnitTypeItem
     {
         get => _selectedUnitTypeItem;
@@ -64,20 +63,20 @@ public class AssetManagerViewModel : ViewModelBase
         var assetDict = _assetManager.GetAllAssets();
         Assets = new ObservableCollection<AssetSpecifications>(assetDict.Values);
     }
-    
+
     public void AddNewUnit()
     {
         try
         {
             // Extract the actual unit type text from the ComboBoxItem if needed
             string unitType = _selectedUnitType;
-            
+
             // Create new unit with the selected type
             var newUnit = _assetManager.CreateNewUnit(unitType);
-            
+
             // Add to observable collection
             Assets.Add(newUnit);
-            
+
             StatusMessage = $"New {unitType} unit added.";
         }
         catch (Exception ex)
@@ -86,7 +85,7 @@ public class AssetManagerViewModel : ViewModelBase
             Console.WriteLine($"Error adding new unit: {ex}");
         }
     }
-    
+
     public bool ValidateAssets()
     {
         if (Assets == null || Assets.Count == 0)
@@ -112,7 +111,7 @@ public class AssetManagerViewModel : ViewModelBase
             }
 
             // Fuel Type validation for Boiler and Motor
-            if ((asset.UnitType == "Boiler" || asset.UnitType == "Motor") && 
+            if ((asset.UnitType == "Boiler" || asset.UnitType == "Motor") &&
                 string.IsNullOrWhiteSpace(asset.FuelType))
             {
                 StatusMessage = $"Asset {asset.Name}: Fuel Type is required for {asset.UnitType}.";
@@ -120,8 +119,8 @@ public class AssetManagerViewModel : ViewModelBase
             }
 
             // Validate Fuel Type for Boilers specifically
-            if (asset.UnitType == "Boiler" && 
-                (string.IsNullOrWhiteSpace(asset.FuelType) || 
+            if (asset.UnitType == "Boiler" &&
+                (string.IsNullOrWhiteSpace(asset.FuelType) ||
                 (asset.FuelType != "Gas" && asset.FuelType != "Oil")))
             {
                 StatusMessage = $"Asset {asset.Name}: Fuel Type for Boiler must be either 'Gas' or 'Oil'.";
@@ -154,7 +153,7 @@ public class AssetManagerViewModel : ViewModelBase
     public bool TryParseNumericField(string fieldName, string value, out object? result)
     {
         result = null;
-        
+
         if (string.IsNullOrWhiteSpace(value))
         {
             StatusMessage = $"{fieldName} cannot be empty.";
@@ -182,7 +181,7 @@ public class AssetManagerViewModel : ViewModelBase
                 }
                 StatusMessage = $"Invalid number format for {fieldName}.";
                 return false;
-                
+
             default:
                 // For string fields
                 if (!string.IsNullOrWhiteSpace(value))
@@ -194,7 +193,7 @@ public class AssetManagerViewModel : ViewModelBase
                 return false;
         }
     }
-    
+
     public void SaveChanges()
     {
         try
@@ -204,15 +203,15 @@ public class AssetManagerViewModel : ViewModelBase
                 StatusMessage = "No assets to save.";
                 return;
             }
-            
+
             // Validate assets before saving
             if (!ValidateAssets())
             {
                 return;
             }
-            
+
             bool result = _assetManager.SaveAssets(Assets);
-            
+
             if (result)
             {
                 StatusMessage = "Changes saved successfully!";
@@ -229,12 +228,12 @@ public class AssetManagerViewModel : ViewModelBase
         }
     }
 
-    public string CurrentFilePath 
-    { 
-        get => _currentFilePath; 
-        private set => this.RaiseAndSetIfChanged(ref _currentFilePath, value); 
+    public string CurrentFilePath
+    {
+        get => _currentFilePath;
+        private set => this.RaiseAndSetIfChanged(ref _currentFilePath, value);
     }
-    
+
     public void LoadFromFile(string filePath)
     {
         try
@@ -244,13 +243,13 @@ public class AssetManagerViewModel : ViewModelBase
                 StatusMessage = "Invalid file path specified.";
                 return;
             }
-            
+
             _assetManager = new AssetManager(filePath);
-            
+
             CurrentFilePath = filePath;
-            
+
             LoadAssets();
-            
+
             StatusMessage = $"Successfully loaded assets from: {Path.GetFileName(filePath)}";
         }
         catch (Exception ex)
