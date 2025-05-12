@@ -12,19 +12,19 @@ namespace HeatProductionOptimization.Services.Managers;
 public class AssetManager
 {
     private readonly string _assetsFilePath;
-    private Dictionary<int, AssetSpecifications> _assets; // Use int keys
+    private Dictionary<int, AssetSpecifications> _assets;
     private int _nextAvailableId = 1;
 
-    public AssetManager(string assetsFilePath = "../Resources/Data/Production_Units.json")
+    public AssetManager(string assetsFilePath = "Resources/Data/Production_Units.json")
     {
-        _assetsFilePath = Path.GetFullPath(assetsFilePath);
+        _assetsFilePath = assetsFilePath;
         _assets = LoadAssetsSpecifications();
     }
 
     public Dictionary<int, AssetSpecifications> LoadAssetsSpecifications()
     {
         var assets = new Dictionary<int, AssetSpecifications>();
-        _nextAvailableId = 1; // Initialize counter
+        _nextAvailableId = 1;
 
         if (!File.Exists(_assetsFilePath))
         {
