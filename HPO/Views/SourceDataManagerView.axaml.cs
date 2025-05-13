@@ -60,7 +60,7 @@ public partial class SourceDataManagerView : UserControl
     {
         if (DataContext is SourceDataManagerViewModel viewModel && viewModel.HasValidData)
         {
-            WindowManager.TriggerDateInputWindow();
+            WindowManager.TriggerOptimizerWindow();
         }
         else
         {
