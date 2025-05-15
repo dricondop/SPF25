@@ -65,9 +65,12 @@
             <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="BorderBrush" Value="#5E5E5E"/>
             <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Padding" Value="8 4"/>
             <Setter Property="CornerRadius" Value="5"/>
-            <Setter Property="Margin" Value="0 0 0 10"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="20 0 0 10"/>
+            <Setter Property="Width" Value="170"/>
+            <Setter Property="Height" Value="35"/>
         </Style>
 
         <Style Selector="CheckBox.data-group:checked">
@@ -85,18 +88,26 @@
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
 
+        <Style Selector="CheckBox.data-group /template/ Border#NormalRectangle">
+            <Setter Property="Margin" Value="10 0 0 0"/>
+        </Style>
+
+        <Style Selector="CheckBox.data-group /template/ Path#CheckGlyph">
+            <Setter Property="Margin" Value="10 0 0 0"/>
+        </Style>
+
         <Style Selector="CheckBox.data-group:checked:pointerover">
             <Setter Property="Background" Value="#5A8FC5"/>
         </Style>
     </UserControl.Styles>
 
     <Grid Background="#2D2D2D">
-        <Border Background="#1E1E1E" CornerRadius="10" Padding="30" BoxShadow="0 5 15 0 #00000050" Margin="40">
+        <Border Background="#1E1E1E" CornerRadius="10" Padding="20" BoxShadow="0 5 15 0 #00000050" Margin="10">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="500">
                 <TextBlock Text="Select Time Period" Classes="title" HorizontalAlignment="Center"/>
 
-                <StackPanel Orientation="Vertical" Classes="data-selection">
-                    <TextBlock Text="Select Data Groups:" Foreground="White" FontWeight="Bold"/>
+                <StackPanel Orientation="Vertical" Classes="data-selection" Width="200" HorizontalAlignment="Left">
+                    <TextBlock Text="Select Data Groups:" Foreground="White" FontWeight="Bold" Margin="0 0 0 10"/>
                     <CheckBox Content="Winter Data" Classes="data-group" 
                              IsChecked="{Binding UseWinterData}"/>
                     <CheckBox Content="Summer Data" Classes="data-group" 

@@ -15,21 +15,22 @@ namespace HeatProductionOptimization.ViewModels;
 public class AssetManagerViewModel : ViewModelBase
 {
     private AssetManager _assetManager;
-    private ObservableCollection<AssetSpecifications> _assets;
+    private ObservableCollection<AssetSpecifications>? _assets;
     private string _statusMessage = "Do not forget to save any changes :)";
     private string _currentFilePath;
     private string _selectedUnitType = "Boiler"; // Default unit type
-    private ComboBoxItem _selectedUnitTypeItem;
+    private ComboBoxItem? _selectedUnitTypeItem;
     public static double? MaxHeat = 0;
 
     public AssetManagerViewModel()
     {
-        _currentFilePath = Path.GetFullPath("../../../Resources/Data/Production_Units.json"); _assetManager = new AssetManager(_currentFilePath);
+        _currentFilePath = Path.GetFullPath("../../../Resources/Data/Production_Units.json");
+        _assetManager = new AssetManager(_currentFilePath);
         LoadAssets();
         UpdateMaxHeat();
     }
 
-    public ObservableCollection<AssetSpecifications> Assets
+    public ObservableCollection<AssetSpecifications>? Assets
     {
         get => _assets;
         set => this.RaiseAndSetIfChanged(ref _assets, value);
@@ -47,7 +48,7 @@ public class AssetManagerViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _selectedUnitType, value);
     }
 
-    public ComboBoxItem SelectedUnitTypeItem
+    public ComboBoxItem? SelectedUnitTypeItem
     {
         get => _selectedUnitTypeItem;
         set
@@ -77,7 +78,7 @@ public class AssetManagerViewModel : ViewModelBase
             var newUnit = _assetManager.CreateNewUnit(unitType);
 
             // Add to observable collection
-            Assets.Add(newUnit);
+            Assets?.Add(newUnit);
 
             StatusMessage = $"New {unitType} unit added.";
         }
@@ -238,7 +239,7 @@ public class AssetManagerViewModel : ViewModelBase
 
     public void UpdateMaxHeat()
     {
-        MaxHeat = Assets.Where(m => m.IsActive).Select(m => m.MaxHeat).Sum();
+        MaxHeat = Assets?.Where(m => m.IsActive).Select(m => m.MaxHeat).Sum();
         Console.WriteLine($"Max Heat: {MaxHeat}");
     }
 

@@ -39,15 +39,15 @@ namespace HeatProductionOptimization.ViewModels
 
 
         // Selected data source and chart type
-        private string _selectedDataSource;
+        private string? _selectedDataSource;
         public string SelectedDataSource
         {
-            get => _selectedDataSource;
+            get => _selectedDataSource ?? string.Empty;
             set
             {
                 var changed = this.RaiseAndSetIfChanged(ref _selectedDataSource, value);
                 UpdateChartTypes();
-                SelectedChartType = FilteredChartTypes.FirstOrDefault();
+                SelectedChartType = FilteredChartTypes.FirstOrDefault() ?? string.Empty;
                 this.RaisePropertyChanged(nameof(SelectedChartType));
                 if (string.IsNullOrEmpty(changed)) this.RaisePropertyChanged(nameof(SelectedDataSource));
             }
@@ -669,7 +669,7 @@ namespace HeatProductionOptimization.ViewModels
             // Ensure selected chart type is still valid
             if (!FilteredChartTypes.Contains(SelectedChartType))
             {
-                SelectedChartType = FilteredChartTypes.FirstOrDefault();
+                SelectedChartType = FilteredChartTypes.FirstOrDefault() ?? string.Empty;
                 this.RaisePropertyChanged(nameof(SelectedChartType));
             }
         }
