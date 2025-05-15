@@ -28,6 +28,12 @@
                            FontWeight="SemiBold" 
                            Margin="0,0,0,15"/>
                 
+                <TextBlock Text="Heat Demand:" 
+                           FontSize="16" 
+                           FontWeight="Medium" 
+                           Margin="0,0,0,15"/>
+                <NumericUpDown Minimum="0.1" Value="{Binding HeatNeeded}" Increment="0.1" Margin="5" Maximum="{Binding MaxHeat}"/>
+                
                 <TextBlock Text="Optimization Parameters:" 
                            FontSize="16" 
                            FontWeight="Medium" 

@@ -20,11 +20,13 @@ public class AssetManagerViewModel : ViewModelBase
     private string _currentFilePath;
     private string _selectedUnitType = "Boiler"; // Default unit type
     private ComboBoxItem _selectedUnitTypeItem;
+    public static double? MaxHeat = 0;
 
     public AssetManagerViewModel()
     {
         _currentFilePath = Path.GetFullPath("../../../Resources/Data/Production_Units.json"); _assetManager = new AssetManager(_currentFilePath);
         LoadAssets();
+        UpdateMaxHeat();
     }
 
     public ObservableCollection<AssetSpecifications> Assets
@@ -211,7 +213,7 @@ public class AssetManagerViewModel : ViewModelBase
             }
 
             bool result = _assetManager.SaveAssets(Assets);
-
+            UpdateMaxHeat();
             if (result)
             {
                 StatusMessage = "Changes saved successfully!";
@@ -232,6 +234,12 @@ public class AssetManagerViewModel : ViewModelBase
     {
         get => _currentFilePath;
         private set => this.RaiseAndSetIfChanged(ref _currentFilePath, value);
+    }
+
+    public void UpdateMaxHeat()
+    {
+        MaxHeat = Assets.Where(m => m.IsActive).Select(m => m.MaxHeat).Sum();
+        Console.WriteLine($"Max Heat: {MaxHeat}");
     }
 
     public void LoadFromFile(string filePath)

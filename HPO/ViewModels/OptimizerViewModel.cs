@@ -1,16 +1,12 @@
-﻿﻿using System;
+﻿using System;
 using ReactiveUI;
-using System.Threading.Tasks;
 using HeatProductionOptimization.Models;
 using System.Collections.Generic;
 using HeatProductionOptimization.Services.Managers;
 using HeatProductionOptimization.Models.DataModels;
-using Avalonia.Interactivity;
-using Avalonia.Controls;
 using System.Linq;
-using HeatProductionOptimization.Services.DataProviders;
 using CommunityToolkit.Mvvm.Input;
-using HeatProductionOptimization.ViewModels;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -23,19 +19,32 @@ public partial class OptimizerViewModel : ViewModelBase
     SourceDataManager sourceDataManager = SourceDataManager.sourceDataManagerInstance;
     private bool _isOptimizationRunning;
     private string _statusMessage = "Ready to optimize";
-
+    public List<AssetSpecifications> boilers;
+    
     // Optimization parameters
     private bool _considerProductionCost = true;
     private bool _considerCO2Emissions = true;
     private bool _considerFuelConsumption = true;
     private bool _considerElectricity = true;
     private bool _prioritizeRenewable = false;
+    private double _heatNeeded = 0;
+    private double? maxHeat = 0;
 
     // Optimization strategy
     private bool _isCostOptimization = true;
 
-    public OptimizerViewModel() { }
+    public OptimizerViewModel() 
+    {
+        // Get the actual objects from the SharedAssetManager (not a copy!)
+        boilers = assetManager.GetAllAssets().Values.ToList();
+    }
 
+    
+    public double? MaxHeat
+    {
+        get => AssetManagerViewModel.MaxHeat;
+        set => this.RaiseAndSetIfChanged(ref maxHeat, value);
+    }
     public bool IsOptimizationRunning
     {
         get => _isOptimizationRunning;
@@ -84,6 +93,15 @@ public partial class OptimizerViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _isCostOptimization, value);
     }
 
+    public double HeatNeeded
+    {
+        get => _heatNeeded;
+        set 
+        {
+            this.RaiseAndSetIfChanged(ref _heatNeeded, value);
+        } 
+    }
+
     [RelayCommand]
     public void RunOptimization()
     {
@@ -93,9 +111,9 @@ public partial class OptimizerViewModel : ViewModelBase
         Console.WriteLine("RunOptimization started");
         Console.WriteLine("Optimizer AssetManager Hash: " + assetManager.GetHashCode());
 
-
         try
         {
+            
             IsOptimizationRunning = true;
             StatusMessage = "Optimization in progress...";
 
@@ -119,13 +137,13 @@ public partial class OptimizerViewModel : ViewModelBase
             Console.WriteLine("Loading asset specifications...");
             Dictionary<int, AssetSpecifications> boilerdict = assetManager.LoadAssetsSpecifications();
 
-            // ✅ Update the actual SharedAssetManager so its contents get modified
+            // Update the actual SharedAssetManager so its contents get modified
             foreach (var pair in boilerdict)
             {
                 assetManager.GetAllAssets()[pair.Key] = pair.Value;
             }
 
-            // ✅ Get the actual objects from the SharedAssetManager (not a copy!)
+            // Get the actual objects from the SharedAssetManager (not a copy!)
             List<AssetSpecifications> boilers = assetManager.GetAllAssets().Values.ToList();
 
             Console.WriteLine($"Loaded {boilers.Count} boilers");
@@ -178,7 +196,7 @@ public partial class OptimizerViewModel : ViewModelBase
 
             foreach (KeyValuePair<DateTime, double?> price in ElectricityPrices)
             {
-                alg.OptimizationAlgorithm(boilers, parameters, price.Value, 10, price.Key);
+                alg.OptimizationAlgorithm(boilers, parameters, price.Value, _heatNeeded, price.Key);
             }
 
             double? Electricity = alg.CalculateElectricity(boilers, ElectricityPrices);

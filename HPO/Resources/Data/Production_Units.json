@@ -16,7 +16,7 @@
     "Gas Boiler 2": {
       "Name": "Gas Boiler 2",
       "ID": 2,
-      "IsActive": true,
+      "IsActive": false,
       "Unit Type": "Boiler",
       "Max Heat (MW)": 3,
       "Production Cost (DKK/MWh)": 560,
@@ -56,7 +56,7 @@
     "Heat Pump 1": {
       "Name": "Heat Pump 1",
       "ID": 5,
-      "IsActive": true,
+      "IsActive": false,
       "Unit Type": "Heat Pump",
       "Max Heat (MW)": 6,
       "Max Electricity (MW)": -6,
