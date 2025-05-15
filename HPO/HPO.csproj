@@ -24,7 +24,9 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="QuestPDF" Version="2023.12.0" />
     <PackageReference Include="ReactiveUI" Version="20.2.45" />
     <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
+    <PackageReference Include="System.IO" Version="4.3.0" />
   </ItemGroup>
 </Project>
