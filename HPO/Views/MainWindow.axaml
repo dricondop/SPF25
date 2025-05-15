@@ -41,37 +41,43 @@
                     <StackPanel Spacing="20" 
                           Margin="0,20"
                           VerticalAlignment="Top">
-                        <Button Classes="sidebar-button"
+                        <Button x:Name="HomeButton"
+                            Classes="sidebar-button"
                             Command="{Binding HomeWindow}"
                             ToolTip.Tip="Home"
                             HorizontalAlignment="Center">
                             <PathIcon Data="{StaticResource home_regular}" />
                         </Button>
-                        <Button Classes="sidebar-button"
+                        <Button x:Name="AssetManagerButton"
+                            Classes="sidebar-button"
                             Command="{Binding AssetManagerWindow}"
                             ToolTip.Tip="Asset Manager"
                             HorizontalAlignment="Center">
                             <PathIcon Data="{StaticResource tabs_regular}" />
                         </Button>
-                        <Button Classes="sidebar-button"
+                        <Button x:Name="SourceDataManagerButton"
+                            Classes="sidebar-button"
                             Command="{Binding SourceDataManagerWindow}"
                             ToolTip.Tip="Source Data Manager"
                             HorizontalAlignment="Center">
                             <PathIcon Data="{StaticResource database_regular}" />
                         </Button>
-                        <Button Classes="sidebar-button"
+                        <Button x:Name="OptimizerButton"
+                            Classes="sidebar-button"
                             Command="{Binding OptimizerWindow}"
                             ToolTip.Tip="Optimizer"
                             HorizontalAlignment="Center">
                             <PathIcon Data="{StaticResource options_regular}" />
                         </Button>
-                        <Button Classes="sidebar-button"
+                        <Button x:Name="DataVisualizationButton"
+                            Classes="sidebar-button"
                             Command="{Binding DataVisualizationWindow}"
                             ToolTip.Tip="Data Visualization"
                             HorizontalAlignment="Center">
                             <PathIcon Data="{StaticResource data_pie_regular}" />
                         </Button>
-                        <Button Classes="sidebar-button"
+                        <Button x:Name="ResultDataManagerButton"
+                            Classes="sidebar-button"
                             Command="{Binding ResultDataManagerWindow}"
                             ToolTip.Tip="Result Data Manager"
                             HorizontalAlignment="Center">
@@ -82,7 +88,8 @@
                     <StackPanel Spacing="20" 
                           Margin="0,20"
                           VerticalAlignment="Bottom">
-                        <Button Classes="sidebar-button"
+                        <Button x:Name="SettingsButton"
+                            Classes="sidebar-button"
                             Command="{Binding SettingsWindow}"
                             ToolTip.Tip="Settings"
                             HorizontalAlignment="Center">
