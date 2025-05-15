@@ -14,25 +14,23 @@
                     HorizontalAlignment="Left"
                     Margin="0,0,0,30"/>
         
-         <!--  Bottom Buttons  -->
-        <UniformGrid
-            Grid.Row="3"
-            HorizontalAlignment="Stretch"
-            Columns="3">
-            <Button
-                Margin="5"
+        <!-- Action Buttons -->
+        <UniformGrid Grid.Row="3" Columns="3" HorizontalAlignment="Stretch">
+            <Button Content="Export Data"
+                Command="{Binding ExportDataToCsv}"
                 HorizontalAlignment="Stretch"
-                Content="Export Data" />
-
-            <Button
-                Margin="5"
+                Margin="5"/>
+    
+            <Button Content="Print Report"
+                Command="{Binding GenerateAndSavePdfReport}"
                 HorizontalAlignment="Stretch"
-                Content="Print Report" />
-
-            <Button
-                Margin="5"
+                Margin="5"/>
+            
+            <Button Content="Compare Results"
                 HorizontalAlignment="Stretch"
-                Content="Compare Results" />
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Margin="5"/>
         </UniformGrid>
     </StackPanel>
 </UserControl>
