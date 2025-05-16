@@ -272,6 +272,13 @@ namespace HeatProductionOptimization.ViewModels
             }
             else if (ShowDateSelection)
             {
+                if (!StartDate.HasValue || !EndDate.HasValue)
+                {
+                    // Handle the error or return early
+                    Console.WriteLine("StartDate or EndDate is null. Cannot save selected date range.");
+                    return;
+                }
+
                 DateTime start = StartDate.Value.DateTime.AddHours(StartHour);
                 DateTime end = EndDate.Value.DateTime.AddHours(EndHour);
                 

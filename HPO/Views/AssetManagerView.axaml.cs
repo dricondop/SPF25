@@ -20,7 +20,7 @@ public partial class AssetManagerView : UserControl
         InitializeComponent();
     }
 
-    private void DoubleTapped(object sender, RoutedEventArgs e)
+    private new void DoubleTapped(object sender, RoutedEventArgs e)
     {
         if (sender is Border border)
         {
@@ -42,7 +42,7 @@ public partial class AssetManagerView : UserControl
         }
     }
 
-    private void LostFocus(object sender, RoutedEventArgs e)
+    private new void LostFocus(object sender, RoutedEventArgs e)
     {
         if (sender is TextBox textBox)
         {
@@ -60,7 +60,7 @@ public partial class AssetManagerView : UserControl
         }
     }
 
-    private void KeyDown(object sender, KeyEventArgs e)
+    private new void KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {
@@ -133,15 +133,20 @@ public partial class AssetManagerView : UserControl
                 string currentFilePath = viewModel.CurrentFilePath;
                 if (!string.IsNullOrEmpty(currentFilePath))
                 {
-                    string directory = Path.GetDirectoryName(currentFilePath);
-                    if (Directory.Exists(directory))
+                    string? directory = Path.GetDirectoryName(currentFilePath);
+                    if (!string.IsNullOrEmpty(directory) && Directory.Exists(directory))
                     {
-                        dialog.Directory = directory;
+                        dialog.Directory = $"Couldn't set the initial directory in AssetManager: {directory}";
                     }
                 }
                 
                 // Show dialog and get result
                 var window = this.VisualRoot as Window;
+                if (window == null)
+                {
+                    viewModel.StatusMessage = "Error: Unable to get the parent window for file dialog.";
+                    return;
+                }
                 var result = await dialog.ShowAsync(window);
                 
                 if (result != null && result.Length > 0)

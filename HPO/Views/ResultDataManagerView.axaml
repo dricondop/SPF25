@@ -13,5 +13,26 @@
                     FontWeight="Bold"
                     HorizontalAlignment="Left"
                     Margin="0,0,0,30"/>
+        
+         <!--  Bottom Buttons  -->
+        <UniformGrid
+            Grid.Row="3"
+            HorizontalAlignment="Stretch"
+            Columns="3">
+            <Button
+                Margin="5"
+                HorizontalAlignment="Stretch"
+                Content="Export Data" />
+
+            <Button
+                Margin="5"
+                HorizontalAlignment="Stretch"
+                Content="Print Report" />
+
+            <Button
+                Margin="5"
+                HorizontalAlignment="Stretch"
+                Content="Compare Results" />
+        </UniformGrid>
     </StackPanel>
 </UserControl>

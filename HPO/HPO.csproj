@@ -26,5 +26,8 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
     <PackageReference Include="ReactiveUI" Version="20.2.45" />
     <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc5.4" />
+    <PackageReference Include="SkiaSharp" Version="2.88.9" />
+    <PackageReference Include="SkiaSharp.Views" Version="2.88.9" />
   </ItemGroup>
 </Project>
