@@ -254,9 +254,9 @@ public class AssetManagerViewModel : ViewModelBase
                 return;
             }
 
-            _assetManager = new AssetManager(filePath);
+            _assetManager = new AssetManager();
 
-            CurrentFilePath = filePath;
+            CurrentFilePath = _assetManager._assetsFilePath;
 
             LoadAssets();
 

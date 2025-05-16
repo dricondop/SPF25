@@ -43,7 +43,7 @@ public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
         {
             var locations = new[]
             {
-                  Path.GetFullPath("../../../Resources/Data/ElectricityData.csv")
+                Path.GetFullPath("Resources/Data/ElectricityData.csv")
             };
 
             _currentFilePath = locations.FirstOrDefault(File.Exists);

@@ -11,13 +11,13 @@ namespace HeatProductionOptimization.Services.Managers;
 
 public class AssetManager
 {
-    private readonly string _assetsFilePath;
+    public readonly string _assetsFilePath;
     private Dictionary<int, AssetSpecifications> _assets;
     private int _nextAvailableId = 1;
 
-    public AssetManager(string assetsFilePath = "../../../Resources/Data/Production_Units.json")
+    public AssetManager()
     {
-        _assetsFilePath = assetsFilePath;
+        _assetsFilePath = Path.GetFullPath("Resources/Data/Production_Units.json");
         _assets = LoadAssetsSpecifications();
     }
 
