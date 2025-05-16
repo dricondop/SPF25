@@ -38,6 +38,7 @@ public partial class OptimizerViewModel : ViewModelBase
         get => AssetManagerViewModel.MaxHeat;
         set => this.RaiseAndSetIfChanged(ref maxHeat, value);
     }
+    
     // Date selection properties from DateInputWindowViewModel
     private DateTimeOffset? _startDate;
     private DateTimeOffset? _endDate;

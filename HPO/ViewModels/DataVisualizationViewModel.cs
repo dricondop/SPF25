@@ -11,6 +11,7 @@ using HeatProductionOptimization.Models.DataModels;
 using HeatProductionOptimization.Services.Managers;
 using ReactiveUI;
 using SkiaSharp;
+using Avalonia.Remote.Protocol.Designer;
 
 namespace HeatProductionOptimization.ViewModels
 {
@@ -156,20 +157,42 @@ namespace HeatProductionOptimization.ViewModels
             _preparedXAxisTitle = "";
             CartesianSeries.Clear();
 
-            DateTime startDate = DateInputWindowViewModel.SelectedDateRange.StartDate;
-            DateTime endDate = DateInputWindowViewModel.SelectedDateRange.EndDate;
+            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0); 
+            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0); 
 
+            try
+            {
+                var optimizerVM = new OptimizerViewModel();
+                if (optimizerVM.StartDate.HasValue && optimizerVM.EndDate.HasValue)
+                {
+                    startDate = optimizerVM.StartDate.Value.DateTime;
+                    endDate = optimizerVM.EndDate.Value.DateTime;
+                }
+                else
+                {
+                    Console.WriteLine("No dates available in the Optimizer");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex}");
+            }
+
+
+            Console.WriteLine($"Selected data source: {SelectedDataSource}");
             if (SelectedDataSource == "Optimization Results")
             {
+                Console.WriteLine($"Asset Manager has {OptimizerViewModel.SharedAssetManager.GetAllAssets().Count} total assets");
                 var assets = OptimizerViewModel.SharedAssetManager.GetAllAssets().Values
                     .Where(a => a.IsActive)
                     .ToList();
-
+        
                 if (assets.Count == 0)
                 {
                     Console.WriteLine("No active assets found.");
                     return;
                 }
+
 
                 var timestamps = assets
                     .SelectMany(a => a.ProducedHeat.Keys)
@@ -177,6 +200,7 @@ namespace HeatProductionOptimization.ViewModels
                     .Distinct()
                     .OrderBy(t => t)
                     .ToList();
+
 
                 if (timestamps.Count == 0)
                 {
@@ -232,12 +256,13 @@ namespace HeatProductionOptimization.ViewModels
 
             else if (SelectedDataSource == "Heat Demand Data")
             {
-                DateTime start = DateInputWindowViewModel.SelectedDateRange.StartDate;
-                DateTime end = DateInputWindowViewModel.SelectedDateRange.EndDate;
+                DateTime start = startDate;
+                DateTime end = endDate;
                 if (SelectedDataSource == "Heat Demand Data")
                 {
-                    var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
-                    var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
+                    var optimizerVM = new OptimizerViewModel();
+                    var winter = optimizerVM.UseWinterData;
+                    var summer = optimizerVM.UseSummerData;
                     var records = new List<HeatDemandRecord>();
                     if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
                     if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
@@ -286,10 +311,11 @@ namespace HeatProductionOptimization.ViewModels
 
             else if (SelectedDataSource == "Electricity Price Data")
             {
-                DateTime start = DateInputWindowViewModel.SelectedDateRange.StartDate;
-                DateTime end = DateInputWindowViewModel.SelectedDateRange.EndDate;
-                var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
-                var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
+                DateTime start = startDate;
+                DateTime end = endDate;
+                var optimizerVM = new OptimizerViewModel();
+                var winter = optimizerVM.UseWinterData;
+                var summer = optimizerVM.UseSummerData;
                 var records = new List<HeatDemandRecord>();
                 if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
                 if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
@@ -395,9 +421,30 @@ namespace HeatProductionOptimization.ViewModels
         // Methods to create different types of charts
         private void CreateLineChart()
         {
+            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0); 
+            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0); 
+
+            try
+            {
+                var optimizerVM = new OptimizerViewModel();
+                if (optimizerVM.StartDate.HasValue && optimizerVM.EndDate.HasValue)
+                {
+                    startDate = optimizerVM.StartDate.Value.DateTime;
+                    endDate = optimizerVM.EndDate.Value.DateTime;
+                }
+                else
+                {
+                    Console.WriteLine("No dates available in the Optimizer");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex}");
+            }
+
             CartesianSeries.Clear();
-            var start = DateInputWindowViewModel.SelectedDateRange.StartDate;
-            var end = DateInputWindowViewModel.SelectedDateRange.EndDate;
+            var start = startDate;
+            var end = endDate;
 
             if (SelectedDataSource == "Optimization Results")
             {
@@ -458,9 +505,30 @@ namespace HeatProductionOptimization.ViewModels
 
         private void CreateBarChart(List<double> values, List<string> labels)
         {
+            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0); 
+            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0); 
+
+            try
+            {
+                var optimizerVM = new OptimizerViewModel();
+                if (optimizerVM.StartDate.HasValue && optimizerVM.EndDate.HasValue)
+                {
+                    startDate = optimizerVM.StartDate.Value.DateTime;
+                    endDate = optimizerVM.EndDate.Value.DateTime;
+                }
+                else
+                {
+                    Console.WriteLine("No dates available in the Optimizer");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex}");
+            }
+
             CartesianSeries.Clear();
-            var start = DateInputWindowViewModel.SelectedDateRange.StartDate;
-            var end = DateInputWindowViewModel.SelectedDateRange.EndDate;
+            var start = startDate;
+            var end = endDate;
 
             if (SelectedDataSource == "Optimization Results")
             {
@@ -516,9 +584,30 @@ namespace HeatProductionOptimization.ViewModels
 
         private void CreateScatterChart(List<double> values, List<string> labels)
         {
+            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0); 
+            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0); 
+
+            try
+            {
+                var optimizerVM = new OptimizerViewModel();
+                if (optimizerVM.StartDate.HasValue && optimizerVM.EndDate.HasValue)
+                {
+                    startDate = optimizerVM.StartDate.Value.DateTime;
+                    endDate = optimizerVM.EndDate.Value.DateTime;
+                }
+                else
+                {
+                    Console.WriteLine("No dates available in the Optimizer");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex}");
+            }
+
             CartesianSeries.Clear();
-            var start = DateInputWindowViewModel.SelectedDateRange.StartDate;
-            var end = DateInputWindowViewModel.SelectedDateRange.EndDate;
+            var start = startDate;
+            var end = endDate;   
 
             if (SelectedDataSource == "Optimization Results")
             {
