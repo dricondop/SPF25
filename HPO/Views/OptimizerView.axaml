@@ -6,10 +6,17 @@
              xmlns:vm="using:HeatProductionOptimization.ViewModels"
              x:Class="HeatProductionOptimization.Views.OptimizerView"
              x:DataType="vm:OptimizerViewModel">
-             <StackPanel>
-                <Border Height="25" VerticalAlignment="Top" IsHitTestVisible="False" Background="Transparent"/>
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <Grid Margin="30" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
+
+             <Grid RowDefinitions="Auto,*">
+           
+                <Border Grid.Row="0" 
+                        Height="30" 
+                        Background="Transparent" 
+                        IsHitTestVisible="False"
+                        Name="DragHandle"/>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+                    <Grid Margin="30 0 30 30" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
                         <TextBlock Grid.Row="0"
                                 Text="Heat Production Optimizer / Optimizer"
                                 FontSize="40"
@@ -171,5 +178,5 @@
                         </Grid>
                     </Grid>
                 </ScrollViewer>
-            </StackPanel>
+            </Grid>
 </UserControl>
