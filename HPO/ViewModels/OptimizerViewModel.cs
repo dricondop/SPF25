@@ -484,10 +484,15 @@ public partial class OptimizerViewModel : ViewModelBase
 
             Console.WriteLine("Starting optimization loop...");
 
-
+            //Getting min and max Electricity price for the normalization
+            double? minElecprice = ElectricityPrices.Values.Min();
+            Console.WriteLine(minElecprice + "minelecprice");
+            double? maxElecprice = ElectricityPrices.Values.Max();
+            Console.WriteLine(maxElecprice + "maxelecprice");
             foreach (KeyValuePair<DateTime, double?> price in ElectricityPrices)
             {
-                alg.OptimizationAlgorithm(boilers, parameters, price.Value, _heatNeeded, price.Key);
+                double? normElecprice = (price.Value - minElecprice) / (maxElecprice - minElecprice);
+                alg.OptimizationAlgorithm(boilers, parameters, normElecprice, _heatNeeded, price.Key);
             }
 
             double? Electricity = alg.CalculateElectricity(boilers, ElectricityPrices);

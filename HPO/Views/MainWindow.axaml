@@ -12,7 +12,9 @@
     x:DataType="vm:MainWindowViewModel"
     Icon="/Assets/Icons/HPO.ico"
     RequestedThemeVariant="Light"
-    Title="Heat Production Optimization">
+    Title="Heat Production Optimization"
+    Height="750"
+    Width="1200">
 
     <Design.DataContext>
         <!--
