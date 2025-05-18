@@ -6,7 +6,8 @@
              xmlns:vm="using:HeatProductionOptimization.ViewModels"
              x:Class="HeatProductionOptimization.Views.OptimizerView"
              x:DataType="vm:OptimizerViewModel">
-             <Panel Margin="0 0 0 15" IsHitTestVisible="False">
+             <StackPanel>
+                <Border Height="25" VerticalAlignment="Top" IsHitTestVisible="False" Background="Transparent"/>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Grid Margin="30" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
                         <TextBlock Grid.Row="0"
@@ -170,5 +171,5 @@
                         </Grid>
                     </Grid>
                 </ScrollViewer>
-            </Panel>
+            </StackPanel>
 </UserControl>
