@@ -17,7 +17,7 @@ public class AssetManager
 
     public AssetManager()
     {
-        _assetsFilePath = Path.GetFullPath("Resources/Data/Production_Units.json");
+        _assetsFilePath = GetFilePath();
         _assets = LoadAssetsSpecifications();
     }
 
@@ -82,7 +82,28 @@ public class AssetManager
 
     public string GetFilePath()
     {
-        return _assetsFilePath;
+        try
+        {
+            var locations = new[]
+            {
+                Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Data", "Production_Units.json"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Data", "Production_Units.json"),
+                Path.Combine(Environment.CurrentDirectory, "Resources", "Data", "Production_Units.json")
+            };
+
+            string? FilePath = locations.FirstOrDefault(File.Exists);
+            if (FilePath == null)
+            {
+                Console.WriteLine("No file path found");
+                return string.Empty;
+            }
+            return FilePath;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return string.Empty;
+        }
     }
 
     public bool SaveAssets(IEnumerable<AssetSpecifications> assets)
