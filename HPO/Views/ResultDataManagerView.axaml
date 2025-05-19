@@ -6,31 +6,103 @@
              xmlns:vm="using:HeatProductionOptimization.ViewModels"
              x:Class="HeatProductionOptimization.Views.ResultDataManagerView"
              x:DataType="vm:ResultDataManagerViewModel">
-    <StackPanel Margin="30">
-        <TextBlock DockPanel.Dock="Top"
-                    Text="Heat Production Optimizer / Result Data Manager"
-                    FontSize="40"
-                    FontWeight="Bold"
-                    HorizontalAlignment="Left"
-                    Margin="0,0,0,30"/>
+    <StackPanel Margin="30" Background="#F5F7FA">
+        <!-- Header with original spacing -->
+        <TextBlock Text="Heat Production Optimizer / Result Data Manager"
+                FontSize="40"
+                FontWeight="Bold"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,30"/>
         
-        <!-- Action Buttons -->
-        <UniformGrid Grid.Row="3" Columns="3" HorizontalAlignment="Stretch">
-            <Button Content="Export Data"
-                Command="{Binding ExportDataToCsv}"
-                HorizontalAlignment="Stretch"
-                Margin="5"/>
-    
-            <Button Content="Print Report"
-                Command="{Binding GenerateAndSavePdfReport}"
-                HorizontalAlignment="Stretch"
-                Margin="5"/>
+        <!-- Action Buttons with perfect symmetry -->
+        <Grid ColumnDefinitions="*,*" Margin="0,20" HorizontalAlignment="Stretch">
+            <!-- CSV Export Button -->
+            <Button Grid.Column="0"
+                    Command="{Binding ExportDataToCsv}"
+                    Margin="10"
+                    Padding="20,15"
+                    Background="#FFFFFF"
+                    BorderBrush="#3498DB"
+                    BorderThickness="2"
+                    CornerRadius="8"
+                    HorizontalAlignment="Stretch">
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="📊"
+                            FontSize="36"
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,10"/>
+                    <TextBlock Text="Export Data"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="#2C3E50"
+                            HorizontalAlignment="Center"/>
+                    <TextBlock Text="Save optimization data in spreadsheet format"
+                            FontSize="12"
+                            Foreground="#7F8C8D"
+                            TextWrapping="Wrap"
+                            HorizontalAlignment="Center"
+                            Margin="0,5,0,0"/>
+                </StackPanel>
+            </Button>
             
-            <Button Content="Compare Results"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Margin="5"/>
-        </UniformGrid>
+            <!-- PDF Report Button -->
+            <Button Grid.Column="1"
+                    Command="{Binding GenerateAndSavePdfReport}"
+                    Margin="10"
+                    Padding="20,15"
+                    Background="#FFFFFF"
+                    BorderBrush="#E74C3C"
+                    BorderThickness="2"
+                    CornerRadius="8"
+                    HorizontalAlignment="Stretch">
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="📄"
+                            FontSize="36"
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,10"/>
+                    <TextBlock Text="Generate Report"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="#2C3E50"
+                            HorizontalAlignment="Center"/>
+                    <TextBlock Text="Create a professional PDF report with analysis"
+                            FontSize="12"
+                            Foreground="#7F8C8D"
+                            TextWrapping="Wrap"
+                            HorizontalAlignment="Center"
+                            Margin="0,5,0,0"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+        
+        <!-- Workflow visualization -->
+        <Border CornerRadius="8" 
+                Background="#FFFFFF" 
+                Margin="0,30,0,0" 
+                Padding="20"
+                BorderBrush="#E0E0E0" 
+                BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="Optimization Workflow"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Foreground="#2C3E50"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,15"/>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="1. Optimize →" Margin="0,0,10,0" FontWeight="Bold"/>
+                    <TextBlock Text="2. Analyze →" Margin="0,0,10,0" FontWeight="Bold"/>
+                    <TextBlock Text="3. Export Results" FontWeight="Bold" Foreground="#E74C3C"/>
+                </StackPanel>
+                
+                <TextBlock Text="Use the buttons above to export your optimization results"
+                        FontSize="12"
+                        Foreground="#7F8C8D"
+                        TextWrapping="Wrap"
+                        HorizontalAlignment="Center"
+                        Margin="0,15,0,0"/>
+            </StackPanel>
+        </Border>
     </StackPanel>
 </UserControl>
