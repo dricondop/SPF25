@@ -28,17 +28,36 @@ public partial class OptimizerViewModel : ViewModelBase
     private bool _considerElectricity = true;
     private bool _prioritizeRenewable = false;
     private double _heatNeeded = 0;
+    private bool heatDemandEnabled = true;
     private double? maxHeat = 0;
+    private bool csvHeatDemand = false;
 
     // Optimization strategy
     private bool _isCostOptimization = true;
+
     
     public double? MaxHeat
     {
         get => AssetManagerViewModel.MaxHeat;
         set => this.RaiseAndSetIfChanged(ref maxHeat, value);
     }
+
+    public bool HeatDemandEnabled
+    {
+        get => heatDemandEnabled;
+        set => this.RaiseAndSetIfChanged(ref heatDemandEnabled, value);
+    }
     
+    public bool CsvHeatDemand
+    {
+        get => csvHeatDemand;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref csvHeatDemand, value);
+            HeatDemandEnabled = !HeatDemandEnabled;
+        } 
+    }
+
     // Date selection properties from DateInputWindowViewModel
     private DateTimeOffset? _startDate;
     private DateTimeOffset? _endDate;
@@ -368,6 +387,11 @@ public partial class OptimizerViewModel : ViewModelBase
 
         CanRunOptimization = true;
     }
+
+    public void LoadCsvHeat()
+    {
+        
+    }
     
     [RelayCommand]
     public void RunOptimization()
@@ -489,10 +513,21 @@ public partial class OptimizerViewModel : ViewModelBase
             Console.WriteLine(minElecprice + "minelecprice");
             double? maxElecprice = ElectricityPrices.Values.Max();
             Console.WriteLine(maxElecprice + "maxelecprice");
+            
+            Dictionary<DateTime, double?> HeatDemand = allData.ToDictionary(v => v.TimeFrom, v => v.HeatDemand);
             foreach (KeyValuePair<DateTime, double?> price in ElectricityPrices)
             {
+                double? CurrentHeat;
+                if (heatDemandEnabled == true)
+                {
+                    CurrentHeat = HeatNeeded;
+                }
+                else
+                { 
+                    CurrentHeat = HeatDemand[price.Key];
+                }
                 double? normElecprice = (price.Value - minElecprice) / (maxElecprice - minElecprice);
-                alg.OptimizationAlgorithm(boilers, parameters, normElecprice, _heatNeeded, price.Key);
+                alg.OptimizationAlgorithm(boilers, parameters, normElecprice, CurrentHeat, price.Key);
             }
 
             double? Electricity = alg.CalculateElectricity(boilers, ElectricityPrices);
