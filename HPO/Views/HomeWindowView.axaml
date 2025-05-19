@@ -28,12 +28,14 @@
                         MinHeight="200">
 
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="Load Scenario 1" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Load Scenario 1" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="15"/>
                         <TextBlock Text="Single heating area, two gas boilers, one oil boiler" 
-                                   FontSize="14" 
+                                   FontSize="18"
+                                   FontWeight="Medium" 
                                    HorizontalAlignment="Center"
                                    TextWrapping="Wrap"
-                                   TextAlignment="Center"/>
+                                   TextAlignment="Center"
+                                   Margin="10,0,10,0"/>
                     </StackPanel>
                 </Button>
                 
@@ -44,12 +46,14 @@
                         MinHeight="200">
                         
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="Load Scenario 2" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Load Scenario 2" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="15"/>
                         <TextBlock Text="Single heating area, one gas boiler, one oil boiler, one gas motor, one heat pump" 
-                                   FontSize="14" 
+                                   FontSize="18"
+                                   FontWeight="Medium" 
                                    HorizontalAlignment="Center"
                                    TextWrapping="Wrap"
-                                   TextAlignment="Center"/>
+                                   TextAlignment="Center"
+                                   Margin="10 0 10 0"/>
                     </StackPanel>
                 </Button>
             </UniformGrid>

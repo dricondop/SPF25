@@ -5,6 +5,7 @@ using System.Threading;
 using Avalonia.Controls.Platform;
 using HeatProductionOptimization.Models.DataModels;
 
+
 namespace HeatProductionOptimization.Models;
 
 public class OptAlgorithm
@@ -42,7 +43,7 @@ public class OptAlgorithm
 
             //Calculate objective values for every heat pump
             objective = ((TemporalPumpCost ?? 0.0) * par[0] + (TemporalConsumption ?? 0.0) * par[1] + (hp.CO2Emissions ?? 0.0) * par[2])/ n;
-            Console.WriteLine($"Boiler {hp.Name} objective value: {objective}");
+            //Console.WriteLine($"Boiler {hp.Name} objective value: {objective}");
             obj[hp] = objective;
         }
         
@@ -56,7 +57,7 @@ public class OptAlgorithm
             
             //Calculate objective values for every gas motor
             objective = ((TemporalMotorCost ?? 0.0) * par[0] + (TemporalConsumption ?? 0.0) * par[1] + ( TemporalCo2 ?? 0.0) * par[2])/ n;
-            Console.WriteLine($"Boiler {gm.Name} objective value: {objective}");
+            //Console.WriteLine($"Boiler {gm.Name} objective value: {objective}");
             obj[gm] = objective;
         }
 
@@ -70,7 +71,7 @@ public class OptAlgorithm
                 double? TemporalBoilerCost = (Boilers[i].ProductionCost - MinCostValue) / (MaxCostValue - MinCostValue);
                 objective = ((TemporalBoilerCost ?? 0.0) * par[0] + (TemporalConsumption?? 0.0) * par[1] + ( TemporalCo2?? 0.0) * par[2])/ n;
                 obj[Boilers[i]] = objective;
-                Console.WriteLine($"Boiler {Boilers[i].Name} objective value: {objective}");
+                //Console.WriteLine($"Boiler {Boilers[i].Name} objective value: {objective}");
             }
         } 
         //obj is a dictionary that has the objective value as a double and the unit as an AssetSpecifications object
@@ -78,7 +79,7 @@ public class OptAlgorithm
     }
 
     //This method distributes the heat demand across the unit depending on their objective values (profitability)
-    public void CalculateUnits(List<AssetSpecifications> Boilers, Dictionary<AssetSpecifications,double> boilerdict, double heat, DateTime hour)
+    public void CalculateUnits(List<AssetSpecifications> Boilers, Dictionary<AssetSpecifications,double> boilerdict, double? heat, DateTime hour)
     {
         //This orders the objective values associated with each unit
         double[] order = boilerdict.Values.OrderBy(o => o).Distinct().ToArray();
@@ -99,13 +100,14 @@ public class OptAlgorithm
                 //The for i in range distributes the heat throughout the units in indexes
                 for (int j = 0; j < indexes.Count(); j++)
                 {
+                    //Checks if the heat needed is more than the Max produced heat of the boiler
                     if (heatneeded > Boilers[indexes[j]].MaxHeat)
                     {
                         Boilers[indexes[j]].ProducedHeat[hour] = Boilers[indexes[j]].MaxHeat;
                         heatneeded -= Boilers[indexes[j]].MaxHeat;
-                        Console.WriteLine($"The Boiler:  {Boilers[indexes[j]].Name} is produces {Boilers[indexes[j]].MaxHeat}");
+                        Console.WriteLine($"The Boiler:  {Boilers[indexes[j]].Name} produces {Boilers[indexes[j]].MaxHeat}");
                     }
-                    else
+                    else //If not, it means that this boiler can be assigned with the remaining heat and set it to 0
                     {
                         Boilers[indexes[j]].ProducedHeat[hour] = heatneeded;
                         heatneeded = 0;
@@ -114,57 +116,88 @@ public class OptAlgorithm
             }
         }
     }
-    public double? CalculateElectricity(List<AssetSpecifications> boilers, Dictionary<DateTime,double?> ElectricityPrice)
+
+    //This method calculates the final impact of electricity in the total costs.
+    public double? CalculateElectricity(List<AssetSpecifications> boilers, Dictionary<DateTime, double?> ElectricityPrice)
     {
+        //Get every boiler, pump and motor and store them in separate lists as AssetSpecifications objects
         List<AssetSpecifications> Boilers = boilers.Where(n => n.IsActive == true).ToList();
-        List<AssetSpecifications> HeatPumps = Boilers.Where( n => n.UnitType == "Heat Pump").ToList();
-        List<AssetSpecifications> GasMotors =  Boilers.Where( n => n.UnitType == "Motor").ToList();
+        List<AssetSpecifications> HeatPumps = Boilers.Where(n => n.UnitType == "Heat Pump").ToList();
+        List<AssetSpecifications> GasMotors = Boilers.Where(n => n.UnitType == "Motor").ToList();
 
         double? MotorBenefit = 0;
         double? PumpsCost = 0;
-        foreach(var motor in GasMotors)
+        //Calculates for each gas motor the money of electricity produced
+        foreach (var motor in GasMotors)
         {
-            foreach(KeyValuePair<DateTime,double?> price in ElectricityPrice)
+            //This is because the motor may not have a 1 to 1 heat/electricity production
+            double? ratio = 0;
+
+            //Preventing divisions by 0 and null values sneaking in
+            if (motor.MaxElectricity != null && motor.MaxElectricity != 0)
             {
-                if(motor.ProducedHeat.ContainsKey(price.Key))
+                //This ratio is the ratio in which the electricity is produced in comparison with the heat generation
+                ratio = motor.MaxHeat / (double)Math.Abs((decimal)motor.MaxElectricity);
+                //The absolute value was added in case the user wants the motor to consume electricity instead of generate it
+            }
+            foreach (KeyValuePair<DateTime, double?> price in ElectricityPrice)
+            {
+                //This condition is triggered only if any engine has generated heat
+                if (motor.ProducedHeat.ContainsKey(price.Key))
                 {
-                    MotorBenefit += motor.ProducedHeat[price.Key] * 0.742857 * price.Value;
+                    //The electricity remaining from motors can be sold, here it's added to the benefits
+                    MotorBenefit += motor.ProducedHeat[price.Key] * ratio * price.Value;
                 }
             }
         }
+        
+        //Calculates for each heat pump the money of electricity spent
+        foreach (var pump in HeatPumps)
+        {
+            //This is because the pump may not have a 1 to 1 heat/electricity production
+            double? ratio = 0;
 
-        foreach(var pump in HeatPumps)
-        {
-        foreach(KeyValuePair<DateTime,double?> price in ElectricityPrice)
-        {
-            if(pump.ProducedHeat.ContainsKey(price.Key))
+            //Preventing divisions by 0 and null values sneaking in
+            if (pump.MaxElectricity != null && pump.MaxElectricity != 0)
             {
-                PumpsCost += pump.ProducedHeat[price.Key] * price.Value;
+                //This ratio is the ratio in which the electricity is produced in comparison with the heat generation
+                ratio = pump.MaxHeat / (double)Math.Abs((decimal)pump.MaxElectricity);
+                //Pumps do not produce electricity, so the max electricity is negative, we have to use absolute values
+            }
+            foreach (KeyValuePair<DateTime, double?> price in ElectricityPrice)
+            {
+                if (pump.ProducedHeat.ContainsKey(price.Key))
+                {
+                    //The pumps use electricity to generate heat, so electricity prices have to added to the final costs
+                    PumpsCost += pump.ProducedHeat[price.Key] * ratio * price.Value;
+                }
             }
         }
-        }
-        return  PumpsCost - MotorBenefit;
+        //Cost - benefit to know whether if you end up winning or losing money in electricity generation/consumption
+        return PumpsCost - MotorBenefit;
     }
 
-    public void OptimizationAlgorithm(List<AssetSpecifications> boilers, int[] par, double? ElectricityPrice,double heat, DateTime time)
+    public void OptimizationAlgorithm(List<AssetSpecifications> boilers, int[] par, double? ElectricityPrice,double? heat, DateTime time)
     {
+        //All the optimization methods should go here, this way we only have to call one sigle method in the view model
         List<AssetSpecifications> Boilers = boilers.Where(n => n.IsActive == true).ToList();
         List<AssetSpecifications> HeatPumps = Boilers.Where( n => n.UnitType == "Heat Pump").ToList();
         List<AssetSpecifications> GasMotors =  Boilers.Where( n => n.UnitType == "Motor").ToList();
         CalculateUnits(Boilers, GetObjective(Boilers, par, ElectricityPrice, HeatPumps, GasMotors), heat, time);
-    
-        // double? Cost = CalculateTotalCost(Boilers,Electricity);
     }
 
+    //This is the final calculation after the electricity profit/losses are calculated and returns the final cost
     public double? CalculateTotalCost(List<AssetSpecifications> boilers, double? Electricity)
     {
         List<AssetSpecifications> Boilers = boilers.Where(n => n.IsActive == true).ToList();
         double? TotalCost = 0;
-        foreach(var boiler in boilers)
+        foreach (var boiler in boilers)
         {
+            //For every bit of heat produced by boilers, multiply by the production costs
             TotalCost += boiler.ProductionCost * boiler.ProducedHeat.Values.Sum();
         }
 
+        //Add the total costs to the electricity prices balance
         return TotalCost + Electricity;
     }
 }
