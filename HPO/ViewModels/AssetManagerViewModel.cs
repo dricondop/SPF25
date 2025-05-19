@@ -12,23 +12,43 @@ using System.Diagnostics;
 
 namespace HeatProductionOptimization.ViewModels;
 
-public class AssetManagerViewModel : ViewModelBase
+public partial class AssetManagerViewModel : ViewModelBase
 {
     private AssetManager _assetManager;
     private ObservableCollection<AssetSpecifications>? _assets;
     private string _statusMessage = "Do not forget to save any changes :)";
     private string _currentFilePath;
-    private string _selectedUnitType = "Boiler"; // Default unit type
+    private string _selectedUnitType = "Boiler";
     private ComboBoxItem? _selectedUnitTypeItem;
     public static double? MaxHeat = 0;
 
     public AssetManagerViewModel()
     {
-        // Initialize AssetManager with null to use the default path
-        _assetManager = new AssetManager();
+        _assetManager = OptimizerViewModel.SharedAssetManager;
         _currentFilePath = _assetManager.GetFilePath();
         LoadAssets();
         UpdateMaxHeat();
+    }
+
+    public void ReloadAssets()
+    {
+        try
+        {
+            var assetDict = _assetManager.LoadAssetsSpecifications();
+
+            Assets = new ObservableCollection<AssetSpecifications>(assetDict.Values);
+
+            UpdateMaxHeat();
+
+            StatusMessage = $"Assets refreshed from file. {Assets.Count(a => a.IsActive)} active units.";
+
+            Console.WriteLine($"Assets reloaded from file. {Assets.Count(a => a.IsActive)} active units out of {Assets.Count} total.");
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Error refreshing assets: {ex.Message}";
+            Console.WriteLine($"Error refreshing assets: {ex}");
+        }
     }
 
     public ObservableCollection<AssetSpecifications>? Assets
@@ -72,13 +92,10 @@ public class AssetManagerViewModel : ViewModelBase
     {
         try
         {
-            // Extract the actual unit type text from the ComboBoxItem if needed
             string unitType = _selectedUnitType;
 
-            // Create new unit with the selected type
             var newUnit = _assetManager.CreateNewUnit(unitType);
 
-            // Add to observable collection
             Assets?.Add(newUnit);
 
             StatusMessage = $"New {unitType} unit added.";
@@ -164,7 +181,6 @@ public class AssetManagerViewModel : ViewModelBase
             return false;
         }
 
-        // Different parsing logic based on field type
         switch (fieldName)
         {
             case "MaxHeat":
@@ -179,7 +195,6 @@ public class AssetManagerViewModel : ViewModelBase
                 }
                 else if (double.TryParse(value, NumberStyles.Any, CultureInfo.CurrentCulture, out doubleResult))
                 {
-                    // Also try with current culture (which might use comma as decimal separator)
                     result = doubleResult;
                     return true;
                 }
@@ -187,7 +202,6 @@ public class AssetManagerViewModel : ViewModelBase
                 return false;
 
             default:
-                // For string fields
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     result = value;
@@ -208,7 +222,6 @@ public class AssetManagerViewModel : ViewModelBase
                 return;
             }
 
-            // Validate assets before saving
             if (!ValidateAssets())
             {
                 return;

@@ -19,6 +19,16 @@ public partial class AssetManagerView : UserControl
     public AssetManagerView()
     {
         InitializeComponent();
+        this.Loaded += AssetManagerView_Loaded;
+    }
+
+    private void AssetManagerView_Loaded(object? sender, RoutedEventArgs e)
+    {
+        // When the view is loaded, refresh the assets from the JSON file
+        if (DataContext is AssetManagerViewModel viewModel)
+        {
+            viewModel.ReloadAssets();
+        }
     }
 
     private new void DoubleTapped(object sender, RoutedEventArgs e)
@@ -88,15 +98,12 @@ public partial class AssetManagerView : UserControl
     {
         if (DataContext is AssetManagerViewModel viewModel)
         {
-            // If the ComboBox selection isn't set in the ViewModel, try to get it directly
             var comboBox = this.FindControl<ComboBox>("UnitTypeComboBox");
             
             if (comboBox != null && comboBox.SelectedItem is ComboBoxItem selectedItem)
             {
-                // Extract text content from the ComboBoxItem
                 string unitType = selectedItem.Content?.ToString() ?? "Boiler";
                 
-                // Set it in the ViewModel
                 viewModel.SelectedUnitType = unitType;
             }
             
@@ -115,7 +122,7 @@ public partial class AssetManagerView : UserControl
 
     private async void LoadFile_Click(object sender, RoutedEventArgs e)
     {
-        if (DataContext is not SourceDataManagerViewModel viewModel)
+        if (DataContext is not AssetManagerViewModel viewModel)
         {
             Console.WriteLine("DataContext is not set correctly");
             return;
