@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Avalonia.VisualTree;
 using HeatProductionOptimization.Models.DataModels;
 using HeatProductionOptimization.ViewModels;
@@ -18,6 +19,16 @@ public partial class AssetManagerView : UserControl
     public AssetManagerView()
     {
         InitializeComponent();
+        this.Loaded += AssetManagerView_Loaded;
+    }
+
+    private void AssetManagerView_Loaded(object? sender, RoutedEventArgs e)
+    {
+        // When the view is loaded, refresh the assets from the JSON file
+        if (DataContext is AssetManagerViewModel viewModel)
+        {
+            viewModel.ReloadAssets();
+        }
     }
 
     private new void DoubleTapped(object sender, RoutedEventArgs e)
@@ -87,15 +98,12 @@ public partial class AssetManagerView : UserControl
     {
         if (DataContext is AssetManagerViewModel viewModel)
         {
-            // If the ComboBox selection isn't set in the ViewModel, try to get it directly
             var comboBox = this.FindControl<ComboBox>("UnitTypeComboBox");
             
             if (comboBox != null && comboBox.SelectedItem is ComboBoxItem selectedItem)
             {
-                // Extract text content from the ComboBoxItem
                 string unitType = selectedItem.Content?.ToString() ?? "Boiler";
                 
-                // Set it in the ViewModel
                 viewModel.SelectedUnitType = unitType;
             }
             
@@ -114,50 +122,41 @@ public partial class AssetManagerView : UserControl
 
     private async void LoadFile_Click(object sender, RoutedEventArgs e)
     {
-        if (DataContext is AssetManagerViewModel viewModel)
+        if (DataContext is not AssetManagerViewModel viewModel)
         {
-            try
+            Console.WriteLine("DataContext is not set correctly");
+            return;
+        }
+
+        try
+        {
+            var topLevel = TopLevel.GetTopLevel(this);
+            if (topLevel == null)
             {
-                // Create file picker
-                var dialog = new OpenFileDialog
-                {
-                    Title = "Select JSON Asset File",
-                    Filters = new List<FileDialogFilter>
-                    {
-                        new FileDialogFilter { Name = "JSON Files", Extensions = new List<string> { "json" } },
-                        new FileDialogFilter { Name = "All Files", Extensions = new List<string> { "*" } }
-                    }
-                };
-                
-                // Try to set initial directory to the same directory as the current file
-                string currentFilePath = viewModel.CurrentFilePath;
-                if (!string.IsNullOrEmpty(currentFilePath))
-                {
-                    string? directory = Path.GetDirectoryName(currentFilePath);
-                    if (!string.IsNullOrEmpty(directory) && Directory.Exists(directory))
-                    {
-                        dialog.Directory = $"Couldn't set the initial directory in AssetManager: {directory}";
-                    }
-                }
-                
-                // Show dialog and get result
-                var window = this.VisualRoot as Window;
-                if (window == null)
-                {
-                    viewModel.StatusMessage = "Error: Unable to get the parent window for file dialog.";
-                    return;
-                }
-                var result = await dialog.ShowAsync(window);
-                
-                if (result != null && result.Length > 0)
-                {
-                    viewModel.LoadFromFile(result[0]);
-                }
+                Console.WriteLine("Could not get TopLevel");
+                return;
             }
-            catch (Exception ex)
+
+            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
-                viewModel.StatusMessage = $"Error loading file: {ex.Message}";
+                Title = "Select JSON File",
+                AllowMultiple = false,
+                FileTypeFilter = new List<FilePickerFileType>
+                {
+                    new("JSON Files") { Patterns = new[] { "*.json" } },
+                    new("All Files") { Patterns = new[] { "*" } }
+                },
+                SuggestedStartLocation = await topLevel.StorageProvider.TryGetWellKnownFolderAsync(WellKnownFolder.Documents)
+            });
+
+            if (files.Count > 0 && files[0].TryGetLocalPath() is { } filePath)
+            {
+                viewModel.LoadFromFile(filePath);
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"File dialog error: {ex}");
         }
     }
 }

@@ -57,7 +57,6 @@
                         Foreground="White"/>
             </StackPanel>
             
-            <!-- Status Message -->
             <TextBlock Text="{Binding StatusMessage}"
                       VerticalAlignment="Center"
                       Margin="0,0,10,0"/>
@@ -79,7 +78,6 @@
                                 Padding="10"
                                 Background="White">
                             <StackPanel>
-                                <!-- Name and Active Toggle in same row -->
                                 <Grid ColumnDefinitions="*, Auto" Margin="0,0,0,10">
                                     <Border Grid.Column="0" Classes="editableValue" 
                                             DoubleTapped="DoubleTapped"
@@ -101,7 +99,6 @@
                                         </Panel>
                                     </Border>
                                     
-                                    <!-- Active Toggle -->
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="Active" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                         <ToggleSwitch IsChecked="{Binding IsActive}" 
@@ -112,7 +109,7 @@
                                 </Grid>
                                            
                                 <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                                    <!-- Unit Type - Always shown (not editable) -->
+                                    <!-- Unit Type -->
                                     <Grid Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,8">
                                         <Grid ColumnDefinitions="*,*,*">
                                             <TextBlock Grid.Column="0" Text="Unit Type" FontWeight="SemiBold"/>
@@ -121,7 +118,7 @@
                                         </Grid>
                                     </Grid>
 
-                                    <!-- Fuel Type - Only show if property exists -->
+                                    <!-- Fuel Type -->
                                     <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding FuelType, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
@@ -139,7 +136,7 @@
                                         </Grid>
                                     </Grid>
 
-                                    <!-- Production Cost - Only show if property exists -->
+                                    <!-- Production Cost -->
                                     <Grid Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding ProductionCost, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
@@ -157,7 +154,7 @@
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- Max Heat - Only show if property exists -->
+                                    <!-- Max Heat -->
                                     <Grid Grid.Row="3" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding MaxHeat, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
@@ -175,7 +172,7 @@
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- Max Electricity - Only show if property exists -->
+                                    <!-- Max Electricity -->
                                     <Grid Grid.Row="4" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding MaxElectricity, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
@@ -193,7 +190,7 @@
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- CO2 Emissions - Only show if property exists -->
+                                    <!-- CO2 Emissions -->
                                     <Grid Grid.Row="5" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding CO2Emissions, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">
@@ -211,7 +208,7 @@
                                         </Grid>
                                     </Grid>
                                     
-                                    <!-- Fuel Consumption - Only show if property exists -->
+                                    <!-- Fuel Consumption -->
                                     <Grid Grid.Row="6" Grid.ColumnSpan="3" Margin="0,0,0,8"
                                           IsVisible="{Binding FuelConsumption, Converter={x:Static ObjectConverters.IsNotNull}}">
                                         <Grid ColumnDefinitions="*,*,*">

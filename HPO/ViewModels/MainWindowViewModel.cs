@@ -26,7 +26,7 @@ public class MainWindowViewModel : ViewModelBase
             new HomeWindowViewModel(),
             new AssetManagerViewModel(),
             new SourceDataManagerViewModel(),
-            new OptimizerViewModel(), 
+            new OptimizerViewModel(),
             new DataVisualizationViewModel(),
             new ResultDataManagerViewModel(),
             new SettingsViewModel(),
@@ -36,7 +36,7 @@ public class MainWindowViewModel : ViewModelBase
         };
         CurrentPage = Windows[0];
         _currentPage = CurrentPage;
-        
+
         WindowManager.HomeWindow += () => CurrentPage = Windows[0];
         WindowManager.AssetManagerWindow += () => CurrentPage = Windows[1];
         WindowManager.SourceDataManagerWindow += () => CurrentPage = Windows[2];
@@ -54,6 +54,11 @@ public class MainWindowViewModel : ViewModelBase
     }
     public void AssetManagerWindow()
     {
+        // Update the AssetManagerViewModel instance before showing the view
+        if (Windows[1] is AssetManagerViewModel assetManagerViewModel)
+        {
+            assetManagerViewModel.ReloadAssets();
+        }
         CurrentPage = Windows[1];
     }
     public void SourceDataManagerWindow()
