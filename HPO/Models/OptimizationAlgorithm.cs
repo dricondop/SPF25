@@ -42,7 +42,7 @@ public class OptAlgorithm
 
             //Calculate objective values for every heat pump
             objective = ((TemporalPumpCost ?? 0.0) * par[0] + (TemporalConsumption ?? 0.0) * par[1] + (hp.CO2Emissions ?? 0.0) * par[2])/ n;
-            Console.WriteLine($"Boiler {hp.Name} objective value: {objective}");
+            //Console.WriteLine($"Boiler {hp.Name} objective value: {objective}");
             obj[hp] = objective;
         }
         
@@ -56,7 +56,7 @@ public class OptAlgorithm
             
             //Calculate objective values for every gas motor
             objective = ((TemporalMotorCost ?? 0.0) * par[0] + (TemporalConsumption ?? 0.0) * par[1] + ( TemporalCo2 ?? 0.0) * par[2])/ n;
-            Console.WriteLine($"Boiler {gm.Name} objective value: {objective}");
+            //Console.WriteLine($"Boiler {gm.Name} objective value: {objective}");
             obj[gm] = objective;
         }
 
@@ -70,7 +70,7 @@ public class OptAlgorithm
                 double? TemporalBoilerCost = (Boilers[i].ProductionCost - MinCostValue) / (MaxCostValue - MinCostValue);
                 objective = ((TemporalBoilerCost ?? 0.0) * par[0] + (TemporalConsumption?? 0.0) * par[1] + ( TemporalCo2?? 0.0) * par[2])/ n;
                 obj[Boilers[i]] = objective;
-                Console.WriteLine($"Boiler {Boilers[i].Name} objective value: {objective}");
+                //Console.WriteLine($"Boiler {Boilers[i].Name} objective value: {objective}");
             }
         } 
         //obj is a dictionary that has the objective value as a double and the unit as an AssetSpecifications object
@@ -78,7 +78,7 @@ public class OptAlgorithm
     }
 
     //This method distributes the heat demand across the unit depending on their objective values (profitability)
-    public void CalculateUnits(List<AssetSpecifications> Boilers, Dictionary<AssetSpecifications,double> boilerdict, double heat, DateTime hour)
+    public void CalculateUnits(List<AssetSpecifications> Boilers, Dictionary<AssetSpecifications,double> boilerdict, double? heat, DateTime hour)
     {
         //This orders the objective values associated with each unit
         double[] order = boilerdict.Values.OrderBy(o => o).Distinct().ToArray();
@@ -146,7 +146,7 @@ public class OptAlgorithm
         return  PumpsCost - MotorBenefit;
     }
 
-    public void OptimizationAlgorithm(List<AssetSpecifications> boilers, int[] par, double? ElectricityPrice,double heat, DateTime time)
+    public void OptimizationAlgorithm(List<AssetSpecifications> boilers, int[] par, double? ElectricityPrice,double? heat, DateTime time)
     {
         List<AssetSpecifications> Boilers = boilers.Where(n => n.IsActive == true).ToList();
         List<AssetSpecifications> HeatPumps = Boilers.Where( n => n.UnitType == "Heat Pump").ToList();

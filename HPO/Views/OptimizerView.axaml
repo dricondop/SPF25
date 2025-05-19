@@ -103,14 +103,21 @@
                                         FontSize="16" 
                                         FontWeight="Medium" 
                                         Margin="0,0,0,10"/>
-
-                                <NumericUpDown Minimum="0.1"
-                                            Value="{Binding HeatNeeded}"
-                                            Increment="0.1" Margin="5,0,0,15"
-                                            Maximum="{Binding MaxHeat}"
-                                            Width="150"
-                                            HorizontalAlignment="Left"/>
-                                
+                                <StackPanel Orientation="Horizontal">
+                                        <NumericUpDown Minimum="0.1"
+                                                Value="{Binding HeatNeeded}"
+                                                Increment="0.1" Margin="5,0,0,15"
+                                                Maximum="{Binding MaxHeat}"
+                                                Width="150"
+                                                HorizontalAlignment="Left"
+                                                IsEnabled="{Binding HeatDemandEnabled}"
+                                                VerticalAlignment="Center"/>
+                                        <CheckBox
+                                        Content="CSV heat demand data"
+                                        IsChecked="{Binding CsvHeatDemand}"
+                                        VerticalAlignment="Center"
+                                        Margin="50 0 20 15"/>
+                                </StackPanel>
                                 <TextBlock Text="Optimization Parameters:" 
                                         FontSize="16" 
                                         FontWeight="Medium" 
