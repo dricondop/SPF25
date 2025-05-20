@@ -80,7 +80,7 @@ public class ResultDataManagerViewModel : ViewModelBase
                     
                     for (int i = 0; i < ResultsData.TimeStamps.Count; i++)
                     {
-                        var line = $"{ResultsData.TimeStamps[i]:yyyy-MM-dd HH:mm:ss}," +
+                        var line = $"{ResultsData.TimeStamps[i]:dd-MM-yyyy HH:mm:ss}," +
                                    $"{ResultsData.HeatDemand[i]}," +
                                    $"{ResultsData.ElectricityPrice[i]}," +
                                    $"{ResultsData.TotalCosts[i]}," +

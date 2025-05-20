@@ -153,7 +153,7 @@ namespace HeatProductionOptimization.Services
                         .AlignMiddle()
                         .Text(text =>
                         {
-                            text.Span($"Report generated on {DateTime.Now:yyyy-MM-dd HH:mm} | ");
+                            text.Span($"Report generated on {DateTime.Now:dd-MM-yyyy HH:mm} | ");
                             text.Span("Page ");
                             text.CurrentPageNumber();
                             text.Span(" of ");

@@ -149,14 +149,14 @@ public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
             {
                 var winterStart = _sourceDataManager.WinterRecords.Min(r => r.TimeFrom);
                 var winterEnd = _sourceDataManager.WinterRecords.Max(r => r.TimeTo);
-                winterRange = $"Winter: {winterStart:yyyy-MM-dd} to {winterEnd:yyyy-MM-dd}";
+                winterRange = $"Winter: {winterStart:dd-MM-yyyy} to {winterEnd:dd-MM-yyyy}";
             }
 
             if (_sourceDataManager.SummerRecords.Count > 0)
             {
                 var summerStart = _sourceDataManager.SummerRecords.Min(r => r.TimeFrom);
                 var summerEnd = _sourceDataManager.SummerRecords.Max(r => r.TimeTo);
-                summerRange = $"Summer: {summerStart:yyyy-MM-dd} to {summerEnd:yyyy-MM-dd}";
+                summerRange = $"Summer: {summerStart:dd-MM-yyyy} to {summerEnd:dd-MM-yyyy}";
             }
 
             DateRange = $"{winterRange} | {summerRange}";
