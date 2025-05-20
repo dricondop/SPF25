@@ -136,9 +136,6 @@ namespace HeatProductionOptimization.ViewModels
             SelectedChartType = "Line Chart";
 
             UpdateChartCommand = new RelayCommand(UpdateChart);
-            ExportDataCommand = new RelayCommand(ExportData);
-            PrintReportCommand = new RelayCommand(PrintReport);
-            CompareResultsCommand = new RelayCommand(CompareResults);
             FilteredChartTypes = new ObservableCollection<string>(AvailableChartTypes);
 
             // Initialize default chart data
@@ -208,7 +205,7 @@ namespace HeatProductionOptimization.ViewModels
                     return;
                 }
 
-                _preparedLabels = timestamps.Select(t => t.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
                 this.RaisePropertyChanged(nameof(ChartWidth));
                 _preparedXAxisTitle = "Time";
                 _preparedYAxisTitle = "Produced Heat (MWh)";
@@ -267,7 +264,7 @@ namespace HeatProductionOptimization.ViewModels
                     if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
                     if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
                     var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                    _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("MM-dd HH:mm")).ToList();
+                    _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
                     _preparedValues = sorted.Select(r => r.HeatDemand ?? 0).ToList();
                     _preparedXAxisTitle = "Date and Hour";
                     _preparedYAxisTitle = "Heat Demand (MWh)";
@@ -320,7 +317,7 @@ namespace HeatProductionOptimization.ViewModels
                 if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
                 if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
                 var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
                 _preparedValues = sorted.Select(r => r.ElectricityPrice ?? 0).ToList();
                 _preparedXAxisTitle = "Date and Hour";
                 _preparedYAxisTitle = "Electricity Price (DKK/kWh)";
@@ -458,7 +455,7 @@ namespace HeatProductionOptimization.ViewModels
                     .OrderBy(t => t)
                     .ToList();
 
-                _preparedLabels = timestamps.Select(t => t.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
                 _preparedXAxisTitle = "Time";
                 _preparedYAxisTitle = "Produced Heat (MWh)";
 
@@ -486,7 +483,7 @@ namespace HeatProductionOptimization.ViewModels
                 if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
 
                 var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
                 _preparedValues = sorted.Select(r => r.HeatDemand ?? 0).ToList();
                 _preparedXAxisTitle = "Date and Hour";
                 _preparedYAxisTitle = "Heat Demand (MWh)";
@@ -542,7 +539,7 @@ namespace HeatProductionOptimization.ViewModels
                     .OrderBy(t => t)
                     .ToList();
 
-                _preparedLabels = timestamps.Select(t => t.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
                 _preparedXAxisTitle = "Time";
                 _preparedYAxisTitle = "Produced Heat (MWh)";
 
@@ -621,7 +618,7 @@ namespace HeatProductionOptimization.ViewModels
                     .OrderBy(t => t)
                     .ToList();
 
-                _preparedLabels = timestamps.Select(t => t.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
                 _preparedXAxisTitle = "Time";
                 _preparedYAxisTitle = "Produced Heat (MWh)";
 
