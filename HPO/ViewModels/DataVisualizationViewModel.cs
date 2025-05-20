@@ -254,13 +254,80 @@ namespace HeatProductionOptimization.ViewModels
         {
             try
             {
+                bool limitTo48 = SelectedDataSource is "Heat Demand Data" or "Electricity Price Data" or "Optimization Results";
+
+                var series = new List<ISeries>();
+                var xAxis = new Axis();
+                var yAxis = YAxes.FirstOrDefault();
+
+                if (limitTo48)
+                {
+                    for (int i = 0; i < CartesianSeries.Count; i++)
+                    {
+                        var original = CartesianSeries[i];
+
+                        switch (original)
+                        {
+                            case LineSeries<double> line:
+                                series.Add(new LineSeries<double>
+                                {
+                                    Name = line.Name,
+                                    Values = line.Values?.Cast<double>().Take(48).ToList() ?? new List<double>()
+                                });
+                                break;
+                            case ColumnSeries<double> column:
+                                series.Add(new ColumnSeries<double>
+                                {
+                                    Name = column.Name,
+                                    Values = column.Values?.Cast<double>().Take(48).ToList() ?? new List<double>(),
+                                    MaxBarWidth = column.MaxBarWidth,
+                                    Stroke = column.Stroke
+                                });
+                                break;
+                            case ScatterSeries<double> scatter:
+                                series.Add(new ScatterSeries<double>
+                                {
+                                    Name = scatter.Name,
+                                    Values = scatter.Values?.Cast<double>().Take(48).ToList() ?? new List<double>(),
+                                    DataLabelsPaint = scatter.DataLabelsPaint
+                                });
+                                break;
+                            default:
+                                series.Add(original); // fallback
+                                break;
+                        }
+                    }
+
+                    if (XAxes.FirstOrDefault() is Axis originalAxis && originalAxis.Labels != null)
+                    {
+                        xAxis = new Axis
+                        {
+                            Labels = originalAxis.Labels.Take(48).ToArray(),
+                            Name = originalAxis.Name,
+                            ShowSeparatorLines = originalAxis.ShowSeparatorLines,
+                            LabelsRotation = originalAxis.LabelsRotation,
+                            TextSize = originalAxis.TextSize,
+                            UnitWidth = originalAxis.UnitWidth,
+                            MinStep = originalAxis.MinStep,
+                            ForceStepToMin = originalAxis.ForceStepToMin,
+                            MinLimit = originalAxis.MinLimit,
+                            Padding = originalAxis.Padding
+                        };
+                    }
+                }
+                else
+                {
+                    series = CartesianSeries.ToList();
+                    xAxis = XAxes.FirstOrDefault() ?? new Axis();
+                }
+
                 var chart = new SKCartesianChart
                 {
-                    Width = (int)ChartWidth,
+                    Width = limitTo48 ? Math.Max(48 * 45, 900) : (int)ChartWidth,
                     Height = 600,
-                    Series = CartesianSeries,
-                    XAxes = XAxes,
-                    YAxes = YAxes,
+                    Series = series,
+                    XAxes = new[] { xAxis },
+                    YAxes = new[] { yAxis ?? new Axis() },
                     Title = new LabelVisual
                     {
                         Text = $"{SelectedDataSource} - {SelectedChartType}",
@@ -282,6 +349,7 @@ namespace HeatProductionOptimization.ViewModels
                 Console.WriteLine($"Error saving specific chart: {ex.Message}");
             }
         }
+
 
         // Method to refresh data based on the selected data source
         private void UpdateChart()

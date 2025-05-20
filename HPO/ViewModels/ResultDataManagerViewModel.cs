@@ -18,7 +18,7 @@ public class ResultDataManagerViewModel : ViewModelBase
 {
     private ResultsData _resultsData;
     private readonly DataVisualizationViewModel _dataVisualizationVM;
-        
+
     public ResultsData ResultsData
     {
         get => _resultsData;
@@ -52,7 +52,7 @@ public class ResultDataManagerViewModel : ViewModelBase
             var totalCost = 5000 + rand.NextDouble() * 10000;
             var totalEmission = 100 + rand.NextDouble() * 200;
 
-            ResultsData.AddDataPoint(timeStamp, heatDemand, electricityPrice, production, totalCost, totalEmission);
+            _resultsData?.AddDataPoint(timeStamp, heatDemand, electricityPrice, production, totalCost, totalEmission);
         }
     }
 
@@ -61,10 +61,10 @@ public class ResultDataManagerViewModel : ViewModelBase
         try
         {
             var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-            if (mainWindow == null) return;
+            if (mainWindow == null || ResultsData == null) return;
 
             var topLevel = TopLevel.GetTopLevel(mainWindow);
-            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            var file = await topLevel?.StorageProvider?.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "Save Data as CSV",
                 SuggestedFileName = $"OptimizationData.csv",
@@ -72,31 +72,38 @@ public class ResultDataManagerViewModel : ViewModelBase
                 {
                     new FilePickerFileType("CSV File") { Patterns = new[] { "*.csv" } }
                 }
-            });
+            })!;
 
             if (file != null)
             {
                 await using var stream = await file.OpenWriteAsync();
                 using var writer = new StreamWriter(stream);
-                
+
                 writer.WriteLine("TimeStamp,HeatDemand,ElectricityPrice,TotalCost,TotalEmission,GB,OB,GM,EK,HK");
-                
-                for (int i = 0; i < ResultsData.TimeStamps.Count; i++)
+
+                int count = Math.Min(
+                    ResultsData.TimeStamps?.Count ?? 0,
+                    ResultsData.ProductionData?.Count ?? 0
+                );
+
+                for (int i = 0; i < count; i++)
                 {
-                    var line = $"{ResultsData.TimeStamps[i]:dd-MM-yyyy HH:mm:ss}," +
-                               $"{ResultsData.HeatDemand[i]}," +
-                               $"{ResultsData.ElectricityPrice[i]}," +
-                               $"{ResultsData.TotalCosts[i]}," +
-                               $"{ResultsData.TotalEmissions[i]}," +
-                               $"{ResultsData.ProductionData[i]["GB"]}," +
-                               $"{ResultsData.ProductionData[i]["OB"]}," +
-                               $"{ResultsData.ProductionData[i]["GM"]}," +
-                               $"{ResultsData.ProductionData[i]["EK"]}," +
-                               $"{ResultsData.ProductionData[i]["HK"]}";
-                    
+                    var prod = ResultsData.ProductionData?[i];
+
+                    string line = $"{ResultsData.TimeStamps?[i]:dd-MM-yyyy HH:mm:ss}," +
+                                  $"{ResultsData.HeatDemand?[i]}," +
+                                  $"{ResultsData.ElectricityPrice?[i]}," +
+                                  $"{ResultsData.TotalCosts?[i]}," +
+                                  $"{ResultsData.TotalEmissions?[i]}," +
+                                  $"{prod?["GB"] ?? 0}," +
+                                  $"{prod?["OB"] ?? 0}," +
+                                  $"{prod?["GM"] ?? 0}," +
+                                  $"{prod?["EK"] ?? 0}," +
+                                  $"{prod?["HK"] ?? 0}";
+
                     writer.WriteLine(line);
                 }
-                
+
                 var messageBox = new MessageBox("Success", "Data exported successfully to CSV file.");
                 await messageBox.ShowDialog(mainWindow);
             }
@@ -114,43 +121,42 @@ public class ResultDataManagerViewModel : ViewModelBase
 
     public async Task GenerateAndSavePdfReport()
     {
+        Dictionary<string, string>? chartImages = null;
+
         try
         {
             var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
             if (mainWindow == null) return;
 
-            // Generar los gráficos primero
-            var chartImages = _dataVisualizationVM.GenerateAllCharts();
+            chartImages = _dataVisualizationVM.GenerateAllCharts();
 
-            // Solicitar ubicación para guardar el PDF
             var topLevel = TopLevel.GetTopLevel(mainWindow);
-            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            var file = await topLevel?.StorageProvider?.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "Save Report as PDF",
-                SuggestedFileName = $"OptimizationReport_{DateTime.Now:yyyyMMddHHmmss}.pdf",
+                SuggestedFileName = $"OptimizationReport.pdf",
                 FileTypeChoices = new[]
                 {
                     new FilePickerFileType("PDF File") { Patterns = new[] { "*.pdf" } }
                 }
-            });
+            })!;
 
             if (file != null)
             {
                 await using var stream = await file.OpenWriteAsync();
-                
-                // Generar el PDF con los gráficos
-                await PdfReportGenerator.GenerateReport(chartImages, stream);
-                
-                // Limpiar las imágenes temporales
-                CleanUpTempImages(chartImages);
-                
+                if (chartImages != null)
+                {
+                    await PdfReportGenerator.GenerateReport(chartImages, stream);
+                    CleanUpTempImages(chartImages);
+                }
+
                 var messageBox = new MessageBox("Success", "PDF report generated successfully.");
                 await messageBox.ShowDialog(mainWindow);
             }
             else
             {
-                // Si el usuario cancela, limpiar las imágenes temporales igualmente
-                CleanUpTempImages(chartImages);
+                if (chartImages != null)
+                    CleanUpTempImages(chartImages);
             }
         }
         catch (Exception ex)
@@ -164,10 +170,12 @@ public class ResultDataManagerViewModel : ViewModelBase
         }
     }
 
-    private void CleanUpTempImages(Dictionary<string, string> chartImages)
+    private void CleanUpTempImages(Dictionary<string, string>? chartImages)
     {
         try
         {
+            if (chartImages == null) return;
+
             foreach (var imagePath in chartImages.Values)
             {
                 if (File.Exists(imagePath))

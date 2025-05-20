@@ -26,7 +26,6 @@ namespace HeatProductionOptimization.Services
                     page.PageColor(Colors.White);
                     page.DefaultTextStyle(x => x.FontSize(12));
 
-                    // Encabezado
                     page.Header()
                         .PaddingBottom(15)
                         .Row(row =>
@@ -42,12 +41,10 @@ namespace HeatProductionOptimization.Services
                                .FontSize(18);
                         });
 
-                    // Contenido - Gráficos
                     page.Content()
                         .PaddingVertical(10)
                         .Column(column =>
                         {
-                            // Heat Demand Chart
                             if (chartImages.ContainsKey("HeatDemand"))
                             {
                                 column.Item()
@@ -61,7 +58,6 @@ namespace HeatProductionOptimization.Services
                                     .Image(chartImages["HeatDemand"]);
                             }
 
-                            // Electricity Price Chart
                             if (chartImages.ContainsKey("ElectricityPrice"))
                             {
                                 column.Item()
@@ -76,14 +72,13 @@ namespace HeatProductionOptimization.Services
                                     .Image(chartImages["ElectricityPrice"]);
                             }
 
-                            // Optimization Results Chart
                             if (chartImages.ContainsKey("Optimization"))
                             {
                                 column.Item()
                                     .PaddingTop(20)
                                     .PaddingBottom(15)
                                     .AlignCenter()
-                                    .Text("Optimization Results (Daily)")
+                                    .Text("Optimization Results")
                                     .FontSize(14)
                                     .Bold();
                                 
@@ -91,7 +86,6 @@ namespace HeatProductionOptimization.Services
                                     .Image(chartImages["Optimization"]);
                             }
 
-                            // Production Performance Chart
                             if (chartImages.ContainsKey("Production"))
                             {
                                 column.Item()
@@ -107,7 +101,6 @@ namespace HeatProductionOptimization.Services
                             }
                         });
 
-                    // Pie de página
                     page.Footer()
                         .Height(30)
                         .Background(Colors.Grey.Lighten4)
@@ -124,7 +117,6 @@ namespace HeatProductionOptimization.Services
                 });
             });
 
-            // Generación del PDF
             await Task.Run(() => 
             {
                 document.GeneratePdf(outputStream);
