@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -6,12 +6,16 @@ using System.Windows.Input;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using CommunityToolkit.Mvvm.Input;
 using HeatProductionOptimization.Models.DataModels;
 using HeatProductionOptimization.Services.Managers;
 using ReactiveUI;
 using SkiaSharp;
 using Avalonia.Remote.Protocol.Designer;
+using System.IO;
+using LiveChartsCore.SkiaSharpView.Extensions;
+using LiveChartsCore.SkiaSharpView.VisualElements;
 
 namespace HeatProductionOptimization.ViewModels
 {
@@ -37,7 +41,6 @@ namespace HeatProductionOptimization.ViewModels
             "Scatter Plot"
         };
         public ObservableCollection<string> FilteredChartTypes { get; set; } = new();
-
 
         // Selected data source and chart type
         private string? _selectedDataSource;
@@ -72,7 +75,6 @@ namespace HeatProductionOptimization.ViewModels
         // Property to determine legend position based on the ShowLegend flag
         public LiveChartsCore.Measure.LegendPosition ChartLegendPosition =>
             ShowLegend ? LiveChartsCore.Measure.LegendPosition.Right : LiveChartsCore.Measure.LegendPosition.Hidden;
-
 
         // Properties for chart options with change notification
         public bool ShowLegend
@@ -126,6 +128,7 @@ namespace HeatProductionOptimization.ViewModels
         public ICommand ExportDataCommand { get; }
         public ICommand PrintReportCommand { get; }
         public ICommand CompareResultsCommand { get; }
+        public ICommand SaveChartImageCommand { get; }
 
         public DataVisualizationViewModel()
         {
@@ -139,6 +142,7 @@ namespace HeatProductionOptimization.ViewModels
             ExportDataCommand = new RelayCommand(ExportData);
             PrintReportCommand = new RelayCommand(PrintReport);
             CompareResultsCommand = new RelayCommand(CompareResults);
+            SaveChartImageCommand = new RelayCommand(SaveChartImage);
             FilteredChartTypes = new ObservableCollection<string>(AvailableChartTypes);
 
             // Initialize default chart data
@@ -147,6 +151,205 @@ namespace HeatProductionOptimization.ViewModels
             YAxes.Add(new Axis { Name = "Value" });
             UpdateChartTypes();
         }
+
+        // Method to save chart as image
+        private void SaveChartImage()
+        {
+            try
+            {
+                string fileName = $"{SelectedDataSource.Replace(" ", "_")}_{SelectedChartType.Replace(" ", "_")}.png";
+                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), fileName);
+
+                var chart = new SKCartesianChart
+                {
+                    Width = (int)ChartWidth,
+                    Height = 600,
+                    Series = CartesianSeries,
+                    XAxes = XAxes,
+                    YAxes = YAxes,
+                    Title = new LabelVisual
+                    {
+                        Text = $"{SelectedDataSource} - {SelectedChartType}",
+                        TextSize = 20,
+                        Padding = new LiveChartsCore.Drawing.Padding(15),
+                        Paint = new SolidColorPaint(SKColors.Black)
+                    }
+                };
+
+                using (var image = chart.GetImage())
+                using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+                using (var stream = File.OpenWrite(filePath))
+                {
+                    data.SaveTo(stream);
+                }
+
+                Console.WriteLine($"Chart saved to: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving chart image: {ex.Message}");
+            }
+        }
+
+        // Method to get chart data for external use
+        public ChartData GetChartData()
+        {
+            return new ChartData
+            {
+                Series = new List<ISeries>(CartesianSeries),
+                XAxes = new List<Axis>(XAxes),
+                YAxes = new List<Axis>(YAxes),
+                ChartType = SelectedChartType,
+                DataSource = SelectedDataSource,
+                Values = new List<double>(_preparedValues),
+                Labels = new List<string>(_preparedLabels),
+                XAxisTitle = _preparedXAxisTitle,
+                YAxisTitle = _preparedYAxisTitle,
+                ChartWidth = ChartWidth
+            };
+        }
+
+        // Method to generate all required charts and return their image paths
+        public Dictionary<string, string> GenerateAllCharts()
+        {
+            var chartImages = new Dictionary<string, string>();
+            var tempFolder = Path.GetTempPath();
+
+            // 1. Heat Demand Data - Line Chart
+            SelectedDataSource = "Heat Demand Data";
+            SelectedChartType = "Line Chart";
+            UpdateChart();
+            string heatDemandPath = Path.Combine(tempFolder, "Heat_Demand_Line.png");
+            SaveSpecificChart(heatDemandPath);
+            chartImages.Add("HeatDemand", heatDemandPath);
+
+            // 2. Electricity Price Data - Line Chart
+            SelectedDataSource = "Electricity Price Data";
+            SelectedChartType = "Line Chart";
+            UpdateChart();
+            string electricityPricePath = Path.Combine(tempFolder, "Electricity_Price_Line.png");
+            SaveSpecificChart(electricityPricePath);
+            chartImages.Add("ElectricityPrice", electricityPricePath);
+
+            // 3. Optimization Results - Bar Chart (Daily)
+            SelectedDataSource = "Optimization Results";
+            SelectedChartType = "Bar Chart";
+            UpdateChart();
+            string optimizationPath = Path.Combine(tempFolder, "Optimization_Bar_Daily.png");
+            SaveSpecificChart(optimizationPath);
+            chartImages.Add("Optimization", optimizationPath);
+
+            // 4. Production Unit Performance - Bar Chart
+            SelectedDataSource = "Production Unit Performance";
+            SelectedChartType = "Bar Chart";
+            UpdateChart();
+            string productionPath = Path.Combine(tempFolder, "Production_Performance_Bar.png");
+            SaveSpecificChart(productionPath);
+            chartImages.Add("Production", productionPath);
+
+            return chartImages;
+        }
+
+        private void SaveSpecificChart(string filePath)
+        {
+            try
+            {
+                bool limitTo48 = SelectedDataSource is "Heat Demand Data" or "Electricity Price Data" or "Optimization Results";
+
+                var series = new List<ISeries>();
+                var xAxis = new Axis();
+                var yAxis = YAxes.FirstOrDefault();
+
+                if (limitTo48)
+                {
+                    for (int i = 0; i < CartesianSeries.Count; i++)
+                    {
+                        var original = CartesianSeries[i];
+
+                        switch (original)
+                        {
+                            case LineSeries<double> line:
+                                series.Add(new LineSeries<double>
+                                {
+                                    Name = line.Name,
+                                    Values = line.Values?.Cast<double>().Take(48).ToList() ?? new List<double>()
+                                });
+                                break;
+                            case ColumnSeries<double> column:
+                                series.Add(new ColumnSeries<double>
+                                {
+                                    Name = column.Name,
+                                    Values = column.Values?.Cast<double>().Take(48).ToList() ?? new List<double>(),
+                                    MaxBarWidth = column.MaxBarWidth,
+                                    Stroke = column.Stroke
+                                });
+                                break;
+                            case ScatterSeries<double> scatter:
+                                series.Add(new ScatterSeries<double>
+                                {
+                                    Name = scatter.Name,
+                                    Values = scatter.Values?.Cast<double>().Take(48).ToList() ?? new List<double>(),
+                                    DataLabelsPaint = scatter.DataLabelsPaint
+                                });
+                                break;
+                            default:
+                                series.Add(original); // fallback
+                                break;
+                        }
+                    }
+
+                    if (XAxes.FirstOrDefault() is Axis originalAxis && originalAxis.Labels != null)
+                    {
+                        xAxis = new Axis
+                        {
+                            Labels = originalAxis.Labels.Take(48).ToArray(),
+                            Name = originalAxis.Name,
+                            ShowSeparatorLines = originalAxis.ShowSeparatorLines,
+                            LabelsRotation = originalAxis.LabelsRotation,
+                            TextSize = originalAxis.TextSize,
+                            UnitWidth = originalAxis.UnitWidth,
+                            MinStep = originalAxis.MinStep,
+                            ForceStepToMin = originalAxis.ForceStepToMin,
+                            MinLimit = originalAxis.MinLimit,
+                            Padding = originalAxis.Padding
+                        };
+                    }
+                }
+                else
+                {
+                    series = CartesianSeries.ToList();
+                    xAxis = XAxes.FirstOrDefault() ?? new Axis();
+                }
+
+                var chart = new SKCartesianChart
+                {
+                    Width = limitTo48 ? Math.Max(48 * 45, 900) : (int)ChartWidth,
+                    Height = 600,
+                    Series = series,
+                    XAxes = new[] { xAxis },
+                    YAxes = new[] { yAxis ?? new Axis() },
+                    Title = new LabelVisual
+                    {
+                        Text = $"{SelectedDataSource} - {SelectedChartType}",
+                        TextSize = 20,
+                        Padding = new LiveChartsCore.Drawing.Padding(15),
+                        Paint = new SolidColorPaint(SKColors.Black)
+                    }
+                };
+
+                using (var image = chart.GetImage())
+                using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+                using (var stream = File.OpenWrite(filePath))
+                {
+                    data.SaveTo(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving specific chart: {ex.Message}");
+            }
+        }
+
 
         // Method to refresh data based on the selected data source
         private void UpdateChart()
@@ -157,8 +360,8 @@ namespace HeatProductionOptimization.ViewModels
             _preparedXAxisTitle = "";
             CartesianSeries.Clear();
 
-            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0); 
-            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0); 
+            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0);
+            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0);
 
             try
             {
@@ -186,7 +389,7 @@ namespace HeatProductionOptimization.ViewModels
                 var assets = OptimizerViewModel.SharedAssetManager.GetAllAssets().Values
                     .Where(a => a.IsActive)
                     .ToList();
-        
+
                 if (assets.Count == 0)
                 {
                     Console.WriteLine("No active assets found.");
@@ -208,7 +411,7 @@ namespace HeatProductionOptimization.ViewModels
                     return;
                 }
 
-                _preparedLabels = timestamps.Select(t => t.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
                 this.RaisePropertyChanged(nameof(ChartWidth));
                 _preparedXAxisTitle = "Time";
                 _preparedYAxisTitle = "Produced Heat (MWh)";
@@ -267,7 +470,7 @@ namespace HeatProductionOptimization.ViewModels
                     if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
                     if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
                     var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                    _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("MM-dd HH:mm")).ToList();
+                    _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
                     _preparedValues = sorted.Select(r => r.HeatDemand ?? 0).ToList();
                     _preparedXAxisTitle = "Date and Hour";
                     _preparedYAxisTitle = "Heat Demand (MWh)";
@@ -320,7 +523,7 @@ namespace HeatProductionOptimization.ViewModels
                 if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
                 if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
                 var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
                 _preparedValues = sorted.Select(r => r.ElectricityPrice ?? 0).ToList();
                 _preparedXAxisTitle = "Date and Hour";
                 _preparedYAxisTitle = "Electricity Price (DKK/kWh)";
@@ -421,8 +624,8 @@ namespace HeatProductionOptimization.ViewModels
         // Methods to create different types of charts
         private void CreateLineChart()
         {
-            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0); 
-            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0); 
+            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0);
+            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0);
 
             try
             {
@@ -458,7 +661,7 @@ namespace HeatProductionOptimization.ViewModels
                     .OrderBy(t => t)
                     .ToList();
 
-                _preparedLabels = timestamps.Select(t => t.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
                 _preparedXAxisTitle = "Time";
                 _preparedYAxisTitle = "Produced Heat (MWh)";
 
@@ -486,7 +689,7 @@ namespace HeatProductionOptimization.ViewModels
                 if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
 
                 var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
                 _preparedValues = sorted.Select(r => r.HeatDemand ?? 0).ToList();
                 _preparedXAxisTitle = "Date and Hour";
                 _preparedYAxisTitle = "Heat Demand (MWh)";
@@ -505,8 +708,8 @@ namespace HeatProductionOptimization.ViewModels
 
         private void CreateBarChart(List<double> values, List<string> labels)
         {
-            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0); 
-            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0); 
+            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0);
+            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0);
 
             try
             {
@@ -542,7 +745,7 @@ namespace HeatProductionOptimization.ViewModels
                     .OrderBy(t => t)
                     .ToList();
 
-                _preparedLabels = timestamps.Select(t => t.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
                 _preparedXAxisTitle = "Time";
                 _preparedYAxisTitle = "Produced Heat (MWh)";
 
@@ -584,8 +787,8 @@ namespace HeatProductionOptimization.ViewModels
 
         private void CreateScatterChart(List<double> values, List<string> labels)
         {
-            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0); 
-            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0); 
+            DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0);
+            DateTime endDate = new DateTime(2024, 8, 25, 0, 0, 0);
 
             try
             {
@@ -607,7 +810,7 @@ namespace HeatProductionOptimization.ViewModels
 
             CartesianSeries.Clear();
             var start = startDate;
-            var end = endDate;   
+            var end = endDate;
 
             if (SelectedDataSource == "Optimization Results")
             {
@@ -621,7 +824,7 @@ namespace HeatProductionOptimization.ViewModels
                     .OrderBy(t => t)
                     .ToList();
 
-                _preparedLabels = timestamps.Select(t => t.ToString("MM-dd HH:mm")).ToList();
+                _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
                 _preparedXAxisTitle = "Time";
                 _preparedYAxisTitle = "Produced Heat (MWh)";
 
@@ -762,5 +965,19 @@ namespace HeatProductionOptimization.ViewModels
                 this.RaisePropertyChanged(nameof(SelectedChartType));
             }
         }
+    }
+
+    public class ChartData
+    {
+        public List<ISeries> Series { get; set; } = new();
+        public List<Axis> XAxes { get; set; } = new();
+        public List<Axis> YAxes { get; set; } = new();
+        public string ChartType { get; set; } = string.Empty;
+        public string DataSource { get; set; } = string.Empty;
+        public List<double> Values { get; set; } = new();
+        public List<string> Labels { get; set; } = new();
+        public string XAxisTitle { get; set; } = string.Empty;
+        public string YAxisTitle { get; set; } = string.Empty;
+        public double ChartWidth { get; set; }
     }
 }

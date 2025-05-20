@@ -321,7 +321,7 @@ public partial class OptimizerViewModel : ViewModelBase
                     
                     if (start < winterStart || end > winterEnd)
                     {
-                        outOfRangeMessage += $"Winter data: {winterStart:yyyy-MM-dd} to {winterEnd:yyyy-MM-dd}\n";
+                        outOfRangeMessage += $"Winter data: {winterStart:dd-MM-yyyy} to {winterEnd:dd-MM-yyyy}\n";
                         isValid = false;
                     }
                 }
@@ -342,7 +342,7 @@ public partial class OptimizerViewModel : ViewModelBase
                     
                     if (start < summerStart || end > summerEnd)
                     {
-                        outOfRangeMessage += $"Summer data: {summerStart:yyyy-MM-dd} to {summerEnd:yyyy-MM-dd}\n";
+                        outOfRangeMessage += $"Summer data: {summerStart:dd-MM-yyyy} to {summerEnd:dd-MM-yyyy}\n";
                         isValid = false;
                     }
                 }
@@ -365,11 +365,11 @@ public partial class OptimizerViewModel : ViewModelBase
         var summerRecordsDisplay = sourceDataManager.SummerRecords;
         
         string winterRangeText = winterRecordsDisplay.Any() 
-            ? $"{winterRecordsDisplay.Min(r => r.TimeFrom):yyyy-MM-dd} to {winterRecordsDisplay.Max(r => r.TimeTo):yyyy-MM-dd}"
+            ? $"{winterRecordsDisplay.Min(r => r.TimeFrom):dd-MM-yyyy} to {winterRecordsDisplay.Max(r => r.TimeTo):dd-MM-yyyy}"
             : "No data";
 
         string summerRangeText = summerRecordsDisplay.Any()
-            ? $"{summerRecordsDisplay.Min(r => r.TimeFrom):yyyy-MM-dd} to {summerRecordsDisplay.Max(r => r.TimeTo):yyyy-MM-dd}"
+            ? $"{summerRecordsDisplay.Min(r => r.TimeFrom):dd-MM-yyyy} to {summerRecordsDisplay.Max(r => r.TimeTo):dd-MM-yyyy}"
             : "No data";
 
         if (UseWinterData && !UseSummerData)

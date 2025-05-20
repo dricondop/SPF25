@@ -197,7 +197,7 @@ namespace HeatProductionOptimization.ViewModels
                     var winterRange = _dataRangeProvider.GetWinterDataRange();
                     if (start < winterRange.start || end > winterRange.end)
                     {
-                        outOfRangeMessage += $"Winter data: {winterRange.start:yyyy-MM-dd} to {winterRange.end:yyyy-MM-dd}\n";
+                        outOfRangeMessage += $"Winter data: {winterRange.start:dd-MM-yyyy} to {winterRange.end:dd-MM-yyyy}\n";
                         isValid = false;
                     }
                 }
@@ -207,7 +207,7 @@ namespace HeatProductionOptimization.ViewModels
                     var summerRange = _dataRangeProvider.GetSummerDataRange();
                     if (start < summerRange.start || end > summerRange.end)
                     {
-                        outOfRangeMessage += $"Summer data: {summerRange.start:yyyy-MM-dd} to {summerRange.end:yyyy-MM-dd}\n";
+                        outOfRangeMessage += $"Summer data: {summerRange.start:dd-MM-yyyy} to {summerRange.end:dd-MM-yyyy}\n";
                         isValid = false;
                     }
                 }
@@ -225,17 +225,17 @@ namespace HeatProductionOptimization.ViewModels
 
             if (UseWinterData && !UseSummerData)
             {
-                StatusMessage = $"Winter data range:\n{winterRangeDisplay.start:yyyy-MM-dd} to {winterRangeDisplay.end:yyyy-MM-dd}";
+                StatusMessage = $"Winter data range:\n{winterRangeDisplay.start:dd-MM-yyyy} to {winterRangeDisplay.end:dd-MM-yyyy}";
             }
             else if (!UseWinterData && UseSummerData)
             {
-                StatusMessage = $"Summer data range:\n{summerRangeDisplay.start:yyyy-MM-dd} to {summerRangeDisplay.end:yyyy-MM-dd}";
+                StatusMessage = $"Summer data range:\n{summerRangeDisplay.start:dd-MM-yyyy} to {summerRangeDisplay.end:dd-MM-yyyy}";
             }
             else
             {
                 StatusMessage = $"Available data ranges:\n" +
-                              $"Winter: {winterRangeDisplay.start:yyyy-MM-dd} to {winterRangeDisplay.end:yyyy-MM-dd}\n" +
-                              $"Summer: {summerRangeDisplay.start:yyyy-MM-dd} to {summerRangeDisplay.end:yyyy-MM-dd}";
+                              $"Winter: {winterRangeDisplay.start:dd-MM-yyyy} to {winterRangeDisplay.end:dd-MM-yyyy}\n" +
+                              $"Summer: {summerRangeDisplay.start:dd-MM-yyyy} to {summerRangeDisplay.end:dd-MM-yyyy}";
             }
 
             CanProceed = true;
