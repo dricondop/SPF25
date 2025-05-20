@@ -6,7 +6,7 @@
              xmlns:vm="using:HeatProductionOptimization.ViewModels"
              x:Class="HeatProductionOptimization.Views.ResultDataManagerView"
              x:DataType="vm:ResultDataManagerViewModel">
-    <StackPanel Margin="30" Background="#F5F7FA">
+    <StackPanel Margin="30">
         <!-- Header with original spacing -->
         <TextBlock Text="Heat Production Optimizer / Result Data Manager"
                 FontSize="40"

@@ -86,18 +86,6 @@
                             <PathIcon Data="{StaticResource document_catch_up_regular}" />
                         </Button>
                     </StackPanel>
-                    
-                    <StackPanel Spacing="20" 
-                          Margin="0,20"
-                          VerticalAlignment="Bottom">
-                        <Button x:Name="SettingsButton"
-                            Classes="sidebar-button"
-                            Command="{Binding SettingsWindow}"
-                            ToolTip.Tip="Settings"
-                            HorizontalAlignment="Center">
-                            <PathIcon Data="{StaticResource settings_regular}" />
-                        </Button>
-                    </StackPanel>
                 </Grid>
             </Border>
 
