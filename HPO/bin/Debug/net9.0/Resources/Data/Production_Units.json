@@ -63,5 +63,18 @@
       "Production Cost (DKK/MWh)": 60,
       "Fuel Type": ""
     }
+  },
+  {
+    "Boiler 6": {
+      "Name": "Boiler 6",
+      "ID": 6,
+      "IsActive": false,
+      "Unit Type": "Boiler",
+      "Max Heat (MW)": 4,
+      "Production Cost (DKK/MWh)": 500,
+      "CO2 Emissions (kg/MWh)": 150,
+      "Fuel Type": "Gas",
+      "Fuel Consumption (MWh fuel/MWh heat)": 0.9
+    }
   }
 ]
