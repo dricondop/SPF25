@@ -13,7 +13,7 @@
 
     <Grid Margin="30" RowDefinitions="Auto,Auto,*">
 
-        <!--  Header  -->
+        <!-- Header -->
         <TextBlock
             Grid.Row="0"
             Margin="0,0,0,30"
@@ -22,7 +22,7 @@
             FontWeight="Bold"
             Text="Heat Production Optimizer / Data Visualization" />
 
-        <!--  Visualization Controls  -->
+        <!-- Visualization Controls -->
         <Border
             Grid.Row="1"
             Margin="0,0,0,20"
@@ -43,7 +43,7 @@
                     ColumnDefinitions="Auto,*,Auto"
                     RowDefinitions="Auto,Auto">
 
-                    <!--  Data Source  -->
+                    <!-- Data Source -->
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="0"
@@ -59,7 +59,7 @@
                         ItemsSource="{Binding AvailableDataSources}"
                         SelectedItem="{Binding SelectedDataSource}" />
 
-                    <!--  Move button to second row and align  -->
+                    <!-- Move button to second row and align -->
                     <Button
                         Grid.Row="1"
                         Grid.Column="2"
@@ -69,7 +69,7 @@
                         Command="{Binding UpdateChartCommand}"
                         Content="Refresh Data" />
 
-                    <!--  Chart Type  -->
+                    <!-- Chart Type -->
                     <TextBlock
                         Grid.Row="1"
                         Grid.Column="0"
@@ -87,8 +87,8 @@
 
                 </Grid>
 
-                <!--  Chart Options  -->
-                <Grid Margin="0,5" ColumnDefinitions="*,*,*,*">
+                <!-- Chart Options -->
+                <Grid Margin="0,5" ColumnDefinitions="*,*,*,*,*,*">
                     <CheckBox
                         Grid.Column="0"
                         Margin="0,0,5,0"
@@ -106,15 +106,26 @@
                         IsChecked="{Binding ShowGridLines}" />
                     <CheckBox
                         Grid.Column="3"
+                        Margin="0,0,5,0"
                         Content="Auto Scale"
                         IsChecked="{Binding AutoScale}" />
-
+                    <CheckBox
+                        Grid.Column="4"
+                        Margin="0,0,5,0"
+                        Content="Enable Zoom"
+                        IsChecked="{Binding EnableZoom}" />
+                    <Button
+                        Grid.Column="5"
+                        Margin="0,0,0,0"
+                        Padding="5"
+                        Command="{Binding ResetZoomCommand}"
+                        Content="Reset Zoom" />
                 </Grid>
 
             </StackPanel>
         </Border>
 
-        <!--  Chart  -->
+        <!-- Chart -->
         <Border
             Grid.Row="2"
             Margin="0,10,0,20"
@@ -122,7 +133,10 @@
             BorderBrush="#CCCCCC"
             BorderThickness="1"
             CornerRadius="5">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <ScrollViewer 
+                HorizontalScrollBarVisibility="Auto" 
+                VerticalScrollBarVisibility="Disabled"
+                HorizontalContentAlignment="Left">
                 <Grid>
                     <Border>
                         <lvc:CartesianChart
@@ -130,7 +144,8 @@
                             LegendPosition="{Binding ChartLegendPosition}"
                             Series="{Binding CartesianSeries}"
                             XAxes="{Binding XAxes}"
-                            YAxes="{Binding YAxes}" />
+                            YAxes="{Binding YAxes}"
+                            ZoomMode="{Binding ZoomMode}" />
                     </Border>
                 </Grid>
             </ScrollViewer>
