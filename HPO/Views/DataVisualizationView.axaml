@@ -145,7 +145,7 @@
                             Series="{Binding CartesianSeries}"
                             XAxes="{Binding XAxes}"
                             YAxes="{Binding YAxes}"
-                            ZoomMode="{Binding ZoomMode}" />
+                            ZoomMode="{Binding ZoomMode}"/>
                     </Border>
                 </Grid>
             </ScrollViewer>

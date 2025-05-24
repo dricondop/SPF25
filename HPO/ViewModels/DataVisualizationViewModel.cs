@@ -757,7 +757,7 @@ namespace HeatProductionOptimization.ViewModels
                 {
                     Name = "Heat Demand",
                     Values = values,
-                    GeometrySize = pointSize,
+                    GeometrySize = 2,
                     LineSmoothness = 0,
                     Stroke = new SolidColorPaint(colors[0]) { StrokeThickness = 2 },
                     Fill = null,
@@ -787,7 +787,7 @@ namespace HeatProductionOptimization.ViewModels
                 {
                     Name = "Electricity Price",
                     Values = values,
-                    GeometrySize = pointSize,
+                    GeometrySize = 2,
                     LineSmoothness = 0,
                     Stroke = new SolidColorPaint(colors[0]) { StrokeThickness = 2 },
                     Fill = null,
@@ -1005,7 +1005,7 @@ namespace HeatProductionOptimization.ViewModels
                 {
                     Name = "Heat Demand",
                     Values = _preparedValues,
-                    GeometrySize = pointSize,
+                    GeometrySize = 3,
                     Stroke = null,
                     Fill = new SolidColorPaint(SKColors.Red.WithAlpha(150)),
                     DataLabelsPaint = null
@@ -1032,7 +1032,7 @@ namespace HeatProductionOptimization.ViewModels
                 {
                     Name = "Electricity Price",
                     Values = _preparedValues,
-                    GeometrySize = pointSize,
+                    GeometrySize = 3,
                     Stroke = null,
                     Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(150)),
                     DataLabelsPaint = null
@@ -1154,12 +1154,10 @@ namespace HeatProductionOptimization.ViewModels
         {
             if (_preparedLabels.Count == 0) return 8; // Default size
             
-            // Adjust size based on number of points and chart width
-            double baseSize = 8; // Base size
-            double widthFactor = ChartWidth / 1000; // Factor based on width
-            double countFactor = 50.0 / _preparedLabels.Count; // Inverse factor based on point count
+            double baseSize = 8;
+            double widthFactor = ChartWidth / 1000;
+            double countFactor = 50.0 / _preparedLabels.Count;
             
-            // Minimum size 3px, maximum 8px
             return Math.Max(3, Math.Min(baseSize * widthFactor * countFactor, 8));
         }
 
