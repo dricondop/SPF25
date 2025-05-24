@@ -1048,19 +1048,22 @@ namespace HeatProductionOptimization.ViewModels
         {
             XAxes.Clear();
 
+            string dateFormat = GetOptimalDateFormat(labels);
+
             XAxes.Add(new Axis
             {
                 Labels = labels.ToArray(),
                 Name = ShowDataLabels ? _preparedXAxisTitle : "",
                 ShowSeparatorLines = ShowGridLines,
-                LabelsRotation = 90,
+                LabelsRotation = GetOptimalLabelRotation(labels.Count),
                 TextSize = 12,
                 UnitWidth = 1,
-                MinStep = 1,
-                ForceStepToMin = true,
-                MinLimit = null, // Start with no zoom
-                MaxLimit = null, // Start with no zoom
-                Padding = new LiveChartsCore.Drawing.Padding(30, 0, 0, 0)
+                MinStep = CalculateOptimalMinStep(labels.Count),
+                ForceStepToMin = labels.Count < 100, // Solo forzar paso mínimo para conjuntos pequeños
+                MinLimit = null,
+                MaxLimit = null,
+                Padding = new LiveChartsCore.Drawing.Padding(30, 0, 0, 0),
+                Labeler = value => FormatDateLabel(value, dateFormat, labels)
             });
 
             YAxes.Clear();
@@ -1071,6 +1074,67 @@ namespace HeatProductionOptimization.ViewModels
                 MinLimit = AutoScale ? null : 0,
                 MaxLimit = AutoScale ? null : (_preparedValues.Count > 0 ? _preparedValues.Max() * 1.1 : (double?)null)
             });
+        }
+
+        private string GetOptimalDateFormat(List<string> labels)
+        {
+            if (labels.Count == 0) return "dd-MM HH:mm";
+            
+            try
+            {
+                if (DateTime.TryParse(labels.First(), out DateTime firstDate) && 
+                    DateTime.TryParse(labels.Last(), out DateTime lastDate))
+                {
+                    TimeSpan dateRange = lastDate - firstDate;
+                    
+                    if (dateRange.TotalDays > 365) return "MMM yyyy"; // Más de 1 año: mostrar mes/año
+                    if (dateRange.TotalDays > 30) return "dd MMM";    // Más de 1 mes: mostrar día/mes
+                    if (dateRange.TotalDays > 2) return "dd-MM HH:mm"; // Más de 2 días: mostrar día/hora
+                    return "HH:mm"; // Menos de 2 días: solo hora
+                }
+            }
+            catch
+            {
+                
+            }
+            
+            return "dd-MM HH:mm";
+        }
+
+        private double GetOptimalLabelRotation(int labelCount)
+        {
+            if (labelCount <= 24) return 0;    // Sin rotación para pocas etiquetas
+            if (labelCount <= 168) return 45;  // 45° para hasta 1 semana de datos
+            return 90;                         // 90° para muchos datos
+        }
+
+        private double CalculateOptimalMinStep(int labelCount)
+        {
+            if (labelCount <= 24) return 1;    // Mostrar todas las etiquetas para pocos datos
+            if (labelCount <= 168) return 3;   // Mostrar cada 3 puntos para 1 semana
+            if (labelCount <= 720) return 24;  // Mostrar cada día para 1 mes
+            return 168;                        // Mostrar cada semana para muchos datos
+        }
+
+        private string FormatDateLabel(double value, string dateFormat, List<string> allLabels)
+        {
+            try
+            {
+                int index = (int)value;
+                if (index >= 0 && index < allLabels.Count)
+                {
+                    if (DateTime.TryParse(allLabels[index], out DateTime date))
+                    {
+                        return date.ToString(dateFormat);
+                    }
+                }
+            }
+            catch
+            {
+                // Si falla, devolver el valor original
+            }
+            
+            return value.ToString();
         }
 
         private void UpdateAxisTitles()
