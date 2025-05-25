@@ -107,19 +107,16 @@
                                                 Margin="0" Padding="0"
                                                 VerticalAlignment="Center"/>
                                         <Button 
-                                                Content="✕"
                                                 Background="Transparent"
                                                 Foreground="Red"
                                                 BorderBrush="Transparent"
-                                                FontWeight="Bold"
-                                                FontSize="16"
                                                 VerticalAlignment="Center"
                                                 Padding="0"
                                                 Command="{Binding $parent[views:AssetManagerView].((vm:AssetManagerViewModel)DataContext).RemoveAsset}"
                                                 CommandParameter="{Binding}">
                                                     <Image Source="avares://HPO/Assets/Icons/Cross.png"
-                                                        Stretch="Uniform" Width="20"
-                                                        Height="20" />
+                                                        Stretch="Uniform" Width="28"
+                                                        Height="28" />
                                                 </Button>
                                     </StackPanel>
                                     
