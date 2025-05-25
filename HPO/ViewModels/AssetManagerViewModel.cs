@@ -9,6 +9,7 @@ using HeatProductionOptimization.Services.Managers;
 using Avalonia.Controls;
 using ReactiveUI;
 using System.Diagnostics;
+using CommunityToolkit.Mvvm.Input;
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -170,7 +171,11 @@ public partial class AssetManagerViewModel : ViewModelBase
 
         return true;
     }
-
+    [RelayCommand]
+    public void RemoveAsset(AssetSpecifications asset)
+    {
+        _assets.Remove(asset);
+    }
     public bool TryParseNumericField(string fieldName, string value, out object? result)
     {
         result = null;
