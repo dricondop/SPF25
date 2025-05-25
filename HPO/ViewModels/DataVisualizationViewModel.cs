@@ -72,7 +72,7 @@ namespace HeatProductionOptimization.ViewModels
         private List<double> _preparedValues = new();
         private List<string> _preparedLabels = new();
         public double ChartWidth => CalculateOptimalChartWidth();
-        public ZoomAndPanMode ZoomMode => _enableZoom ? ZoomAndPanMode.Both : ZoomAndPanMode.None;
+        public ZoomAndPanMode ZoomMode => _enableZoom ? ZoomAndPanMode.X : ZoomAndPanMode.None;
 
         private readonly AssetManager _assetManager;
         private readonly SourceDataManager _sourceDataManager;
@@ -418,14 +418,10 @@ namespace HeatProductionOptimization.ViewModels
                     startDate = optimizerVM.StartDate.Value.DateTime;
                     endDate = optimizerVM.EndDate.Value.DateTime;
                 }
-                else
-                {
-                    Console.WriteLine("No dates available in the Optimizer");
-                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex}");
+                Console.WriteLine($"Error getting dates: {ex.Message}");
             }
 
 
@@ -662,6 +658,52 @@ namespace HeatProductionOptimization.ViewModels
                 this.RaisePropertyChanged(nameof(XAxes));
                 this.RaisePropertyChanged(nameof(YAxes));
             }
+
+            if (SelectedDataSource == "Heat Demand Data" || SelectedDataSource == "Electricity Price Data")
+            {
+                var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
+                var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
+
+                var records = new List<HeatDemandRecord>();
+                if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
+                if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
+
+                var periodGroups = records
+                    .GroupBy(r => GetPeriodIdentifier(r.TimeFrom))
+                    .OrderBy(g => g.Min(r => r.TimeFrom))
+                    .ToList();
+
+                var periodColors = GenerateDistinctColors(periodGroups.Count);
+
+                foreach (var (group, index) in periodGroups.Select((g, i) => (g, i)))
+                {
+                    var periodRecords = group.OrderBy(r => r.TimeFrom).ToList();
+                    var periodName = GetPeriodName(periodRecords.First().TimeFrom);
+
+                    var values = SelectedDataSource == "Heat Demand Data"
+                        ? periodRecords.Select(r => r.HeatDemand ?? 0).ToList()
+                        : periodRecords.Select(r => r.ElectricityPrice ?? 0).ToList();
+
+                    CartesianSeries.Add(new LineSeries<double>
+                    {
+                        Name = $"{periodName} - {SelectedDataSource.Split(' ')[0]}", // Ej: "March 2024 - Heat"
+                        Values = values,
+                        Stroke = new SolidColorPaint(periodColors[index]) { StrokeThickness = 2 },
+                        Fill = null,
+                        GeometryStroke = new SolidColorPaint(periodColors[index]) { StrokeThickness = 1 }
+                    });
+                }
+            }
+        }
+
+        private string GetPeriodIdentifier(DateTime date)
+        {
+            return $"{date.Year}-{date.Month}";
+        }
+
+        private string GetPeriodName(DateTime date)
+        {
+            return date.ToString("MMMM yyyy");
         }
 
         private void ExportData() => Console.WriteLine("Exporting data...");
