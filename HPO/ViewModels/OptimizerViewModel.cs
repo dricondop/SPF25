@@ -236,7 +236,6 @@ public partial class OptimizerViewModel : ViewModelBase
         DateTime minDate = DateTime.MaxValue;
         DateTime maxDate = DateTime.MinValue;
         bool hasData = false;
-
         if (UseWinterData)
         {
             // Get winter data range from source data manager

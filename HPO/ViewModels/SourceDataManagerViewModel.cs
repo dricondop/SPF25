@@ -111,7 +111,6 @@ public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
             StatusMessage = "Invalid file path provided";
             return;
         }
-
         LoadData(filePath);
     }
 
@@ -158,7 +157,6 @@ public class SourceDataManagerViewModel : ViewModelBase, IDataRangeProvider
                 var summerEnd = _sourceDataManager.SummerRecords.Max(r => r.TimeTo);
                 summerRange = $"Summer: {summerStart:dd-MM-yyyy} to {summerEnd:dd-MM-yyyy}";
             }
-
             DateRange = $"{winterRange} | {summerRange}";
         }
         catch (Exception)
