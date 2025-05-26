@@ -30,19 +30,28 @@ public class ResultDataManagerViewModel : ViewModelBase
     {
         _resultsData = new ResultsData();
         _dataVisualizationVM = new DataVisualizationViewModel();
-        LoadSampleData();
     }
 
     public async Task ExportDataToCsv()
     {
         try
         {
-            var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktopLifetime)
+            {
+                return;
+            }
+
+            var mainWindow = desktopLifetime.MainWindow;
             if (mainWindow == null) return;
 
             // Get data from optimizer
             var assetManager = OptimizerViewModel.SharedAssetManager;
-            var activeAssets = assetManager.GetAllAssets().Values.Where(a => a.IsActive).ToList();
+            if (assetManager == null) return;
+
+            var allAssets = assetManager.GetAllAssets();
+            if (allAssets == null) return;
+
+            var activeAssets = allAssets.Values.Where(a => a.IsActive).ToList();
             
             if (activeAssets.Count == 0)
             {
@@ -53,21 +62,26 @@ public class ResultDataManagerViewModel : ViewModelBase
 
             // Get all timestamps from the active assets
             var timestamps = activeAssets
-                .SelectMany(a => a.ProducedHeat.Keys)
+                .SelectMany(a => a.ProducedHeat?.Keys ?? Enumerable.Empty<DateTime>())
                 .Distinct()
                 .OrderBy(t => t)
                 .ToList();
 
             var topLevel = TopLevel.GetTopLevel(mainWindow);
-            var file = await topLevel?.StorageProvider?.SaveFilePickerAsync(new FilePickerSaveOptions
+            if (topLevel == null) return;
+
+            var storageProvider = topLevel.StorageProvider;
+            if (storageProvider == null) return;
+
+            var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "Save Data as CSV",
-                SuggestedFileName = $"OptimizationData_{DateTime.Now:yyyyMMddHHmmss}.csv",
+                SuggestedFileName = $"OptimizationData.csv",
                 FileTypeChoices = new[]
                 {
                     new FilePickerFileType("CSV File") { Patterns = new[] { "*.csv" } }
                 }
-            })!;
+            });
 
             if (file != null)
             {
@@ -88,7 +102,7 @@ public class ResultDataManagerViewModel : ViewModelBase
                 foreach (var timestamp in timestamps)
                 {
                     // Get heat demand (assuming it's available in one of the assets)
-                    var heatDemand = activeAssets.FirstOrDefault()?.ProducedHeat.TryGetValue(timestamp, out var demand) == true 
+                    var heatDemand = activeAssets.FirstOrDefault()?.ProducedHeat?.TryGetValue(timestamp, out var demand) == true 
                         ? demand ?? 0 
                         : 0;
 
@@ -99,7 +113,7 @@ public class ResultDataManagerViewModel : ViewModelBase
 
                     foreach (var asset in activeAssets)
                     {
-                        var heatProduction = asset.ProducedHeat.TryGetValue(timestamp, out var production) 
+                        var heatProduction = asset.ProducedHeat?.TryGetValue(timestamp, out var production) == true 
                             ? production ?? 0 
                             : 0;
                         var cost = asset.ProductionCost ?? 0;
@@ -121,10 +135,10 @@ public class ResultDataManagerViewModel : ViewModelBase
         catch (Exception ex)
         {
             var messageBox = new MessageBox("Error", $"Failed to export optimizer data: {ex.Message}");
-            var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-            if (mainWindow != null)
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime &&
+                desktopLifetime.MainWindow != null)
             {
-                await messageBox.ShowDialog(mainWindow);
+                await messageBox.ShowDialog(desktopLifetime.MainWindow);
             }
         }
     }
@@ -135,13 +149,31 @@ public class ResultDataManagerViewModel : ViewModelBase
 
         try
         {
-            var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktopLifetime)
+            {
+                return;
+            }
+
+            var mainWindow = desktopLifetime.MainWindow;
             if (mainWindow == null) return;
 
             chartImages = _dataVisualizationVM.GenerateAllCharts();
 
             var topLevel = TopLevel.GetTopLevel(mainWindow);
-            var file = await topLevel?.StorageProvider?.SaveFilePickerAsync(new FilePickerSaveOptions
+            if (topLevel == null)
+            {
+                CleanUpTempImages(chartImages);
+                return;
+            }
+
+            var storageProvider = topLevel.StorageProvider;
+            if (storageProvider == null)
+            {
+                CleanUpTempImages(chartImages);
+                return;
+            }
+
+            var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "Save Report as PDF",
                 SuggestedFileName = $"OptimizationReport.pdf",
@@ -149,7 +181,7 @@ public class ResultDataManagerViewModel : ViewModelBase
                 {
                     new FilePickerFileType("PDF File") { Patterns = new[] { "*.pdf" } }
                 }
-            })!;
+            });
 
             if (file != null)
             {
@@ -165,17 +197,16 @@ public class ResultDataManagerViewModel : ViewModelBase
             }
             else
             {
-                if (chartImages != null)
-                    CleanUpTempImages(chartImages);
+                CleanUpTempImages(chartImages);
             }
         }
         catch (Exception ex)
         {
             var messageBox = new MessageBox("Error", $"Failed to generate PDF report: {ex.Message}");
-            var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-            if (mainWindow != null)
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime &&
+                desktopLifetime.MainWindow != null)
             {
-                await messageBox.ShowDialog(mainWindow);
+                await messageBox.ShowDialog(desktopLifetime.MainWindow);
             }
         }
     }
