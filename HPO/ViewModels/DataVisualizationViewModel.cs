@@ -258,25 +258,25 @@ namespace HeatProductionOptimization.ViewModels
 
             // 1. Heat Demand Data - Line Chart
             SelectedDataSource = "Heat Demand Data";
-            SelectedChartType = "Line Chart";
+            SelectedChartType = "Bar Chart";
             UpdateChart();
-            string heatDemandPath = Path.Combine(tempFolder, "Heat_Demand_Line.png");
+            string heatDemandPath = Path.Combine(tempFolder, "Heat_Demand_Bar.png");
             SaveSpecificChart(heatDemandPath);
             chartImages.Add("HeatDemand", heatDemandPath);
 
             // 2. Electricity Price Data - Line Chart
             SelectedDataSource = "Electricity Price Data";
-            SelectedChartType = "Line Chart";
+            SelectedChartType = "Bar Chart";
             UpdateChart();
-            string electricityPricePath = Path.Combine(tempFolder, "Electricity_Price_Line.png");
+            string electricityPricePath = Path.Combine(tempFolder, "Electricity_Price_Bar.png");
             SaveSpecificChart(electricityPricePath);
             chartImages.Add("ElectricityPrice", electricityPricePath);
 
-            // 3. Optimization Results - Bar Chart (Daily)
+            // 3. Optimization Results - Bar Chart 
             SelectedDataSource = "Optimization Results";
             SelectedChartType = "Bar Chart";
             UpdateChart();
-            string optimizationPath = Path.Combine(tempFolder, "Optimization_Bar_Daily.png");
+            string optimizationPath = Path.Combine(tempFolder, "Optimization_Bar.png");
             SaveSpecificChart(optimizationPath);
             chartImages.Add("Optimization", optimizationPath);
 
@@ -295,80 +295,17 @@ namespace HeatProductionOptimization.ViewModels
         {
             try
             {
-                bool limitTo48 = SelectedDataSource is "Heat Demand Data" or "Electricity Price Data" or "Optimization Results";
-
-                var series = new List<ISeries>();
-                var xAxis = new Axis();
-                var yAxis = YAxes.FirstOrDefault();
-
-                if (limitTo48)
-                {
-                    for (int i = 0; i < CartesianSeries.Count; i++)
-                    {
-                        var original = CartesianSeries[i];
-
-                        switch (original)
-                        {
-                            case LineSeries<double> line:
-                                series.Add(new LineSeries<double>
-                                {
-                                    Name = line.Name,
-                                    Values = line.Values?.Cast<double>().Take(48).ToList() ?? new List<double>()
-                                });
-                                break;
-                            case ColumnSeries<double> column:
-                                series.Add(new ColumnSeries<double>
-                                {
-                                    Name = column.Name,
-                                    Values = column.Values?.Cast<double>().Take(48).ToList() ?? new List<double>(),
-                                    MaxBarWidth = column.MaxBarWidth,
-                                    Stroke = column.Stroke
-                                });
-                                break;
-                            case ScatterSeries<double> scatter:
-                                series.Add(new ScatterSeries<double>
-                                {
-                                    Name = scatter.Name,
-                                    Values = scatter.Values?.Cast<double>().Take(48).ToList() ?? new List<double>(),
-                                    DataLabelsPaint = scatter.DataLabelsPaint
-                                });
-                                break;
-                            default:
-                                series.Add(original); // fallback
-                                break;
-                        }
-                    }
-
-                    if (XAxes.FirstOrDefault() is Axis originalAxis && originalAxis.Labels != null)
-                    {
-                        xAxis = new Axis
-                        {
-                            Labels = originalAxis.Labels.Take(48).ToArray(),
-                            Name = originalAxis.Name,
-                            ShowSeparatorLines = originalAxis.ShowSeparatorLines,
-                            LabelsRotation = originalAxis.LabelsRotation,
-                            TextSize = originalAxis.TextSize,
-                            UnitWidth = originalAxis.UnitWidth,
-                            MinStep = originalAxis.MinStep,
-                            ForceStepToMin = originalAxis.ForceStepToMin,
-                            MinLimit = originalAxis.MinLimit,
-                            Padding = originalAxis.Padding
-                        };
-                    }
-                }
-                else
-                {
-                    series = CartesianSeries.ToList();
-                    xAxis = XAxes.FirstOrDefault() ?? new Axis();
-                }
+                var series = CartesianSeries.ToList();
+                var xAxis = XAxes.FirstOrDefault() ?? new Axis();
+                var yAxis = YAxes.FirstOrDefault() ?? new Axis();
 
                 var chart = new SKCartesianChart
                 {
-                    Width = limitTo48 ? Math.Max(48 * 45, 900) : (int)ChartWidth,
+                    Width = (int)ChartWidth,
                     Height = 600,
                     Series = series,
                     XAxes = new[] { xAxis },
-                    YAxes = new[] { yAxis ?? new Axis() },
+                    YAxes = new[] { yAxis },
                     Title = new LabelVisual
                     {
                         Text = $"{SelectedDataSource} - {SelectedChartType}",
@@ -377,6 +314,14 @@ namespace HeatProductionOptimization.ViewModels
                         Paint = new SolidColorPaint(SKColors.Black)
                     }
                 };
+
+                if (xAxis.Labels != null && xAxis.Labels.Count > 50)
+                {
+                    xAxis.LabelsRotation = 45;
+                    xAxis.TextSize = 10;
+                    xAxis.ShowSeparatorLines = false;
+                    chart.Width = Math.Max(xAxis.Labels.Count * 15, 1200);
+                }
 
                 using (var image = chart.GetImage())
                 using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
@@ -582,7 +527,7 @@ namespace HeatProductionOptimization.ViewModels
 
                     CartesianSeries.Add(new LineSeries<double>
                     {
-                        Name = $"{periodName} - {SelectedDataSource.Split(' ')[0]}", // Ej: "March 2024 - Heat"
+                        Name = $"{periodName} - {SelectedDataSource.Split(' ')[0]}", 
                         Values = values,
                         Stroke = new SolidColorPaint(periodColors[index]) { StrokeThickness = 2 },
                         Fill = null,
