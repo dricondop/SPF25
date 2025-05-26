@@ -499,75 +499,40 @@ namespace HeatProductionOptimization.ViewModels
                 this.RaisePropertyChanged(nameof(XAxes));
                 this.RaisePropertyChanged(nameof(YAxes));
             }
-
-            if (SelectedDataSource == "Heat Demand Data" || SelectedDataSource == "Electricity Price Data")
-            {
-                var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
-                var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
-
-                var records = new List<HeatDemandRecord>();
-                if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
-                if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
-
-                var periodGroups = records
-                    .GroupBy(r => GetPeriodIdentifier(r.TimeFrom))
-                    .OrderBy(g => g.Min(r => r.TimeFrom))
-                    .ToList();
-
-                var periodColors = GenerateDistinctColors(periodGroups.Count);
-
-                foreach (var (group, index) in periodGroups.Select((g, i) => (g, i)))
-                {
-                    var periodRecords = group.OrderBy(r => r.TimeFrom).ToList();
-                    var periodName = GetPeriodName(periodRecords.First().TimeFrom);
-
-                    var values = SelectedDataSource == "Heat Demand Data"
-                        ? periodRecords.Select(r => r.HeatDemand ?? 0).ToList()
-                        : periodRecords.Select(r => r.ElectricityPrice ?? 0).ToList();
-
-                    CartesianSeries.Add(new LineSeries<double>
-                    {
-                        Name = $"{periodName} - {SelectedDataSource.Split(' ')[0]}", 
-                        Values = values,
-                        Stroke = new SolidColorPaint(periodColors[index]) { StrokeThickness = 2 },
-                        Fill = null,
-                        GeometryStroke = new SolidColorPaint(periodColors[index]) { StrokeThickness = 1 }
-                    });
-                }
-            }
-        }
-
-        private string GetPeriodIdentifier(DateTime date)
-        {
-            return $"{date.Year}-{date.Month}";
-        }
-
-        private string GetPeriodName(DateTime date)
-        {
-            return date.ToString("MMMM yyyy");
         }
 
         private void CreateHeatDemandChart(DateTime startDate, DateTime endDate)
         {
+            // Resetear todas las propiedades relacionadas con el gráfico
+            _preparedValues.Clear();
+            _preparedLabels.Clear();
+            CartesianSeries.Clear();
+            
             var optimizerVM = new OptimizerViewModel();
             var winter = optimizerVM.UseWinterData;
             var summer = optimizerVM.UseSummerData;
             var records = new List<HeatDemandRecord>();
+            
             if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
             if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
+            
             var sorted = records.OrderBy(r => r.TimeFrom).ToList();
             
+            // Asignar nuevos valores
             _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
             _preparedValues = sorted.Select(r => r.HeatDemand ?? 0).ToList();
             _preparedXAxisTitle = "Date and Hour";
             _preparedYAxisTitle = "Heat Demand (MWh)";
 
-            CartesianSeries.Clear();
+            // Actualizar el ancho del gráfico basado en la cantidad de puntos de datos
+            this.RaisePropertyChanged(nameof(ChartWidth));
 
+            // Configurar colores
             var seriesColor = new SolidColorPaint(SKColors.SteelBlue);
             var pointColor = new SolidColorPaint(SKColors.SteelBlue);
             var fillColor = new SolidColorPaint(SKColors.SteelBlue.WithAlpha(50));
 
+            // Crear serie según el tipo de gráfico seleccionado
             switch (SelectedChartType)
             {
                 case "Line Chart":
@@ -604,29 +569,46 @@ namespace HeatProductionOptimization.ViewModels
                     });
                     break;
             }
+            
+            // Actualizar ejes y notificar cambios
+            SetAxes(_preparedLabels);
+            this.RaisePropertyChanged(nameof(CartesianSeries));
+            this.RaisePropertyChanged(nameof(XAxes));
+            this.RaisePropertyChanged(nameof(YAxes));
         }
 
         private void CreateElectricityPriceChart(DateTime startDate, DateTime endDate)
         {
+            // Resetear todas las propiedades relacionadas con el gráfico
+            _preparedValues.Clear();
+            _preparedLabels.Clear();
+            CartesianSeries.Clear();
+            
             var optimizerVM = new OptimizerViewModel();
             var winter = optimizerVM.UseWinterData;
             var summer = optimizerVM.UseSummerData;
             var records = new List<HeatDemandRecord>();
+            
             if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
             if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
+            
             var sorted = records.OrderBy(r => r.TimeFrom).ToList();
             
+            // Asignar nuevos valores
             _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
             _preparedValues = sorted.Select(r => r.ElectricityPrice ?? 0).ToList();
             _preparedXAxisTitle = "Date and Hour";
             _preparedYAxisTitle = "Electricity Price (DKK/kWh)";
 
-            CartesianSeries.Clear();
+            // Actualizar el ancho del gráfico basado en la cantidad de puntos de datos
+            this.RaisePropertyChanged(nameof(ChartWidth));
 
+            // Configurar colores
             var seriesColor = new SolidColorPaint(SKColors.DarkOrange);
             var pointColor = new SolidColorPaint(SKColors.DarkOrange);
             var fillColor = new SolidColorPaint(SKColors.DarkOrange.WithAlpha(50));
 
+            // Crear serie según el tipo de gráfico seleccionado
             switch (SelectedChartType)
             {
                 case "Line Chart":
@@ -663,6 +645,12 @@ namespace HeatProductionOptimization.ViewModels
                     });
                     break;
             }
+            
+            // Actualizar ejes y notificar cambios
+            SetAxes(_preparedLabels);
+            this.RaisePropertyChanged(nameof(CartesianSeries));
+            this.RaisePropertyChanged(nameof(XAxes));
+            this.RaisePropertyChanged(nameof(YAxes));
         }
 
         private void CreateLineChart()
