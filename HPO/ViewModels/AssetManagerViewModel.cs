@@ -171,11 +171,20 @@ public partial class AssetManagerViewModel : ViewModelBase
 
         return true;
     }
+
     [RelayCommand]
     public void RemoveAsset(AssetSpecifications asset)
     {
-        _assets.Remove(asset);
+        if (_assets != null)
+        {
+            _assets.Remove(asset);
+        }
+        else
+        {
+            Console.WriteLine("No asset to remove!");
+        }
     }
+    
     public bool TryParseNumericField(string fieldName, string value, out object? result)
     {
         result = null;

@@ -3,7 +3,7 @@
     "Gas Boiler 1": {
       "Name": "Gas Boiler 1",
       "ID": 1,
-      "IsActive": false,
+      "IsActive": true,
       "Unit Type": "Boiler",
       "Max Heat (MW)": 4,
       "Production Cost (DKK/MWh)": 520,
@@ -16,7 +16,7 @@
     "Oil Boiler 1": {
       "Name": "Oil Boiler 1",
       "ID": 2,
-      "IsActive": false,
+      "IsActive": true,
       "Unit Type": "Boiler",
       "Max Heat (MW)": 4,
       "Production Cost (DKK/MWh)": 670,
@@ -29,7 +29,7 @@
     "Gas Motor 1": {
       "Name": "Gas Motor 1",
       "ID": 3,
-      "IsActive": false,
+      "IsActive": true,
       "Unit Type": "Motor",
       "Max Heat (MW)": 3.5,
       "Max Electricity (MW)": 2.6,
@@ -43,7 +43,7 @@
     "Gas Boiler 2": {
       "Name": "Gas Boiler 2",
       "ID": 4,
-      "IsActive": true,
+      "IsActive": false,
       "Unit Type": "Boiler",
       "Max Heat (MW)": 3,
       "Production Cost (DKK/MWh)": 560,
@@ -56,7 +56,7 @@
     "Heat Pump 1": {
       "Name": "Heat Pump 1",
       "ID": 5,
-      "IsActive": false,
+      "IsActive": true,
       "Unit Type": "Heat Pump",
       "Max Heat (MW)": 6,
       "Max Electricity (MW)": -6,

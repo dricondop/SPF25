@@ -20,6 +20,9 @@ public partial class OptimizerViewModel : ViewModelBase
     private bool _isOptimizationRunning;
     private string _statusMessage = "Ready to optimize";
     public List<AssetSpecifications> boilers;
+    public static double? Totalcost;
+    public static double? TotalCO2;
+    public static double? TotalFuel;
     
     // Optimization parameters
     private bool _considerProductionCost = true;
@@ -57,7 +60,7 @@ public partial class OptimizerViewModel : ViewModelBase
             DisableOptimization();
             HeatDemandEnabled = !HeatDemandEnabled;
         } 
-    }
+    }   
 
     // Date selection properties from DateInputWindowViewModel
     private DateTimeOffset? _startDate;
@@ -235,7 +238,7 @@ public partial class OptimizerViewModel : ViewModelBase
         else if (MaxHeat < SummerMax && UseSummerData)
         {
             CanRunOptimization = false;
-            StatusMessage = "Unable to optimize, the u do not have enough power to generate the heat needed";
+            StatusMessage = "Unable to optimize, the units do not have enough power to generate the heat needed";
             return;
         }
         else if (MaxHeat >= SummerMax && UseSummerData)
@@ -569,10 +572,11 @@ public partial class OptimizerViewModel : ViewModelBase
             }
 
             double? Electricity = alg.CalculateElectricity(boilers, ElectricityPrices);
-            double? Totalcost = alg.CalculateTotalCost(boilers, Electricity);
+            Totalcost = alg.CalculateTotalCost(boilers, Electricity);
+            TotalCO2 = alg.CalculateTotalCO2(boilers);
+            TotalFuel = alg.CalculateTotalFuel(boilers);
 
-
-            Console.WriteLine($"Optimization complete. Total cost: {Totalcost}, Total units: {boilers.Count}");
+            Console.WriteLine($"Optimization complete. Total cost: {Totalcost}, Total CO2: {TotalCO2} Total units: {boilers.Count}");
 
             StatusMessage = "Optimization completed successfully";
             foreach (var boiler in boilers)

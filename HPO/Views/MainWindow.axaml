@@ -13,8 +13,8 @@
     Icon="/Assets/Icons/HPO.ico"
     RequestedThemeVariant="Light"
     Title="Heat Production Optimization"
-    Height="750"
-    Width="1200">
+    Height="850"
+    Width="1300">
 
     <Design.DataContext>
         <!--
