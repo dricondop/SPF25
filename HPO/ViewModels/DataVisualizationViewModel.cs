@@ -141,9 +141,6 @@ namespace HeatProductionOptimization.ViewModels
         }
 
         public ICommand UpdateChartCommand { get; }
-        public ICommand ExportDataCommand { get; }
-        public ICommand PrintReportCommand { get; }
-        public ICommand CompareResultsCommand { get; }
         public ICommand SaveChartImageCommand { get; }
         public ICommand ResetZoomCommand { get; }
 
@@ -156,9 +153,6 @@ namespace HeatProductionOptimization.ViewModels
             SelectedChartType = "Line Chart";
 
             UpdateChartCommand = new RelayCommand(UpdateChart);
-            ExportDataCommand = new RelayCommand(ExportData);
-            PrintReportCommand = new RelayCommand(PrintReport);
-            CompareResultsCommand = new RelayCommand(CompareResults);
             SaveChartImageCommand = new RelayCommand(SaveChartImage);
             ResetZoomCommand = new RelayCommand(ResetZoom);
             FilteredChartTypes = new ObservableCollection<string>(AvailableChartTypes);
@@ -706,10 +700,6 @@ namespace HeatProductionOptimization.ViewModels
             return date.ToString("MMMM yyyy");
         }
 
-        private void ExportData() => Console.WriteLine("Exporting data...");
-        private void PrintReport() => Console.WriteLine("Printing report...");
-        private void CompareResults() => Console.WriteLine("Comparing results...");
-
         private void CreateLineChart()
         {
             DateTime startDate = new DateTime(2024, 3, 1, 0, 0, 0);
@@ -777,66 +767,6 @@ namespace HeatProductionOptimization.ViewModels
                     });
                 }
             }
-            else if (SelectedDataSource == "Heat Demand Data")
-            {
-                var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
-                var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
-
-                var records = new List<HeatDemandRecord>();
-                if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-                if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-
-                var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
-                _preparedXAxisTitle = "Time";
-                _preparedYAxisTitle = "Heat Demand (MWh)";
-
-                // Create multiple series for consistency with Optimization Results display
-                var colors = GenerateDistinctColors(1); // Only need one color for single series
-                var values = sorted.Select(r => r.HeatDemand ?? 0).ToList();
-
-                CartesianSeries.Add(new LineSeries<double>
-                {
-                    Name = "Heat Demand",
-                    Values = values,
-                    GeometrySize = 2,
-                    LineSmoothness = 0,
-                    Stroke = new SolidColorPaint(colors[0]) { StrokeThickness = 2 },
-                    Fill = null,
-                    GeometryStroke = new SolidColorPaint(colors[0]) { StrokeThickness = 1 },
-                    GeometryFill = new SolidColorPaint(colors[0].WithAlpha(180))
-                });
-            }
-            else if (SelectedDataSource == "Electricity Price Data")
-            {
-                var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
-                var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
-
-                var records = new List<HeatDemandRecord>();
-                if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-                if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-
-                var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
-                _preparedXAxisTitle = "Time";
-                _preparedYAxisTitle = "Electricity Price (DKK/kWh)";
-
-                // Create multiple series for consistency with Optimization Results display
-                var colors = GenerateDistinctColors(1); // Only need one color for single series
-                var values = sorted.Select(r => r.ElectricityPrice ?? 0).ToList();
-
-                CartesianSeries.Add(new LineSeries<double>
-                {
-                    Name = "Electricity Price",
-                    Values = values,
-                    GeometrySize = 2,
-                    LineSmoothness = 0,
-                    Stroke = new SolidColorPaint(colors[0]) { StrokeThickness = 2 },
-                    Fill = null,
-                    GeometryStroke = new SolidColorPaint(colors[0]) { StrokeThickness = 1 },
-                    GeometryFill = new SolidColorPaint(colors[0].WithAlpha(180))
-                });
-            }
 
             SetAxes(_preparedLabels);
             this.RaisePropertyChanged(nameof(CartesianSeries));
@@ -903,58 +833,6 @@ namespace HeatProductionOptimization.ViewModels
                         Fill = new SolidColorPaint(colors[i].WithAlpha(200))
                     });
                 }
-                SetAxes(_preparedLabels);
-            }
-            else if (SelectedDataSource == "Heat Demand Data")
-            {
-                var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
-                var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
-
-                var records = new List<HeatDemandRecord>();
-                if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-                if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-
-                var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
-                _preparedValues = sorted.Select(r => r.HeatDemand ?? 0).ToList();
-                _preparedXAxisTitle = "Date and Hour";
-                _preparedYAxisTitle = "Heat Demand (MWh)";
-
-                CartesianSeries.Add(new ColumnSeries<double>
-                {
-                    Name = "Heat Demand",
-                    Values = _preparedValues,
-                    MaxBarWidth = 20,
-                    Stroke = null,
-                    Fill = new SolidColorPaint(SKColors.Red.WithAlpha(200))
-                });
-
-                SetAxes(_preparedLabels);
-            }
-            else if (SelectedDataSource == "Electricity Price Data")
-            {
-                var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
-                var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
-
-                var records = new List<HeatDemandRecord>();
-                if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-                if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-
-                var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
-                _preparedValues = sorted.Select(r => r.ElectricityPrice ?? 0).ToList();
-                _preparedXAxisTitle = "Date and Hour";
-                _preparedYAxisTitle = "Electricity Price (DKK/kWh)";
-
-                CartesianSeries.Add(new ColumnSeries<double>
-                {
-                    Name = "Electricity Price",
-                    Values = _preparedValues,
-                    MaxBarWidth = 20,
-                    Stroke = null,
-                    Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(200))
-                });
-
                 SetAxes(_preparedLabels);
             }
 
@@ -1028,60 +906,6 @@ namespace HeatProductionOptimization.ViewModels
 
                 SetAxes(_preparedLabels);
             }
-            else if (SelectedDataSource == "Heat Demand Data")
-            {
-                var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
-                var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
-
-                var records = new List<HeatDemandRecord>();
-                if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-                if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-
-                var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
-                _preparedValues = sorted.Select(r => r.HeatDemand ?? 0).ToList();
-                _preparedXAxisTitle = "Date and Hour";
-                _preparedYAxisTitle = "Heat Demand (MWh)";
-
-                CartesianSeries.Add(new ScatterSeries<double>
-                {
-                    Name = "Heat Demand",
-                    Values = _preparedValues,
-                    GeometrySize = 3,
-                    Stroke = null,
-                    Fill = new SolidColorPaint(SKColors.Red.WithAlpha(150)),
-                    DataLabelsPaint = null
-                });
-
-                SetAxes(_preparedLabels);
-            }
-            else if (SelectedDataSource == "Electricity Price Data")
-            {
-                var winter = DateInputWindowViewModel.SelectedDateRange.UseWinterData;
-                var summer = DateInputWindowViewModel.SelectedDateRange.UseSummerData;
-
-                var records = new List<HeatDemandRecord>();
-                if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-                if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-
-                var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
-                _preparedValues = sorted.Select(r => r.ElectricityPrice ?? 0).ToList();
-                _preparedXAxisTitle = "Date and Hour";
-                _preparedYAxisTitle = "Electricity Price (DKK/kWh)";
-
-                CartesianSeries.Add(new ScatterSeries<double>
-                {
-                    Name = "Electricity Price",
-                    Values = _preparedValues,
-                    GeometrySize = 3,
-                    Stroke = null,
-                    Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(150)),
-                    DataLabelsPaint = null
-                });
-
-                SetAxes(_preparedLabels);
-            }
 
             this.RaisePropertyChanged(nameof(CartesianSeries));
         }
@@ -1101,7 +925,7 @@ namespace HeatProductionOptimization.ViewModels
                 TextSize = 12,
                 UnitWidth = 1,
                 MinStep = CalculateOptimalMinStep(labels.Count),
-                ForceStepToMin = labels.Count < 100, // Solo forzar paso mínimo para conjuntos pequeños
+                ForceStepToMin = labels.Count < 100, 
                 MinLimit = null,
                 MaxLimit = null,
                 Padding = new LiveChartsCore.Drawing.Padding(30, 0, 0, 0),
