@@ -20,6 +20,9 @@ public partial class OptimizerViewModel : ViewModelBase
     private bool _isOptimizationRunning;
     private string _statusMessage = "Ready to optimize";
     public List<AssetSpecifications> boilers;
+    public static double? Totalcost;
+    public static double? TotalCO2;
+    public static double? TotalFuel;
     
     // Optimization parameters
     private bool _considerProductionCost = true;
@@ -54,9 +57,10 @@ public partial class OptimizerViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref csvHeatDemand, value);
+            DisableOptimization();
             HeatDemandEnabled = !HeatDemandEnabled;
         } 
-    }
+    }   
 
     // Date selection properties from DateInputWindowViewModel
     private DateTimeOffset? _startDate;
@@ -212,22 +216,59 @@ public partial class OptimizerViewModel : ViewModelBase
 
     public bool ShowDateSelection => UseWinterData ^ UseSummerData;
 
+    //This method checks if the total heat that all assets can produce is less than the max value in the CSV heat demand data 
+    //to disble the option of running the optimizer
+    public void DisableOptimization()
+    {
+        List<HeatDemandRecord> WinterData = sourceDataManager.WinterRecords;
+        List<HeatDemandRecord> SummerData = sourceDataManager.SummerRecords;
+        double? WinterMax = WinterData.Max(w => w.HeatDemand);
+        double? SummerMax = SummerData.Max(w => w.HeatDemand);
+        if (MaxHeat < WinterMax && UseWinterData)
+        {
+            CanRunOptimization = false;
+            StatusMessage = "Unable to optimize, the units do not have enough power to generate the heat needed";
+            return;
+        }
+        else if (MaxHeat >= WinterMax && UseWinterData)
+        {
+            CanRunOptimization = true;
+            return;
+        }
+        else if (MaxHeat < SummerMax && UseSummerData)
+        {
+            CanRunOptimization = false;
+            StatusMessage = "Unable to optimize, the units do not have enough power to generate the heat needed";
+            return;
+        }
+        else if (MaxHeat >= SummerMax && UseSummerData)
+        {
+            CanRunOptimization = true;
+            return;
+        }
+        else
+        {
+            CanRunOptimization = true;
+            return;
+        }
+    }
+
     // Date selection methods
     private void UpdateDefaultDates()
     {
         var (startDate, endDate) = GetAvailableDataRange();
-        
+
         // Check if dates are valid before assigning
         if (startDate == DateTime.MinValue || startDate == DateTime.MaxValue)
             startDate = DateTime.Today;
-        
+
         if (endDate == DateTime.MinValue || endDate == DateTime.MaxValue)
             endDate = DateTime.Today.AddDays(1);
-        
+
         // Use constructor with explicit date
         StartDate = new DateTimeOffset(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, TimeSpan.Zero);
         EndDate = new DateTimeOffset(endDate.Year, endDate.Month, endDate.Day, 0, 0, 0, TimeSpan.Zero);
-        
+
         ValidateDates();
     }
 
@@ -236,6 +277,7 @@ public partial class OptimizerViewModel : ViewModelBase
         DateTime minDate = DateTime.MaxValue;
         DateTime maxDate = DateTime.MinValue;
         bool hasData = false;
+
         if (UseWinterData)
         {
             // Get winter data range from source data manager
@@ -530,10 +572,11 @@ public partial class OptimizerViewModel : ViewModelBase
             }
 
             double? Electricity = alg.CalculateElectricity(boilers, ElectricityPrices);
-            double? Totalcost = alg.CalculateTotalCost(boilers, Electricity);
+            Totalcost = alg.CalculateTotalCost(boilers, Electricity);
+            TotalCO2 = alg.CalculateTotalCO2(boilers);
+            TotalFuel = alg.CalculateTotalFuel(boilers);
 
-
-            Console.WriteLine($"Optimization complete. Total cost: {Totalcost}, Total units: {boilers.Count}");
+            Console.WriteLine($"Optimization complete. Total cost: {Totalcost}, Total CO2: {TotalCO2} Total units: {boilers.Count}");
 
             StatusMessage = "Optimization completed successfully";
             foreach (var boiler in boilers)

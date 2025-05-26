@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using System.ComponentModel.DataAnnotations.Schema;
+using DynamicData.Aggregation;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -60,6 +62,13 @@ namespace HeatProductionOptimization.ViewModels
 
         public string SelectedChartType { get; set; } = "Bar Chart";
 
+        // OPT Data Settings
+        private bool _isResultVisible;
+        private double? _totalProdCosts = 0;
+        private double? _totalCO2 = 0;
+        private double? _totalFuel = 0;
+        private double? _totalHeatProduced = 0;
+
         // Chart Settings
         private bool _showLegend = true;
         private bool _showDataLabels = true;
@@ -87,6 +96,37 @@ namespace HeatProductionOptimization.ViewModels
         public ZoomAndPanMode ZoomMode => _enableZoom ? ZoomAndPanMode.X : ZoomAndPanMode.None;
         public LegendPosition ChartLegendPosition =>
             ShowLegend ? LegendPosition.Right : LegendPosition.Hidden;
+
+        // Properties for chart options with change notification
+        public bool IsResultVisible
+        {
+            get => _isResultVisible;
+            set => this.RaiseAndSetIfChanged(ref _isResultVisible, value);
+        }
+
+        public double? TotalProdCosts
+        {
+            get => _totalProdCosts;
+            set => this.RaiseAndSetIfChanged(ref _totalProdCosts, value);
+        }
+
+        public double? TotalCO2
+        {
+            get => _totalCO2;
+            set => this.RaiseAndSetIfChanged(ref _totalCO2, value);
+        }
+
+        public double? TotalFuel
+        {
+            get => _totalFuel;
+            set => this.RaiseAndSetIfChanged(ref _totalFuel, value);
+        }
+
+        public double? TotalHeatProduced
+        {
+            get => _totalHeatProduced;
+            set => this.RaiseAndSetIfChanged(ref _totalHeatProduced, value);
+        }    
 
         public bool ShowLegend
         {
@@ -192,6 +232,7 @@ namespace HeatProductionOptimization.ViewModels
             CartesianSeries.Clear();
         }
 
+        // Date Range from Optimizer
         private (DateTime startDate, DateTime endDate) GetDateRange()
         {
             DateTime defaultStart = new(2024, 3, 1);
@@ -213,6 +254,7 @@ namespace HeatProductionOptimization.ViewModels
             return (defaultStart, defaultEnd);
         }
 
+        // 1.OPT Results
         private void UpdateOptimizationResultsChart(DateTime startDate, DateTime endDate)
         {
             var assets = _assetManager.GetAllAssets().Values.Where(a => a.IsActive).ToList();
@@ -230,6 +272,12 @@ namespace HeatProductionOptimization.ViewModels
             _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
             _preparedXAxisTitle = "Time";
             _preparedYAxisTitle = "Produced Heat (MWh)";
+
+            IsResultVisible = false;
+            TotalProdCosts = OptimizerViewModel.Totalcost ??= 0;
+            TotalCO2 = OptimizerViewModel.TotalCO2 ??= 0;
+            TotalFuel = OptimizerViewModel.TotalFuel ??= 0;
+            TotalHeatProduced = assets.Where(a => a.IsActive).SelectMany(a => a.ProducedHeat.Values).Sum();
 
             var colors = GenerateDistinctColors(assets.Count);
             double pointSize = CalculatePointSize();
@@ -249,10 +297,11 @@ namespace HeatProductionOptimization.ViewModels
                 .ToList();
 
             SetAxes(_preparedLabels);
-            
+
             this.RaisePropertyChanged(nameof(ZoomMode));
         }
 
+        // Method to stablish chart settings 
         private void AddSeriesToChart(string name, List<double> values, SKColor color, double pointSize)
         {
             ISeries series = SelectedChartType switch
@@ -290,10 +339,12 @@ namespace HeatProductionOptimization.ViewModels
             CartesianSeries.Add(series);
         }
 
+        // 2. and 3. Heat Demand and Electricity Price
         private void CreateDemandOrPriceChart(DateTime startDate, DateTime endDate, string title, string yAxisTitle, SKColor color)
         {
             var optimizerVM = new OptimizerViewModel();
             var records = new List<HeatDemandRecord>();
+            IsResultVisible = false;
 
             if (optimizerVM.UseWinterData) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
             if (optimizerVM.UseSummerData) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
@@ -317,9 +368,9 @@ namespace HeatProductionOptimization.ViewModels
                     Stroke = seriesColor,
                     GeometryStroke = pointColor,
                     GeometryFill = pointColor,
-                    GeometrySize = 4,
+                    GeometrySize = 2,
                     Fill = fillColor,
-                    LineSmoothness = 0 
+                    LineSmoothness = 0
                 },
                 "Bar Chart" => new ColumnSeries<double>
                 {
@@ -344,11 +395,13 @@ namespace HeatProductionOptimization.ViewModels
             SetAxes(_preparedLabels);
         }
 
+        // 4. Production Units Performance
         private void UpdateProductionPerformanceChart()
         {
             var activeAssets = _assetManager.GetAllAssets().Values.Where(a => a.IsActive).ToList();
             if (!activeAssets.Any()) return;
 
+            IsResultVisible = true;
             _preparedLabels = activeAssets.Select(a => a.Name).ToList();
             _preparedXAxisTitle = "Production Units";
             _preparedYAxisTitle = "Value";
@@ -365,9 +418,9 @@ namespace HeatProductionOptimization.ViewModels
             {
                 ISeries series = SelectedChartType switch
                 {
-                    "Line Chart" => new LineSeries<double> 
-                    { 
-                        Name = name, 
+                    "Line Chart" => new LineSeries<double>
+                    {
+                        Name = name,
                         Values = values,
                         LineSmoothness = 0.8
                     },
@@ -463,7 +516,7 @@ namespace HeatProductionOptimization.ViewModels
 
         private double GetOptimalLabelRotation(int labelCount)
         {
-            if (labelCount <= 24) return 0;
+            if (labelCount <= 6) return 0;
             if (labelCount <= 168) return 45;
             return 90;
         }
