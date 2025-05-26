@@ -314,7 +314,7 @@ namespace HeatProductionOptimization.ViewModels
                         Paint = new SolidColorPaint(SKColors.Black)
                     }
                 };
-
+ 
                 if (xAxis.Labels != null && xAxis.Labels.Count > 50)
                 {
                     xAxis.LabelsRotation = 45;
