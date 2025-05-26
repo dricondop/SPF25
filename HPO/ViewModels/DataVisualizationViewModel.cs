@@ -496,109 +496,11 @@ namespace HeatProductionOptimization.ViewModels
 
             else if (SelectedDataSource == "Heat Demand Data")
             {
-                DateTime start = startDate;
-                DateTime end = endDate;
-                if (SelectedDataSource == "Heat Demand Data")
-                {
-                    var optimizerVM = new OptimizerViewModel();
-                    var winter = optimizerVM.UseWinterData;
-                    var summer = optimizerVM.UseSummerData;
-                    var records = new List<HeatDemandRecord>();
-                    if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
-                    if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
-                    var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                    _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
-                    _preparedValues = sorted.Select(r => r.HeatDemand ?? 0).ToList();
-                    _preparedXAxisTitle = "Date and Hour";
-                    _preparedYAxisTitle = "Heat Demand (MWh)";
-
-                    CartesianSeries.Clear();
-
-                    switch (SelectedChartType)
-                    {
-                        case "Line Chart":
-                            CartesianSeries.Add(new LineSeries<double>
-                            {
-                                Name = "Heat Demand",
-                                Values = _preparedValues
-                            });
-                            break;
-                        case "Bar Chart":
-                            CartesianSeries.Add(new ColumnSeries<double>
-                            {
-                                Name = "Heat Demand",
-                                Values = _preparedValues,
-                                MaxBarWidth = 20,
-                                Stroke = null
-                            });
-                            break;
-                        case "Scatter Plot":
-                            CartesianSeries.Add(new ScatterSeries<double>
-                            {
-                                Name = "Heat Demand",
-                                Values = _preparedValues,
-                                DataLabelsPaint = null
-                            });
-                            break;
-                    }
-                    this.RaisePropertyChanged(nameof(ChartWidth));
-                    SetAxes(_preparedLabels);
-                    this.RaisePropertyChanged(nameof(CartesianSeries));
-                    this.RaisePropertyChanged(nameof(XAxes));
-                    this.RaisePropertyChanged(nameof(YAxes));
-                }
+                CreateHeatDemandChart(startDate, endDate);
             }
-
             else if (SelectedDataSource == "Electricity Price Data")
             {
-                DateTime start = startDate;
-                DateTime end = endDate;
-                var optimizerVM = new OptimizerViewModel();
-                var winter = optimizerVM.UseWinterData;
-                var summer = optimizerVM.UseSummerData;
-                var records = new List<HeatDemandRecord>();
-                if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-                if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= start && r.TimeFrom <= end));
-                var sorted = records.OrderBy(r => r.TimeFrom).ToList();
-                _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
-                _preparedValues = sorted.Select(r => r.ElectricityPrice ?? 0).ToList();
-                _preparedXAxisTitle = "Date and Hour";
-                _preparedYAxisTitle = "Electricity Price (DKK/kWh)";
-
-                CartesianSeries.Clear();
-
-                switch (SelectedChartType)
-                {
-                    case "Line Chart":
-                        CartesianSeries.Add(new LineSeries<double>
-                        {
-                            Name = "Electricity Price",
-                            Values = _preparedValues
-                        });
-                        break;
-                    case "Bar Chart":
-                        CartesianSeries.Add(new ColumnSeries<double>
-                        {
-                            Name = "Electricity Price",
-                            Values = _preparedValues,
-                            MaxBarWidth = 20,
-                            Stroke = null
-                        });
-                        break;
-                    case "Scatter Plot":
-                        CartesianSeries.Add(new ScatterSeries<double>
-                        {
-                            Name = "Electricity Price",
-                            Values = _preparedValues,
-                            DataLabelsPaint = null
-                        });
-                        break;
-                }
-                this.RaisePropertyChanged(nameof(ChartWidth));
-                SetAxes(_preparedLabels);
-                this.RaisePropertyChanged(nameof(CartesianSeries));
-                this.RaisePropertyChanged(nameof(XAxes));
-                this.RaisePropertyChanged(nameof(YAxes));
+                CreateElectricityPriceChart(startDate, endDate);
             }
 
             else if (SelectedDataSource == "Production Unit Performance")
@@ -698,6 +600,124 @@ namespace HeatProductionOptimization.ViewModels
         private string GetPeriodName(DateTime date)
         {
             return date.ToString("MMMM yyyy");
+        }
+
+        private void CreateHeatDemandChart(DateTime startDate, DateTime endDate)
+        {
+            var optimizerVM = new OptimizerViewModel();
+            var winter = optimizerVM.UseWinterData;
+            var summer = optimizerVM.UseSummerData;
+            var records = new List<HeatDemandRecord>();
+            if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
+            if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
+            var sorted = records.OrderBy(r => r.TimeFrom).ToList();
+            
+            _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
+            _preparedValues = sorted.Select(r => r.HeatDemand ?? 0).ToList();
+            _preparedXAxisTitle = "Date and Hour";
+            _preparedYAxisTitle = "Heat Demand (MWh)";
+
+            CartesianSeries.Clear();
+
+            var seriesColor = new SolidColorPaint(SKColors.SteelBlue);
+            var pointColor = new SolidColorPaint(SKColors.SteelBlue);
+            var fillColor = new SolidColorPaint(SKColors.SteelBlue.WithAlpha(50));
+
+            switch (SelectedChartType)
+            {
+                case "Line Chart":
+                    CartesianSeries.Add(new LineSeries<double>
+                    {
+                        Name = "Heat Demand",
+                        Values = _preparedValues,
+                        Stroke = seriesColor,
+                        GeometryStroke = pointColor,
+                        GeometryFill = pointColor,
+                        GeometrySize = 4, 
+                        Fill = fillColor,
+                        LineSmoothness = 0.2
+                    });
+                    break;
+                case "Bar Chart":
+                    CartesianSeries.Add(new ColumnSeries<double>
+                    {
+                        Name = "Heat Demand",
+                        Values = _preparedValues,
+                        MaxBarWidth = 20,
+                        Stroke = null,
+                        Fill = seriesColor
+                    });
+                    break;
+                case "Scatter Plot":
+                    CartesianSeries.Add(new ScatterSeries<double>
+                    {
+                        Name = "Heat Demand",
+                        Values = _preparedValues,
+                        DataLabelsPaint = null,
+                        Fill = pointColor,
+                        GeometrySize = 5 
+                    });
+                    break;
+            }
+        }
+
+        private void CreateElectricityPriceChart(DateTime startDate, DateTime endDate)
+        {
+            var optimizerVM = new OptimizerViewModel();
+            var winter = optimizerVM.UseWinterData;
+            var summer = optimizerVM.UseSummerData;
+            var records = new List<HeatDemandRecord>();
+            if (winter) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
+            if (summer) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
+            var sorted = records.OrderBy(r => r.TimeFrom).ToList();
+            
+            _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
+            _preparedValues = sorted.Select(r => r.ElectricityPrice ?? 0).ToList();
+            _preparedXAxisTitle = "Date and Hour";
+            _preparedYAxisTitle = "Electricity Price (DKK/kWh)";
+
+            CartesianSeries.Clear();
+
+            var seriesColor = new SolidColorPaint(SKColors.DarkOrange);
+            var pointColor = new SolidColorPaint(SKColors.DarkOrange);
+            var fillColor = new SolidColorPaint(SKColors.DarkOrange.WithAlpha(50));
+
+            switch (SelectedChartType)
+            {
+                case "Line Chart":
+                    CartesianSeries.Add(new LineSeries<double>
+                    {
+                        Name = "Electricity Price",
+                        Values = _preparedValues,
+                        Stroke = seriesColor,
+                        GeometryStroke = pointColor,
+                        GeometryFill = pointColor,
+                        GeometrySize = 4, 
+                        Fill = fillColor,
+                        LineSmoothness = 0.2
+                    });
+                    break;
+                case "Bar Chart":
+                    CartesianSeries.Add(new ColumnSeries<double>
+                    {
+                        Name = "Electricity Price",
+                        Values = _preparedValues,
+                        MaxBarWidth = 20,
+                        Stroke = null,
+                        Fill = seriesColor
+                    });
+                    break;
+                case "Scatter Plot":
+                    CartesianSeries.Add(new ScatterSeries<double>
+                    {
+                        Name = "Electricity Price",
+                        Values = _preparedValues,
+                        DataLabelsPaint = null,
+                        Fill = pointColor,
+                        GeometrySize = 5 
+                    });
+                    break;
+            }
         }
 
         private void CreateLineChart()
