@@ -723,6 +723,48 @@ namespace HeatProductionOptimization.ViewModels
             });
         }
 
+        private void UpdateChartTypes()
+        {
+            FilteredChartTypes.Clear();
+
+            if (SelectedDataSource == "Optimization Results")
+            {
+                FilteredChartTypes.Add("Line Chart");
+                FilteredChartTypes.Add("Bar Chart");
+                FilteredChartTypes.Add("Scatter Plot");
+            }
+            else if (SelectedDataSource == "Heat Demand Data")
+            {
+                FilteredChartTypes.Add("Line Chart");
+                FilteredChartTypes.Add("Bar Chart");
+                FilteredChartTypes.Add("Scatter Plot");
+            }
+            else if (SelectedDataSource == "Electricity Price Data")
+            {
+                FilteredChartTypes.Add("Line Chart");
+                FilteredChartTypes.Add("Bar Chart");
+                FilteredChartTypes.Add("Scatter Plot");
+            }
+            else if (SelectedDataSource == "Production Unit Performance")
+            {
+                FilteredChartTypes.Add("Line Chart");
+                FilteredChartTypes.Add("Bar Chart");
+                FilteredChartTypes.Add("Scatter Plot");
+            }
+            else
+            {
+                // For other data sources, show all chart types
+                foreach (var type in AvailableChartTypes)
+                    FilteredChartTypes.Add(type);
+            }
+            // Ensure selected chart type is still valid
+            if (!FilteredChartTypes.Contains(SelectedChartType))
+            {
+                SelectedChartType = FilteredChartTypes.FirstOrDefault() ?? string.Empty;
+                this.RaisePropertyChanged(nameof(SelectedChartType));
+            }
+        }
+
         private string GetOptimalDateFormat(List<string> labels)
         {
             if (labels.Count == 0) return "dd-MM HH:mm";
@@ -734,10 +776,10 @@ namespace HeatProductionOptimization.ViewModels
                 {
                     TimeSpan dateRange = lastDate - firstDate;
 
-                    if (dateRange.TotalDays > 365) return "MMM yyyy"; // Más de 1 año: mostrar mes/año
-                    if (dateRange.TotalDays > 30) return "dd MMM";    // Más de 1 mes: mostrar día/mes
-                    if (dateRange.TotalDays > 2) return "dd-MM HH:mm"; // Más de 2 días: mostrar día/hora
-                    return "HH:mm"; // Menos de 2 días: solo hora
+                    if (dateRange.TotalDays > 365) return "MMM yyyy"; 
+                    if (dateRange.TotalDays > 30) return "dd MMM";    
+                    if (dateRange.TotalDays > 2) return "dd-MM HH:mm"; 
+                    return "HH:mm"; 
                 }
             }
             catch
@@ -750,17 +792,18 @@ namespace HeatProductionOptimization.ViewModels
 
         private double GetOptimalLabelRotation(int labelCount)
         {
-            if (labelCount <= 24) return 0;    
-            if (labelCount <= 168) return 45;  
-            return 90;                         
+            if (labelCount <= 24) return 0;
+            if (labelCount <= 168) return 45;
+            return 90;
         }
 
+        // Method to calculate the optimal data agrupation based the on number of data points
         private double CalculateOptimalMinStep(int labelCount)
         {
-            if (labelCount <= 24) return 1;    
-            if (labelCount <= 168) return 3;   
-            if (labelCount <= 720) return 24;  
-            return 168;                        
+            if (labelCount <= 24) return 1;
+            if (labelCount <= 168) return 3;
+            if (labelCount <= 720) return 24;
+            return 168;
         }
 
         private string FormatDateLabel(double value, string dateFormat, List<string> allLabels)
@@ -831,66 +874,6 @@ namespace HeatProductionOptimization.ViewModels
             return Math.Min(baseWidth + additionalWidth, 3000);
         }
 
-        // Method to Reset Zoom
-        private void ResetZoom()
-        {
-            if (XAxes.Count > 0)
-            {
-                XAxes[0].MinLimit = null;
-                XAxes[0].MaxLimit = null;
-                this.RaisePropertyChanged(nameof(XAxes));
-            }
-
-            if (YAxes.Count > 0)
-            {
-                YAxes[0].MinLimit = AutoScale ? null : 0;
-                YAxes[0].MaxLimit = AutoScale ? null : (_preparedValues.Count > 0 ? _preparedValues.Max() * 1.1 : (double?)null);
-                this.RaisePropertyChanged(nameof(YAxes));
-            }
-        }
-
-        private void UpdateChartTypes()
-        {
-            FilteredChartTypes.Clear();
-
-            if (SelectedDataSource == "Optimization Results")
-            {
-                FilteredChartTypes.Add("Line Chart");
-                FilteredChartTypes.Add("Bar Chart");
-                FilteredChartTypes.Add("Scatter Plot");
-            }
-            else if (SelectedDataSource == "Heat Demand Data")
-            {
-                FilteredChartTypes.Add("Line Chart");
-                FilteredChartTypes.Add("Bar Chart");
-                FilteredChartTypes.Add("Scatter Plot");
-            }
-            else if (SelectedDataSource == "Electricity Price Data")
-            {
-                FilteredChartTypes.Add("Line Chart");
-                FilteredChartTypes.Add("Bar Chart");
-                FilteredChartTypes.Add("Scatter Plot");
-            }
-            else if (SelectedDataSource == "Production Unit Performance")
-            {
-                FilteredChartTypes.Add("Line Chart");
-                FilteredChartTypes.Add("Bar Chart");
-                FilteredChartTypes.Add("Scatter Plot");
-            }
-            else
-            {
-                // For other data sources, show all chart types
-                foreach (var type in AvailableChartTypes)
-                    FilteredChartTypes.Add(type);
-            }
-            // Ensure selected chart type is still valid
-            if (!FilteredChartTypes.Contains(SelectedChartType))
-            {
-                SelectedChartType = FilteredChartTypes.FirstOrDefault() ?? string.Empty;
-                this.RaisePropertyChanged(nameof(SelectedChartType));
-            }
-        }
-
         // Method to adapt size of Graph's points based on the number of data points
         private double CalculatePointSize()
         {
@@ -918,6 +901,23 @@ namespace HeatProductionOptimization.ViewModels
             return colors;
         }
 
+        // Method to Reset Zoom
+        private void ResetZoom()
+        {
+            if (XAxes.Count > 0)
+            {
+                XAxes[0].MinLimit = null;
+                XAxes[0].MaxLimit = null;
+                this.RaisePropertyChanged(nameof(XAxes));
+            }
+
+            if (YAxes.Count > 0)
+            {
+                YAxes[0].MinLimit = AutoScale ? null : 0;
+                YAxes[0].MaxLimit = AutoScale ? null : (_preparedValues.Count > 0 ? _preparedValues.Max() * 1.1 : (double?)null);
+                this.RaisePropertyChanged(nameof(YAxes));
+            }
+        }
         // Method to save chart as image
         private void SaveChartImage()
         {
