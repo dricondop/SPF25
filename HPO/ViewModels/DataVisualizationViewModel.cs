@@ -68,6 +68,7 @@ namespace HeatProductionOptimization.ViewModels
         private double? _totalCO2 = 0;
         private double? _totalFuel = 0;
         private double? _totalHeatProduced = 0;
+        private List<DateTime> _currentOptimizationTimestamps = new();
 
         // Chart Settings
         private bool _showLegend = true;
@@ -232,7 +233,7 @@ namespace HeatProductionOptimization.ViewModels
             CartesianSeries.Clear();
         }
 
-        // Date Range from Optimizer
+        // Date Range from OptimizerViewModel
         private (DateTime startDate, DateTime endDate) GetDateRange()
         {
             DateTime defaultStart = new(2024, 3, 1);
@@ -260,16 +261,16 @@ namespace HeatProductionOptimization.ViewModels
             var assets = _assetManager.GetAllAssets().Values.Where(a => a.IsActive).ToList();
             if (assets.Count == 0) return;
 
-            var timestamps = assets
+            _currentOptimizationTimestamps = assets
                 .SelectMany(a => a.ProducedHeat.Keys)
                 .Where(t => t >= startDate && t <= endDate)
                 .Distinct()
                 .OrderBy(t => t)
                 .ToList();
 
-            if (timestamps.Count == 0) return;
+            if (_currentOptimizationTimestamps.Count == 0) return;
 
-            _preparedLabels = timestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
+            _preparedLabels = _currentOptimizationTimestamps.Select(t => t.ToString("dd-MM HH:mm")).ToList();
             _preparedXAxisTitle = "Time";
             _preparedYAxisTitle = "Produced Heat (MWh)";
 
@@ -285,7 +286,7 @@ namespace HeatProductionOptimization.ViewModels
             for (int i = 0; i < assets.Count; i++)
             {
                 var asset = assets[i];
-                var values = timestamps.Select(t => asset.ProducedHeat.TryGetValue(t, out var v) ? v ?? 0 : 0).ToList();
+                var values = _currentOptimizationTimestamps.Select(t => asset.ProducedHeat.TryGetValue(t, out var v) ? v ?? 0 : 0).ToList();
 
                 AddSeriesToChart(asset.Name, values, colors[i], pointSize);
             }
@@ -346,8 +347,26 @@ namespace HeatProductionOptimization.ViewModels
             var records = new List<HeatDemandRecord>();
             IsResultVisible = false;
 
-            if (optimizerVM.UseWinterData) records.AddRange(_sourceDataManager.WinterRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
-            if (optimizerVM.UseSummerData) records.AddRange(_sourceDataManager.SummerRecords.Where(r => r.TimeFrom >= startDate && r.TimeFrom <= endDate));
+            // Obtener todas las horas exactas que existen en Optimization Results
+            var optimizationTimestamps = _assetManager.GetAllAssets().Values
+                .Where(a => a.IsActive)
+                .SelectMany(a => a.ProducedHeat.Keys)
+                .Where(t => t >= startDate && t <= endDate)
+                .Distinct()
+                .OrderBy(t => t)
+                .ToList();
+
+            // Filtrar los registros para que coincidan exactamente con las horas de Optimization Results
+            if (optimizerVM.UseWinterData)
+            {
+                records.AddRange(_sourceDataManager.WinterRecords
+                    .Where(r => optimizationTimestamps.Contains(r.TimeFrom)));
+            }
+            if (optimizerVM.UseSummerData)
+            {
+                records.AddRange(_sourceDataManager.SummerRecords
+                    .Where(r => optimizationTimestamps.Contains(r.TimeFrom)));
+            }
 
             var sorted = records.OrderBy(r => r.TimeFrom).ToList();
             _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
@@ -642,6 +661,7 @@ namespace HeatProductionOptimization.ViewModels
                 this.RaisePropertyChanged(nameof(YAxes));
             }
         }
+        
         // Method to save chart as image
         private void SaveChartImage()
         {
