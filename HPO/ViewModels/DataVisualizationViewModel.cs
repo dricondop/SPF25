@@ -202,7 +202,6 @@ namespace HeatProductionOptimization.ViewModels
         private void UpdateChart()
         {
             ClearChartData();
-
             var (startDate, endDate) = GetDateRange();
 
             switch (SelectedDataSource)
@@ -217,13 +216,13 @@ namespace HeatProductionOptimization.ViewModels
                     CreateDemandOrPriceChart(startDate, endDate, "Electricity Price", "Electricity Price (DKK/kWh)", SKColors.DarkOrange);
                     break;
                 case "Production Unit Performance":
-                    UpdateProductionPerformanceChart();
+                    UpdateProductionPerformanceChart(); // <-- Aquí se actualizarán los valores
                     break;
             }
 
             RefreshChart();
         }
-
+        
         private void ClearChartData()
         {
             _preparedValues.Clear();
@@ -274,11 +273,14 @@ namespace HeatProductionOptimization.ViewModels
             _preparedXAxisTitle = "Time";
             _preparedYAxisTitle = "Produced Heat (MWh)";
 
+            var calculatedValues = new {
+                Costs = OptimizerViewModel.Totalcost ?? 0,
+                CO2 = OptimizerViewModel.TotalCO2 ?? 0,
+                Fuel = OptimizerViewModel.TotalFuel ?? 0,
+                Heat = assets.Where(a => a.IsActive).SelectMany(a => a.ProducedHeat.Values).Sum()
+            };
+
             IsResultVisible = false;
-            TotalProdCosts = OptimizerViewModel.Totalcost ??= 0;
-            TotalCO2 = OptimizerViewModel.TotalCO2 ??= 0;
-            TotalFuel = OptimizerViewModel.TotalFuel ??= 0;
-            TotalHeatProduced = assets.Where(a => a.IsActive).SelectMany(a => a.ProducedHeat.Values).Sum();
 
             var colors = GenerateDistinctColors(assets.Count);
             double pointSize = CalculatePointSize();
@@ -287,7 +289,6 @@ namespace HeatProductionOptimization.ViewModels
             {
                 var asset = assets[i];
                 var values = _currentOptimizationTimestamps.Select(t => asset.ProducedHeat.TryGetValue(t, out var v) ? v ?? 0 : 0).ToList();
-
                 AddSeriesToChart(asset.Name, values, colors[i], pointSize);
             }
 
@@ -298,7 +299,6 @@ namespace HeatProductionOptimization.ViewModels
                 .ToList();
 
             SetAxes(_preparedLabels);
-
             this.RaisePropertyChanged(nameof(ZoomMode));
         }
 
@@ -418,9 +418,31 @@ namespace HeatProductionOptimization.ViewModels
         private void UpdateProductionPerformanceChart()
         {
             var activeAssets = _assetManager.GetAllAssets().Values.Where(a => a.IsActive).ToList();
-            if (!activeAssets.Any()) return;
+            
+            // Solo calculamos si hay assets activos
+            if (activeAssets.Any())
+            {
+                var (startDate, endDate) = GetDateRange();
+                var filteredHeat = activeAssets
+                    .SelectMany(a => a.ProducedHeat
+                        .Where(e => e.Key >= startDate && e.Key <= endDate)
+                        .Select(e => e.Value ?? 0));
+                
+                TotalProdCosts = OptimizerViewModel.Totalcost ?? 0;
+                TotalCO2 = OptimizerViewModel.TotalCO2 ?? 0;
+                TotalFuel = OptimizerViewModel.TotalFuel ?? 0;
+                TotalHeatProduced = filteredHeat.Sum();
+            }
+            else
+            {
+                TotalProdCosts = 0;
+                TotalCO2 = 0;
+                TotalFuel = 0;
+                TotalHeatProduced = 0;
+            }
 
             IsResultVisible = true;
+            
             _preparedLabels = activeAssets.Select(a => a.Name).ToList();
             _preparedXAxisTitle = "Production Units";
             _preparedYAxisTitle = "Value";
