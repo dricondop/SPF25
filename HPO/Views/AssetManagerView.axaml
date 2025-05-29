@@ -55,6 +55,15 @@
                         Padding="15,10"
                         Background="#4CAF50"
                         Foreground="White"/>
+                
+                <!-- Continue Button -->
+                <Button Content="CONTINUE" 
+                        Click="Continue_Click"
+                        Padding="15,10"
+                        Background="#9C27B0"
+                        Foreground="White"
+                        Margin="20,0,0,0"
+                        IsEnabled="{Binding HasAssets}"/>
             </StackPanel>
             
             <TextBlock Text="{Binding StatusMessage}"

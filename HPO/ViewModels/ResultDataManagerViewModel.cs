@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -29,42 +30,50 @@ public class ResultDataManagerViewModel : ViewModelBase
     {
         _resultsData = new ResultsData();
         _dataVisualizationVM = new DataVisualizationViewModel();
-        LoadSampleData();
-    }
-
-    private void LoadSampleData()
-    {
-        var rand = new Random();
-        var productionUnits = new List<string> { "GB", "OB", "GM", "EK", "HK" };
-
-        for (int i = 0; i < 24; i++)
-        {
-            var timeStamp = DateTime.Now.Date.AddHours(i);
-            var heatDemand = 100 + rand.NextDouble() * 200;
-            var electricityPrice = 30 + rand.NextDouble() * 50;
-
-            var production = new Dictionary<string, double>();
-            foreach (var unit in productionUnits)
-            {
-                production[unit] = rand.NextDouble() * 100;
-            }
-
-            var totalCost = 5000 + rand.NextDouble() * 10000;
-            var totalEmission = 100 + rand.NextDouble() * 200;
-
-            _resultsData?.AddDataPoint(timeStamp, heatDemand, electricityPrice, production, totalCost, totalEmission);
-        }
     }
 
     public async Task ExportDataToCsv()
     {
         try
         {
-            var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-            if (mainWindow == null || ResultsData == null) return;
+            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktopLifetime)
+            {
+                return;
+            }
+
+            var mainWindow = desktopLifetime.MainWindow;
+            if (mainWindow == null) return;
+
+            // Get data from optimizer
+            var assetManager = OptimizerViewModel.SharedAssetManager;
+            if (assetManager == null) return;
+
+            var allAssets = assetManager.GetAllAssets();
+            if (allAssets == null) return;
+
+            var activeAssets = allAssets.Values.Where(a => a.IsActive).ToList();
+            
+            if (activeAssets.Count == 0)
+            {
+                var messageBox = new MessageBox("Error", "No active production units found in optimizer data.");
+                await messageBox.ShowDialog(mainWindow);
+                return;
+            }
+
+            // Get all timestamps from the active assets
+            var timestamps = activeAssets
+                .SelectMany(a => a.ProducedHeat?.Keys ?? Enumerable.Empty<DateTime>())
+                .Distinct()
+                .OrderBy(t => t)
+                .ToList();
 
             var topLevel = TopLevel.GetTopLevel(mainWindow);
-            var file = await topLevel?.StorageProvider?.SaveFilePickerAsync(new FilePickerSaveOptions
+            if (topLevel == null) return;
+
+            var storageProvider = topLevel.StorageProvider;
+            if (storageProvider == null) return;
+
+            var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "Save Data as CSV",
                 SuggestedFileName = $"OptimizationData.csv",
@@ -72,49 +81,64 @@ public class ResultDataManagerViewModel : ViewModelBase
                 {
                     new FilePickerFileType("CSV File") { Patterns = new[] { "*.csv" } }
                 }
-            })!;
+            });
 
             if (file != null)
             {
                 await using var stream = await file.OpenWriteAsync();
                 using var writer = new StreamWriter(stream);
 
-                writer.WriteLine("TimeStamp,HeatDemand,ElectricityPrice,TotalCost,TotalEmission,GB,OB,GM,EK,HK");
-
-                int count = Math.Min(
-                    ResultsData.TimeStamps?.Count ?? 0,
-                    ResultsData.ProductionData?.Count ?? 0
-                );
-
-                for (int i = 0; i < count; i++)
+                // Write header
+                writer.Write("Timestamp,Heat Demand");
+                foreach (var asset in activeAssets)
                 {
-                    var prod = ResultsData.ProductionData?[i];
+                    writer.Write($",{asset.Name} Heat Production");
+                    writer.Write($",{asset.Name} Cost");
+                    writer.Write($",{asset.Name} Emissions");
+                }
+                writer.WriteLine(",Total Cost,Total Emissions");
 
-                    string line = $"{ResultsData.TimeStamps?[i]:dd-MM-yyyy HH:mm:ss}," +
-                                  $"{ResultsData.HeatDemand?[i]}," +
-                                  $"{ResultsData.ElectricityPrice?[i]}," +
-                                  $"{ResultsData.TotalCosts?[i]}," +
-                                  $"{ResultsData.TotalEmissions?[i]}," +
-                                  $"{prod?["GB"] ?? 0}," +
-                                  $"{prod?["OB"] ?? 0}," +
-                                  $"{prod?["GM"] ?? 0}," +
-                                  $"{prod?["EK"] ?? 0}," +
-                                  $"{prod?["HK"] ?? 0}";
+                // Write data rows
+                foreach (var timestamp in timestamps)
+                {
+                    // Get heat demand (assuming it's available in one of the assets)
+                    var heatDemand = activeAssets.FirstOrDefault()?.ProducedHeat?.TryGetValue(timestamp, out var demand) == true 
+                        ? demand ?? 0 
+                        : 0;
 
-                    writer.WriteLine(line);
+                    writer.Write($"{timestamp:yyyy-MM-dd HH:mm},{heatDemand}");
+
+                    double totalCost = 0;
+                    double totalEmissions = 0;
+
+                    foreach (var asset in activeAssets)
+                    {
+                        var heatProduction = asset.ProducedHeat?.TryGetValue(timestamp, out var production) == true 
+                            ? production ?? 0 
+                            : 0;
+                        var cost = asset.ProductionCost ?? 0;
+                        var emissions = asset.CO2Emissions ?? 0;
+
+                        writer.Write($",{heatProduction},{cost},{emissions}");
+
+                        totalCost += cost;
+                        totalEmissions += emissions;
+                    }
+
+                    writer.WriteLine($",{totalCost},{totalEmissions}");
                 }
 
-                var messageBox = new MessageBox("Success", "Data exported successfully to CSV file.");
+                var messageBox = new MessageBox("Success", "Optimizer data exported successfully to CSV file.");
                 await messageBox.ShowDialog(mainWindow);
             }
         }
         catch (Exception ex)
         {
-            var messageBox = new MessageBox("Error", $"Failed to export data: {ex.Message}");
-            var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-            if (mainWindow != null)
+            var messageBox = new MessageBox("Error", $"Failed to export optimizer data: {ex.Message}");
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime &&
+                desktopLifetime.MainWindow != null)
             {
-                await messageBox.ShowDialog(mainWindow);
+                await messageBox.ShowDialog(desktopLifetime.MainWindow);
             }
         }
     }
@@ -125,13 +149,31 @@ public class ResultDataManagerViewModel : ViewModelBase
 
         try
         {
-            var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktopLifetime)
+            {
+                return;
+            }
+
+            var mainWindow = desktopLifetime.MainWindow;
             if (mainWindow == null) return;
 
             chartImages = _dataVisualizationVM.GenerateAllCharts();
 
             var topLevel = TopLevel.GetTopLevel(mainWindow);
-            var file = await topLevel?.StorageProvider?.SaveFilePickerAsync(new FilePickerSaveOptions
+            if (topLevel == null)
+            {
+                CleanUpTempImages(chartImages);
+                return;
+            }
+
+            var storageProvider = topLevel.StorageProvider;
+            if (storageProvider == null)
+            {
+                CleanUpTempImages(chartImages);
+                return;
+            }
+
+            var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "Save Report as PDF",
                 SuggestedFileName = $"OptimizationReport.pdf",
@@ -139,7 +181,7 @@ public class ResultDataManagerViewModel : ViewModelBase
                 {
                     new FilePickerFileType("PDF File") { Patterns = new[] { "*.pdf" } }
                 }
-            })!;
+            });
 
             if (file != null)
             {
@@ -155,17 +197,16 @@ public class ResultDataManagerViewModel : ViewModelBase
             }
             else
             {
-                if (chartImages != null)
-                    CleanUpTempImages(chartImages);
+                CleanUpTempImages(chartImages);
             }
         }
         catch (Exception ex)
         {
             var messageBox = new MessageBox("Error", $"Failed to generate PDF report: {ex.Message}");
-            var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-            if (mainWindow != null)
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime &&
+                desktopLifetime.MainWindow != null)
             {
-                await messageBox.ShowDialog(mainWindow);
+                await messageBox.ShowDialog(desktopLifetime.MainWindow);
             }
         }
     }

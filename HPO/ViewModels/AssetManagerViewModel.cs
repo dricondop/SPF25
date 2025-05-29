@@ -22,6 +22,7 @@ public partial class AssetManagerViewModel : ViewModelBase
     private string _selectedUnitType = "Boiler";
     private ComboBoxItem? _selectedUnitTypeItem;
     public static double? MaxHeat = 0;
+    public bool HasAssets => Assets?.Count > 0;
 
     public AssetManagerViewModel()
     {
@@ -55,7 +56,11 @@ public partial class AssetManagerViewModel : ViewModelBase
     public ObservableCollection<AssetSpecifications>? Assets
     {
         get => _assets;
-        set => this.RaiseAndSetIfChanged(ref _assets, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _assets, value);
+            this.RaisePropertyChanged(nameof(HasAssets)); 
+        }
     }
 
     public string StatusMessage
