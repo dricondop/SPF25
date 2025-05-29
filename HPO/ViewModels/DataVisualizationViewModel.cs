@@ -16,6 +16,8 @@ using Avalonia.Remote.Protocol.Designer;
 using System.IO;
 using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.SkiaSharpView.VisualElements;
+using System.ComponentModel.DataAnnotations.Schema;
+using DynamicData.Aggregation;
 
 namespace HeatProductionOptimization.ViewModels
 {
@@ -59,6 +61,11 @@ namespace HeatProductionOptimization.ViewModels
         private bool _showDataLabels = true;
         private bool _showGridLines = true;
         private bool _autoScale = true;
+        private bool _isResultVisible;
+        private double? _totalProdCosts = 0;
+        private double? _totalCO2 = 0;
+        private double? _totalFuel = 0;
+        private double? _totalHeatProduced = 0;
 
         // Prepared data for chart rendering
         private string _preparedYAxisTitle = "";
@@ -74,6 +81,37 @@ namespace HeatProductionOptimization.ViewModels
             ShowLegend ? LiveChartsCore.Measure.LegendPosition.Right : LiveChartsCore.Measure.LegendPosition.Hidden;
 
         // Properties for chart options with change notification
+
+        public bool IsResultVisible
+        {
+            get => _isResultVisible;
+            set => this.RaiseAndSetIfChanged(ref _isResultVisible, value);
+        }
+
+        public double? TotalProdCosts
+        {
+            get => _totalProdCosts;
+            set => this.RaiseAndSetIfChanged(ref _totalProdCosts, value);
+        }
+
+        public double? TotalCO2
+        {
+            get => _totalCO2;
+            set => this.RaiseAndSetIfChanged(ref _totalCO2, value);
+        }
+
+        public double? TotalFuel
+        {
+            get => _totalFuel;
+            set => this.RaiseAndSetIfChanged(ref _totalFuel, value);
+        }
+
+        public double? TotalHeatProduced
+        {
+            get => _totalHeatProduced;
+            set => this.RaiseAndSetIfChanged(ref _totalHeatProduced, value);
+        }    
+            
         public bool ShowLegend
         {
             get => _showLegend;
@@ -382,6 +420,7 @@ namespace HeatProductionOptimization.ViewModels
             Console.WriteLine($"Selected data source: {SelectedDataSource}");
             if (SelectedDataSource == "Optimization Results")
             {
+                IsResultVisible = true;
                 Console.WriteLine($"Asset Manager has {OptimizerViewModel.SharedAssetManager.GetAllAssets().Count} total assets");
                 var assets = OptimizerViewModel.SharedAssetManager.GetAllAssets().Values
                     .Where(a => a.IsActive)
@@ -393,6 +432,10 @@ namespace HeatProductionOptimization.ViewModels
                     return;
                 }
 
+                TotalProdCosts = OptimizerViewModel.Totalcost ??= 0;
+                TotalCO2 = OptimizerViewModel.TotalCO2 ??= 0;
+                TotalFuel = OptimizerViewModel.TotalFuel ??= 0;
+                TotalHeatProduced = assets.Where(a => a.IsActive).SelectMany(a => a.ProducedHeat.Values).Sum();
 
                 var timestamps = assets
                     .SelectMany(a => a.ProducedHeat.Keys)
@@ -456,6 +499,7 @@ namespace HeatProductionOptimization.ViewModels
 
             else if (SelectedDataSource == "Heat Demand Data")
             {
+                IsResultVisible = false;
                 DateTime start = startDate;
                 DateTime end = endDate;
                 if (SelectedDataSource == "Heat Demand Data")
@@ -511,6 +555,7 @@ namespace HeatProductionOptimization.ViewModels
 
             else if (SelectedDataSource == "Electricity Price Data")
             {
+                IsResultVisible = false;
                 DateTime start = startDate;
                 DateTime end = endDate;
                 var optimizerVM = new OptimizerViewModel();
@@ -563,6 +608,7 @@ namespace HeatProductionOptimization.ViewModels
 
             else if (SelectedDataSource == "Production Unit Performance")
             {
+                IsResultVisible = false;
                 var activeAssets = OptimizerViewModel.SharedAssetManager
                     .GetAllAssets().Values
                     .Where(a => a.IsActive)
