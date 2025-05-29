@@ -168,7 +168,7 @@
                             ColumnDefinitions="*,*" 
                             Margin="0,20,0,20">
                             <Button Grid.Column="0"
-                                    Content="View Optimization Results" 
+                                    Content="Export Optimization Results" 
                                     Padding="15,10"
                                     Click="ViewResults_Click"
                                     HorizontalAlignment="Stretch"

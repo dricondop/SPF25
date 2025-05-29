@@ -159,4 +159,16 @@ public partial class AssetManagerView : UserControl
             Console.WriteLine($"File dialog error: {ex}");
         }
     }
+    
+    private void Continue_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is AssetManagerViewModel viewModel && viewModel.Assets?.Count > 0)
+        {
+            WindowManager.TriggerSourceDataManagerWindow();
+        }
+        else
+        {
+            Console.WriteLine("No assets loaded - cannot proceed");
+        }
+    }
 }

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="using:HeatProductionOptimization.ViewModels"
+             xmlns:views="clr-namespace:HeatProductionOptimization.Views"
              x:Class="HeatProductionOptimization.Views.AssetManagerView"
              x:DataType="vm:AssetManagerViewModel">
     <UserControl.Styles>
@@ -55,6 +56,15 @@
                         Padding="15,10"
                         Background="#4CAF50"
                         Foreground="White"/>
+                
+                <!-- Continue Button -->
+                <Button Content="CONTINUE" 
+                        Click="Continue_Click"
+                        Padding="15,10"
+                        Background="#9C27B0"
+                        Foreground="White"
+                        Margin="20,0,0,0"
+                        IsEnabled="{Binding HasAssets}"/>
             </StackPanel>
             
             <TextBlock Text="{Binding StatusMessage}"
@@ -105,7 +115,20 @@
                                                 OnContent="" OffContent=""
                                                 Margin="0" Padding="0"
                                                 VerticalAlignment="Center"/>
+                                        <Button 
+                                                Background="Transparent"
+                                                Foreground="Red"
+                                                BorderBrush="Transparent"
+                                                VerticalAlignment="Center"
+                                                Padding="0"
+                                                Command="{Binding $parent[views:AssetManagerView].((vm:AssetManagerViewModel)DataContext).RemoveAsset}"
+                                                CommandParameter="{Binding}">
+                                                    <Image Source="avares://HPO/Assets/Icons/Cross.png"
+                                                        Stretch="Uniform" Width="28"
+                                                        Height="28" />
+                                                </Button>
                                     </StackPanel>
+                                    
                                 </Grid>
                                            
                                 <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">

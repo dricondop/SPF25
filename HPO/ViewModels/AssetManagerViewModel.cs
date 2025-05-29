@@ -9,6 +9,7 @@ using HeatProductionOptimization.Services.Managers;
 using Avalonia.Controls;
 using ReactiveUI;
 using System.Diagnostics;
+using CommunityToolkit.Mvvm.Input;
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -21,6 +22,7 @@ public partial class AssetManagerViewModel : ViewModelBase
     private string _selectedUnitType = "Boiler";
     private ComboBoxItem? _selectedUnitTypeItem;
     public static double? MaxHeat = 0;
+    public bool HasAssets => Assets?.Count > 0;
 
     public AssetManagerViewModel()
     {
@@ -54,7 +56,11 @@ public partial class AssetManagerViewModel : ViewModelBase
     public ObservableCollection<AssetSpecifications>? Assets
     {
         get => _assets;
-        set => this.RaiseAndSetIfChanged(ref _assets, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _assets, value);
+            this.RaisePropertyChanged(nameof(HasAssets)); 
+        }
     }
 
     public string StatusMessage
@@ -171,6 +177,19 @@ public partial class AssetManagerViewModel : ViewModelBase
         return true;
     }
 
+    [RelayCommand]
+    public void RemoveAsset(AssetSpecifications asset)
+    {
+        if (_assets != null)
+        {
+            _assets.Remove(asset);
+        }
+        else
+        {
+            Console.WriteLine("No asset to remove!");
+        }
+    }
+    
     public bool TryParseNumericField(string fieldName, string value, out object? result)
     {
         result = null;

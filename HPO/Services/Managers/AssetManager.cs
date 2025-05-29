@@ -13,7 +13,7 @@ public class AssetManager
 {
     public readonly string _assetsFilePath;
     private Dictionary<int, AssetSpecifications> _assets;
-    private int _nextAvailableId = 1;
+    public static int _nextAvailableId = 1;
 
     public AssetManager()
     {

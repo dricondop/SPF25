@@ -347,7 +347,7 @@ namespace HeatProductionOptimization.ViewModels
             var records = new List<HeatDemandRecord>();
             IsResultVisible = false;
 
-            // Obtener todas las horas exactas que existen en Optimization Results
+            // Get Dates from OPT Results
             var optimizationTimestamps = _assetManager.GetAllAssets().Values
                 .Where(a => a.IsActive)
                 .SelectMany(a => a.ProducedHeat.Keys)
@@ -356,7 +356,7 @@ namespace HeatProductionOptimization.ViewModels
                 .OrderBy(t => t)
                 .ToList();
 
-            // Filtrar los registros para que coincidan exactamente con las horas de Optimization Results
+            // Filter Data
             if (optimizerVM.UseWinterData)
             {
                 records.AddRange(_sourceDataManager.WinterRecords
@@ -747,7 +747,7 @@ namespace HeatProductionOptimization.ViewModels
             var chartImages = new Dictionary<string, string>();
             var tempFolder = Path.GetTempPath();
 
-            // 1. Heat Demand Data - Line Chart
+            // 1. Heat Demand Data - Bar Chart
             SelectedDataSource = "Heat Demand Data";
             SelectedChartType = "Bar Chart";
             UpdateChart();
@@ -755,7 +755,7 @@ namespace HeatProductionOptimization.ViewModels
             SaveSpecificChart(heatDemandPath);
             chartImages.Add("HeatDemand", heatDemandPath);
 
-            // 2. Electricity Price Data - Line Chart
+            // 2. Electricity Price Data - Bar Chart
             SelectedDataSource = "Electricity Price Data";
             SelectedChartType = "Bar Chart";
             UpdateChart();
