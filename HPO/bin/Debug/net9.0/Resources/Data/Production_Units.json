@@ -13,16 +13,16 @@
     }
   },
   {
-    "Gas Boiler 2": {
-      "Name": "Gas Boiler 2",
+    "Oil Boiler 1": {
+      "Name": "Oil Boiler 1",
       "ID": 2,
-      "IsActive": false,
+      "IsActive": true,
       "Unit Type": "Boiler",
-      "Max Heat (MW)": 3,
-      "Production Cost (DKK/MWh)": 560,
-      "CO2 Emissions (kg/MWh)": 130,
-      "Fuel Type": "Gas",
-      "Fuel Consumption (MWh fuel/MWh heat)": 0.7
+      "Max Heat (MW)": 4,
+      "Production Cost (DKK/MWh)": 670,
+      "CO2 Emissions (kg/MWh)": 330,
+      "Fuel Type": "Oil",
+      "Fuel Consumption (MWh fuel/MWh heat)": 1.5
     }
   },
   {
@@ -37,6 +37,19 @@
       "CO2 Emissions (kg/MWh)": 650,
       "Fuel Type": "Gas",
       "Fuel Consumption (MWh fuel/MWh heat)": 1.8
+    }
+  },
+  {
+    "Gas Boiler 2": {
+      "Name": "Gas Boiler 2",
+      "ID": 4,
+      "IsActive": false,
+      "Unit Type": "Boiler",
+      "Max Heat (MW)": 3,
+      "Production Cost (DKK/MWh)": 560,
+      "CO2 Emissions (kg/MWh)": 130,
+      "Fuel Type": "Gas",
+      "Fuel Consumption (MWh fuel/MWh heat)": 0.7
     }
   },
   {

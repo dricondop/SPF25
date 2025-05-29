@@ -11,7 +11,6 @@ namespace HeatProductionOptimization;
 internal class ImportButton
 {
     private IStorageProvider? StorageProvider;
-    // Import button logic when clicked
     public ImportButton(UserControl control)
     {
         var topLevel = TopLevel.GetTopLevel(control);
