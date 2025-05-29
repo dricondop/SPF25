@@ -8,7 +8,6 @@
              x:Class="HeatProductionOptimization.Views.AssetManagerView"
              x:DataType="vm:AssetManagerViewModel">
     <UserControl.Styles>
-        <!-- Style for the editable value container -->
         <Style Selector="Border.editableValue">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Padding" Value="2" />

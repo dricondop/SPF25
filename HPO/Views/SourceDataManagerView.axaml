@@ -8,10 +8,18 @@
              d:DesignHeight="450"
              x:Class="HeatProductionOptimization.Views.SourceDataManagerView"
              x:DataType="vm:SourceDataManagerViewModel">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Border Background="#f0f0f0" CornerRadius="10" Padding="30" BoxShadow="5 5 15 #888888">
-            <StackPanel Spacing="20" MinWidth="300">
-                <Button Content="📁 Load CSV File" 
+    <DockPanel Margin="30">
+        <TextBlock DockPanel.Dock="Top"
+                Text="Heat Production Optimizer / Source Data Manager"
+                FontSize="40"
+                FontWeight="Bold"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,30"/>
+        
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border Background="#f0f0f0" CornerRadius="10" Padding="30" BoxShadow="5 5 15 #888888">
+                <StackPanel Spacing="20" MinWidth="300">
+                    <Button Content="📁 Load CSV File" 
                         Click="LoadFile_Click"
                         FontSize="16"
                         Padding="20,10"
@@ -42,7 +50,8 @@
                         Margin="0 20 0 0"
                         IsEnabled="{Binding HasValidData}"/>
 
-            </StackPanel>
-        </Border>
-    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
 </UserControl>
