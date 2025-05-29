@@ -171,11 +171,13 @@ public partial class AssetManagerViewModel : ViewModelBase
 
         return true;
     }
+    
     [RelayCommand]
     public void RemoveAsset(AssetSpecifications asset)
     {
-        _assets.Remove(asset);
+        _assets?.Remove(asset);
     }
+
     public bool TryParseNumericField(string fieldName, string value, out object? result)
     {
         result = null;

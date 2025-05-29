@@ -49,7 +49,6 @@ public class AssetSpecifications
     [JsonIgnore]
     public Dictionary<DateTime, double?> ProducedHeat = [];
 
-    // Factory methods to create specific unit types
     public static AssetSpecifications CreateBoiler(int id, string? name = null)
     {
         return new AssetSpecifications
@@ -99,7 +98,6 @@ public class AssetSpecifications
         };
     }
 
-    // General factory method based on type
     public static AssetSpecifications CreateForType(string unitType, int id, string? name = null)
     {
         switch (unitType?.Trim())
@@ -111,7 +109,7 @@ public class AssetSpecifications
             case "Heat Pump":
                 return CreateHeatPump(id, name);
             default:
-                return CreateBoiler(id, name); // Default to boiler
+                return CreateBoiler(id, name);
         }
     }
 }

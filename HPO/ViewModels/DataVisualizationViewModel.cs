@@ -21,12 +21,10 @@ namespace HeatProductionOptimization.ViewModels
 {
     public class DataVisualizationViewModel : ViewModelBase
     {
-        // Observable collections for chart series and axes
         public ObservableCollection<ISeries> CartesianSeries { get; set; } = new();
         public ObservableCollection<Axis> XAxes { get; set; } = new();
         public ObservableCollection<Axis> YAxes { get; set; } = new();
 
-        // Available data sources and chart types for selection
         public ObservableCollection<string> AvailableDataSources { get; set; } = new()
         {
             "Optimization Results",
@@ -42,7 +40,6 @@ namespace HeatProductionOptimization.ViewModels
         };
         public ObservableCollection<string> FilteredChartTypes { get; set; } = new();
 
-        // Selected data source and chart type
         private string? _selectedDataSource;
         public string SelectedDataSource
         {
@@ -68,12 +65,12 @@ namespace HeatProductionOptimization.ViewModels
         private string _preparedXAxisTitle = "";
         private List<double> _preparedValues = new();
         private List<string> _preparedLabels = new();
-        public double ChartWidth => Math.Max(_preparedLabels.Count * 45, 900); // Minimum width of 900 pixels
+        public double ChartWidth => Math.Max(_preparedLabels.Count * 45, 900);
         private readonly AssetManager _assetManager;
         private readonly SourceDataManager _sourceDataManager;
 
         // Property to determine legend position based on the ShowLegend flag
-        public LiveChartsCore.Measure.LegendPosition ChartLegendPosition =>
+         public LiveChartsCore.Measure.LegendPosition ChartLegendPosition =>
             ShowLegend ? LiveChartsCore.Measure.LegendPosition.Right : LiveChartsCore.Measure.LegendPosition.Hidden;
 
         // Properties for chart options with change notification

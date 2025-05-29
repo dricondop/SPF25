@@ -12,8 +12,6 @@
     mc:Ignorable="d">
 
     <Grid Margin="30" RowDefinitions="Auto,Auto,*">
-
-        <!--  Header  -->
         <TextBlock
             Grid.Row="0"
             Margin="0,0,0,30"
@@ -22,7 +20,6 @@
             FontWeight="Bold"
             Text="Heat Production Optimizer / Data Visualization" />
 
-        <!--  Visualization Controls  -->
         <Border
             Grid.Row="1"
             Margin="0,0,0,20"
@@ -43,7 +40,6 @@
                     ColumnDefinitions="Auto,*,Auto"
                     RowDefinitions="Auto,Auto">
 
-                    <!--  Data Source  -->
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="0"
@@ -59,7 +55,6 @@
                         ItemsSource="{Binding AvailableDataSources}"
                         SelectedItem="{Binding SelectedDataSource}" />
 
-                    <!--  Move button to second row and align  -->
                     <Button
                         Grid.Row="1"
                         Grid.Column="2"
@@ -69,7 +64,6 @@
                         Command="{Binding UpdateChartCommand}"
                         Content="Refresh Data" />
 
-                    <!--  Chart Type  -->
                     <TextBlock
                         Grid.Row="1"
                         Grid.Column="0"
@@ -87,7 +81,6 @@
 
                 </Grid>
 
-                <!--  Chart Options  -->
                 <Grid Margin="0,5" ColumnDefinitions="*,*,*,*">
                     <CheckBox
                         Grid.Column="0"
@@ -114,7 +107,6 @@
             </StackPanel>
         </Border>
 
-        <!--  Chart  -->
         <Border
             Grid.Row="2"
             Margin="0,10,0,20"

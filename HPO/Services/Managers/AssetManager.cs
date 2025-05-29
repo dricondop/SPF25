@@ -162,16 +162,14 @@ public class AssetManager
             // If an asset comes with ID <= 0, it implies it's new or needs an ID assigned.
             if (asset.ID > 0)
             {
-                // Use the existing valid ID
                 if (!newAssets.ContainsKey(asset.ID))
                 {
                     newAssets[asset.ID] = asset;
-                    // Ensure _nextAvailableId is always ahead of the highest seen ID
                     _nextAvailableId = Math.Max(_nextAvailableId, asset.ID + 1);
                 }
                 else
                 {
-                    // Handle duplicate ID scenario if necessary (e.g., log a warning)
+                    // Handle duplicate ID scenario if necessary
                     Console.WriteLine($"Warning: Duplicate asset ID {asset.ID} encountered during update. Skipping duplicate.");
                 }
             }
@@ -179,12 +177,11 @@ public class AssetManager
             {
                 // Assign a new ID if the current one is invalid (0 or less)
                 int newId = _nextAvailableId++;
-                asset.ID = newId; // Update the asset's ID property
+                asset.ID = newId;
                 newAssets[newId] = asset;
             }
         }
 
-        // Replace the old dictionary with the newly constructed one
         _assets = newAssets;
     }
 
@@ -193,7 +190,6 @@ public class AssetManager
     {
         int newId = _nextAvailableId++;
 
-        // Create the appropriate template based on unit type
         AssetSpecifications newUnit;
 
         switch (unitType?.Trim())
@@ -210,7 +206,6 @@ public class AssetManager
                 break;
         }
 
-        // Add to assets dictionary with integer key
         _assets[newId] = newUnit;
         return newUnit;
     }

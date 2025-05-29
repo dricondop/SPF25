@@ -33,7 +33,6 @@ namespace HeatProductionOptimization.Services.Managers
             {
                 var lines = File.ReadAllLines(filePath);
                 
-                // Skip header rows (first line)
                 foreach (var line in lines.Skip(1))
                 {
                     if (string.IsNullOrWhiteSpace(line)) continue;
