@@ -99,7 +99,55 @@ public partial class OptimizerViewModel : ViewModelBase
     public string StatusMessage
     {
         get => _statusMessage;
-        set => this.RaiseAndSetIfChanged(ref _statusMessage, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _statusMessage, value);
+            this.RaisePropertyChanged(nameof(StatusMessageColor));
+        }
+    }
+
+    public string DateStatusMessage
+    {
+        get => _dateStatusMessage;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _dateStatusMessage, value);
+            this.RaisePropertyChanged(nameof(DateStatusMessageColor));
+        }
+    }
+
+    public string StatusMessageColor
+    {
+        get
+        {
+            if (_statusMessage.StartsWith("Error") || _statusMessage.Contains("fail") || 
+                _statusMessage.Contains("Cannot") || _statusMessage.Contains("Unable") || _statusMessage.Contains("No data"))
+                return "#FF5252"; 
+            else if (_statusMessage.Contains("successfully") || _statusMessage.StartsWith("Success"))
+                return "#4CAF50"; 
+            else if (_statusMessage.Contains("WARNING") || _statusMessage.Contains("progress") || 
+                    _statusMessage.StartsWith("not selected"))
+                return "#FFC107"; 
+            else
+                return "#9E9E9E"; 
+        }
+    }
+
+    public string DateStatusMessageColor
+    {
+        get
+        {
+            if (_dateStatusMessage.StartsWith("Error") || _dateStatusMessage.Contains("must") || 
+                _dateStatusMessage.Contains("outside"))
+                return "#FF5252"; 
+            else if (_dateStatusMessage.Contains("successfully"))
+                return "#4CAF50"; 
+            else if (_dateStatusMessage.Contains("warning") || _dateStatusMessage.Contains("Please") || 
+                    _dateStatusMessage.Contains("outside"))
+                return "#FFC107"; 
+            else
+                return "#9E9E9E"; 
+        }
     }
 
     public bool ConsiderProductionCost
@@ -200,12 +248,6 @@ public partial class OptimizerViewModel : ViewModelBase
             this.RaiseAndSetIfChanged(ref _endHour, value);
             ValidateDates();
         }
-    }
-
-    public string DateStatusMessage
-    {
-        get => _dateStatusMessage;
-        private set => this.RaiseAndSetIfChanged(ref _dateStatusMessage, value);
     }
 
     public bool CanRunOptimization

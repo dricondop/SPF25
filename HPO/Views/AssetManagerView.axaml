@@ -66,9 +66,20 @@
                         IsEnabled="{Binding HasAssets}"/>
             </StackPanel>
             
-            <TextBlock Text="{Binding StatusMessage}"
-                      VerticalAlignment="Center"
-                      Margin="0,0,10,0"/>
+            <Border Background="{Binding StatusMessageColor}" 
+                    CornerRadius="4" 
+                    Padding="12,8"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Image Width="24" Height="24" Source="avares://HPO/Assets/Icons/Robot.png"/>
+                    <TextBlock Text="{Binding StatusMessage}"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                            FontSize="14"/>
+                </StackPanel>
+            </Border>
         </DockPanel>
         
         <ScrollViewer>

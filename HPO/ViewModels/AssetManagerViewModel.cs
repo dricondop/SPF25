@@ -66,7 +66,24 @@ public partial class AssetManagerViewModel : ViewModelBase
     public string StatusMessage
     {
         get => _statusMessage;
-        set => this.RaiseAndSetIfChanged(ref _statusMessage, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _statusMessage, value);
+            this.RaisePropertyChanged(nameof(StatusMessageColor));
+        }
+    }
+
+    public string StatusMessageColor
+    {
+        get
+        {
+            if (_statusMessage.StartsWith("Error") || _statusMessage.Contains("invalid") || _statusMessage.Contains("cannot") || _statusMessage.Contains("must") || _statusMessage.Contains("no"))
+                return "#FF5252"; // Red for errors
+            else if (_statusMessage.Contains("successfully") || _statusMessage.StartsWith("Success"))
+                return "#4CAF50"; // Green for success
+            else
+                return "#9E9E9E"; // Gray for neutral
+        }
     }
 
     public string SelectedUnitType

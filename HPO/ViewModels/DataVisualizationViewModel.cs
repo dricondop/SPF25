@@ -216,7 +216,7 @@ namespace HeatProductionOptimization.ViewModels
                     CreateDemandOrPriceChart(startDate, endDate, "Electricity Price", "Electricity Price (DKK/kWh)", SKColors.DarkOrange);
                     break;
                 case "Production Unit Performance":
-                    UpdateProductionPerformanceChart(); // <-- Aquí se actualizarán los valores
+                    UpdateProductionPerformanceChart(); 
                     break;
             }
 
@@ -315,7 +315,7 @@ namespace HeatProductionOptimization.ViewModels
                     Stroke = new SolidColorPaint(lineColor) { StrokeThickness = 2 },
                     GeometryStroke = new SolidColorPaint(lineColor) { StrokeThickness = 1 },
                     GeometryFill = new SolidColorPaint(lineColor.WithAlpha(180)),
-                    Fill = new SolidColorPaint(fillColor), // Color de relleno consistente
+                    Fill = new SolidColorPaint(fillColor), 
                     LineSmoothness = 0
                 },
                 "Bar Chart" => new ColumnSeries<double>
@@ -419,8 +419,7 @@ namespace HeatProductionOptimization.ViewModels
         private void UpdateProductionPerformanceChart()
         {
             var activeAssets = _assetManager.GetAllAssets().Values.Where(a => a.IsActive).ToList();
-            
-            // Solo calculamos si hay assets activos
+
             if (activeAssets.Any())
             {
                 var (startDate, endDate) = GetDateRange();
