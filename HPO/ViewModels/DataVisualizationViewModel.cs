@@ -282,14 +282,14 @@ namespace HeatProductionOptimization.ViewModels
 
             IsResultVisible = false;
 
-            var colors = GenerateDistinctColors(assets.Count);
+            var colorPairs = GenerateDistinctColorPairs(assets.Count);
             double pointSize = CalculatePointSize();
 
             for (int i = 0; i < assets.Count; i++)
             {
                 var asset = assets[i];
                 var values = _currentOptimizationTimestamps.Select(t => asset.ProducedHeat.TryGetValue(t, out var v) ? v ?? 0 : 0).ToList();
-                AddSeriesToChart(asset.Name, values, colors[i], pointSize);
+                AddSeriesToChart(asset.Name, values, colorPairs[i].lineColor, colorPairs[i].fillColor, pointSize);
             }
 
             _preparedValues = assets
@@ -303,7 +303,7 @@ namespace HeatProductionOptimization.ViewModels
         }
 
         // Method to stablish chart settings 
-        private void AddSeriesToChart(string name, List<double> values, SKColor color, double pointSize)
+        private void AddSeriesToChart(string name, List<double> values, SKColor lineColor, SKColor fillColor, double pointSize)
         {
             ISeries series = SelectedChartType switch
             {
@@ -312,9 +312,10 @@ namespace HeatProductionOptimization.ViewModels
                     Name = name,
                     Values = values,
                     GeometrySize = pointSize,
-                    Stroke = new SolidColorPaint(color) { StrokeThickness = 2 },
-                    GeometryStroke = new SolidColorPaint(color) { StrokeThickness = 1 },
-                    GeometryFill = new SolidColorPaint(color.WithAlpha(180)),
+                    Stroke = new SolidColorPaint(lineColor) { StrokeThickness = 2 },
+                    GeometryStroke = new SolidColorPaint(lineColor) { StrokeThickness = 1 },
+                    GeometryFill = new SolidColorPaint(lineColor.WithAlpha(180)),
+                    Fill = new SolidColorPaint(fillColor), // Color de relleno consistente
                     LineSmoothness = 0
                 },
                 "Bar Chart" => new ColumnSeries<double>
@@ -323,7 +324,7 @@ namespace HeatProductionOptimization.ViewModels
                     Values = values,
                     MaxBarWidth = 20,
                     Stroke = null,
-                    Fill = new SolidColorPaint(color.WithAlpha(200))
+                    Fill = new SolidColorPaint(lineColor.WithAlpha(200))
                 },
                 "Scatter Plot" => new ScatterSeries<double>
                 {
@@ -331,7 +332,7 @@ namespace HeatProductionOptimization.ViewModels
                     Values = values,
                     GeometrySize = pointSize,
                     Stroke = null,
-                    Fill = new SolidColorPaint(color.WithAlpha(150)),
+                    Fill = new SolidColorPaint(lineColor.WithAlpha(150)),
                     DataLabelsPaint = null
                 },
                 _ => throw new NotSupportedException($"Chart type {SelectedChartType} not supported")
@@ -652,15 +653,17 @@ namespace HeatProductionOptimization.ViewModels
         }
 
         // Method to generate random colors
-        private SKColor[] GenerateDistinctColors(int count)
+        private (SKColor lineColor, SKColor fillColor)[] GenerateDistinctColorPairs(int count)
         {
-            var colors = new SKColor[count];
+            var colors = new (SKColor, SKColor)[count];
             var hueStep = 360.0 / count;
 
             for (int i = 0; i < count; i++)
             {
                 var hue = i * hueStep;
-                colors[i] = SKColor.FromHsl((float)hue, 80, 60);
+                var lineColor = SKColor.FromHsl((float)hue, 80, 60);
+                var fillColor = SKColor.FromHsl((float)hue, 80, 60).WithAlpha(80); // 80 de alpha para el relleno
+                colors[i] = (lineColor, fillColor);
             }
 
             return colors;
