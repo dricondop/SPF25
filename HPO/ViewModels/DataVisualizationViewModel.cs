@@ -722,10 +722,24 @@ namespace HeatProductionOptimization.ViewModels
                 string fileName = $"{SelectedDataSource.Replace(" ", "_")}_{SelectedChartType.Replace(" ", "_")}.png";
                 string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), fileName);
 
+                // Configuración de dimensiones
+                int baseHeight = 800;
+                int baseWidth = 1200;
+                int calculatedWidth = baseWidth;
+
+                // Ajustar el ancho si hay muchas etiquetas
+                var xAxis = XAxes.FirstOrDefault();
+                if (xAxis?.Labels != null && xAxis.Labels.Count > 30)
+                {
+                    calculatedWidth = Math.Min(xAxis.Labels.Count * 30, 2000);
+                    xAxis.LabelsRotation = 45;
+                    xAxis.TextSize = 10;
+                }
+
                 var chart = new SKCartesianChart
                 {
-                    Width = (int)ChartWidth,
-                    Height = 600,
+                    Width = calculatedWidth,
+                    Height = baseHeight,
                     Series = CartesianSeries,
                     XAxes = XAxes,
                     YAxes = YAxes,
@@ -735,7 +749,8 @@ namespace HeatProductionOptimization.ViewModels
                         TextSize = 20,
                         Padding = new LiveChartsCore.Drawing.Padding(15),
                         Paint = new SolidColorPaint(SKColors.Black)
-                    }
+                    },
+                    Background = SKColors.White
                 };
 
                 using (var image = chart.GetImage())
@@ -820,10 +835,40 @@ namespace HeatProductionOptimization.ViewModels
                 var xAxis = XAxes.FirstOrDefault() ?? new Axis();
                 var yAxis = YAxes.FirstOrDefault() ?? new Axis();
 
+                // Configuración base para todos los gráficos
+                int baseHeight = 800;
+                int baseWidth = 1200;
+                int minWidth = 800;
+                int maxWidth = 2000;
+                int baseFontSize = 12;
+                int minFontSize = 8;
+
+                // Calcular el ancho necesario basado en la cantidad de etiquetas
+                int calculatedWidth = baseWidth;
+                if (xAxis.Labels != null)
+                {
+                    // Ajustar el ancho según la cantidad de etiquetas
+                    int labelCount = xAxis.Labels.Count;
+                    calculatedWidth = Math.Clamp(labelCount * 30, minWidth, maxWidth);
+                    
+                    // Ajustar rotación y tamaño de fuente para muchas etiquetas
+                    if (labelCount > 30)
+                    {
+                        xAxis.LabelsRotation = 45;
+                        xAxis.TextSize = Math.Max(minFontSize, baseFontSize - (labelCount / 30));
+                        xAxis.ShowSeparatorLines = false;
+                    }
+                    else
+                    {
+                        xAxis.LabelsRotation = 0;
+                        xAxis.TextSize = baseFontSize;
+                    }
+                }
+
                 var chart = new SKCartesianChart
                 {
-                    Width = (int)ChartWidth,
-                    Height = 600,
+                    Width = calculatedWidth,
+                    Height = baseHeight,
                     Series = series,
                     XAxes = new[] { xAxis },
                     YAxes = new[] { yAxis },
@@ -833,16 +878,12 @@ namespace HeatProductionOptimization.ViewModels
                         TextSize = 20,
                         Padding = new LiveChartsCore.Drawing.Padding(15),
                         Paint = new SolidColorPaint(SKColors.Black)
-                    }
+                    },
+                    Background = SKColors.White
                 };
 
-                if (xAxis.Labels != null && xAxis.Labels.Count > 50)
-                {
-                    xAxis.LabelsRotation = 45;
-                    xAxis.TextSize = 10;
-                    xAxis.ShowSeparatorLines = false;
-                    chart.Width = Math.Max(xAxis.Labels.Count * 15, 1200);
-                }
+                // Eliminamos la línea que causaba el error:
+                // chart.Core.Measure(chart.Core.DrawMarginSize);
 
                 using (var image = chart.GetImage())
                 using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
