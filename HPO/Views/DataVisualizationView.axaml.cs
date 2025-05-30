@@ -13,8 +13,8 @@ public partial class DataVisualizationView : UserControl
         InitializeComponent();
     }
     
-    private void ViewOptimizer_Click(object sender, RoutedEventArgs e)
+    private void Export_Click(object sender, RoutedEventArgs e)
     {
-        WindowManager.TriggerOptimizerWindow();
+        WindowManager.TriggerResultDataManagerWindow();
     }
 }
