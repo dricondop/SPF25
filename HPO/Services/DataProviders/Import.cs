@@ -33,7 +33,7 @@ internal class ImportButton
             if (file != null)
             {
                 Console.WriteLine($"File loaded: {file}");
-                WindowManager.TriggerDateInputWindow();
+                //WindowManager.TriggerDateInputWindow();
             }
         }
         else

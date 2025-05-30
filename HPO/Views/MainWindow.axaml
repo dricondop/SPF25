@@ -86,6 +86,16 @@
                             <PathIcon Data="{StaticResource document_catch_up_regular}" />
                         </Button>
                     </StackPanel>
+
+                    <StackPanel Spacing="20" 
+                          Margin="0,20"
+                          VerticalAlignment="Bottom">
+                        <Button Classes="sidebar-button"
+                            ToolTip.Tip="Settings"
+                            HorizontalAlignment="Center">
+                            <Image Width="24" Height="24" Source="avares://HPO/Assets/Icons/HPO.ico"/>
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </Border>
 

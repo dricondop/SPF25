@@ -86,7 +86,7 @@
                                 <StackPanel Orientation="Horizontal" 
                                                 Spacing="12"
                                                 VerticalAlignment="Center">
-                                        <Image Width="24" Height="24" Source="avares://HPO/Assets/Icons/Calendar.png"/>
+                                        <Image Width="24" Height="24" Source="avares://HPO/Assets/Images/Calendar.png"/>
                                         <TextBlock Text="{Binding DateStatusMessage}"
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
@@ -178,7 +178,7 @@
                                 <StackPanel Orientation="Horizontal" 
                                                 Spacing="12"
                                                 VerticalAlignment="Center">
-                                        <Image Width="24" Height="24" Source="avares://HPO/Assets/Icons/Robot.png"/>
+                                        <Image Width="24" Height="24" Source="avares://HPO/Assets/Images/Robot.png"/>
                                         <TextBlock Text="{Binding StatusMessage}"
                                                 VerticalAlignment="Center"
                                                 Foreground="White"

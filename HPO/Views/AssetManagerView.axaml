@@ -73,7 +73,7 @@
                     VerticalAlignment="Center"
                     Margin="0,0,10,0">
                 <StackPanel Orientation="Horizontal" Spacing="12">
-                    <Image Width="24" Height="24" Source="avares://HPO/Assets/Icons/Robot.png"/>
+                    <Image Width="24" Height="24" Source="avares://HPO/Assets/Images/Robot.png"/>
                     <TextBlock Text="{Binding StatusMessage}"
                             VerticalAlignment="Center"
                             Foreground="White"
@@ -133,7 +133,7 @@
                                                 Padding="0"
                                                 Command="{Binding $parent[views:AssetManagerView].((vm:AssetManagerViewModel)DataContext).RemoveAsset}"
                                                 CommandParameter="{Binding}">
-                                                    <Image Source="avares://HPO/Assets/Icons/Cross.png"
+                                                    <Image Source="avares://HPO/Assets/Images/Cross.png"
                                                         Stretch="Uniform" Width="28"
                                                         Height="28" />
                                                 </Button>

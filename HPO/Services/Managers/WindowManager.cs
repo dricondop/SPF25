@@ -10,18 +10,13 @@ public static class WindowManager
     public static event Action? OptimizerWindow;
     public static event Action? DataVisualizationWindow;
     public static event Action? ResultDataManagerWindow;
-    public static event Action? ImportJsonWindow;
-    public static event Action? DateInputWindow;
     public static event Action? SettingsWindow;
+    //public static event Action? DateInputWindow;
     
-    public static void TriggerImportJsonWindow()
-    {
-        ImportJsonWindow?.Invoke();
-    }
-    public static void TriggerDateInputWindow()
+    /*public static void TriggerDateInputWindow()
     {
         DateInputWindow?.Invoke();
-    }
+    }*/
     public static void TriggerHomeWindow()
     {
         HomeWindow?.Invoke();

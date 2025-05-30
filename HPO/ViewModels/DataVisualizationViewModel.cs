@@ -25,12 +25,10 @@ namespace HeatProductionOptimization.ViewModels
 {
     public class DataVisualizationViewModel : ViewModelBase
     {
-        // Observable collections for chart series and axes
         public ObservableCollection<ISeries> CartesianSeries { get; set; } = new();
         public ObservableCollection<Axis> XAxes { get; set; } = new();
         public ObservableCollection<Axis> YAxes { get; set; } = new();
 
-        // Available data sources and chart types for selection
         public ObservableCollection<string> AvailableDataSources { get; set; } = new()
         {
             "Optimization Results",
@@ -38,6 +36,7 @@ namespace HeatProductionOptimization.ViewModels
             "Electricity Price Data",
             "Production Unit Performance"
         };
+        
         public ObservableCollection<string> AvailableChartTypes { get; set; } = new()
         {
             "Line Chart",
