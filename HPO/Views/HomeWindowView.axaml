@@ -74,5 +74,53 @@
                 </Button>
             </UniformGrid>
         </Grid>
+        
+        <!-- Project Information Section -->
+        <Border Margin="15,30,15,15" 
+                Background="#f8f9fa" 
+                BorderBrush="#e9ecef" 
+                BorderThickness="1" 
+                CornerRadius="6" 
+                Padding="20">
+            <StackPanel>
+                <TextBlock Text="Heat Production Optimization" 
+                           FontSize="24" 
+                           FontWeight="Bold" 
+                           Foreground="#2c3e50" 
+                           Margin="0,0,0,15"/>
+                
+                <TextBlock Text="Project Description" 
+                           FontSize="20" 
+                           FontWeight="SemiBold" 
+                           Foreground="#34495e" 
+                           Margin="0,0,0,10"/>
+                
+                <TextBlock TextWrapping="Wrap" 
+                           Foreground="#555" 
+                           Margin="0,0,0,15">
+                    <Run Text="This application optimizes heat production schedules across multiple production units. Select a scenario above to configure the available units, then adjust parameters and run optimization to generate cost-effective heat schedules." 
+                         FontSize="14"/>
+                </TextBlock>
+                
+                <TextBlock Text="Case: HeatItOn Utility" 
+                           FontSize="20" 
+                           FontWeight="SemiBold" 
+                           Foreground="#34495e" 
+                           Margin="0,0,0,10"/>
+                
+                <TextBlock TextWrapping="Wrap" 
+                           Foreground="#555" 
+                           Margin="0,0,0,10">
+                    <Run Text="HeatItOn is the utility in the city of Heatington which has to secure the heat delivery to approx. 1600 buildings through a single district heating network. They produce heat with a number of traditional heat-only boilers as well as units that combine the production of heat with the production / consumption of electricity (CHPs)." 
+                         FontSize="14"/>
+                </TextBlock>
+                
+                <TextBlock TextWrapping="Wrap" 
+                           Foreground="#555">
+                    <Run Text="They are planning the heat schedules manually but now they want to cost optimize their production. The goal of the project is to define heat schedules for all available production units with the lowest possible expenses and the highest profit on the electricity market." 
+                         FontSize="14"/>
+                </TextBlock>
+            </StackPanel>
+        </Border>
     </StackPanel>
 </UserControl>
