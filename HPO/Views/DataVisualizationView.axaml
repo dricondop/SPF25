@@ -165,7 +165,15 @@
             BorderThickness="1" 
             CornerRadius="5" 
             IsVisible="{Binding IsResultVisible}">
+            
             <WrapPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
+                <Border Background="#F5E8FA" BorderBrush="#E0C5E8" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="5">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                        <TextBlock Text="Total heat produced:" FontWeight="SemiBold" FontSize="18" Foreground="#5D2A73" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding TotalHeatProduced, StringFormat='{}{0:N2} MWh'}" FontWeight="Bold" FontSize="22" Foreground="#8E44AD" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+                
                 <Border Background="#E8F4FE" BorderBrush="#BFD9F2" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="5">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                         <TextBlock Text="Total costs:" FontWeight="SemiBold" FontSize="18" Foreground="#2C4B6F" HorizontalAlignment="Center"/>
@@ -173,13 +181,6 @@
                     </StackPanel>
                 </Border>
 
-                <Border Background="#F2FBF6" BorderBrush="#C4E8D4" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="5">
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                        <TextBlock Text="Total CO₂ emissions:" FontWeight="SemiBold" FontSize="18" Foreground="#2F5E41" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding TotalCO2, StringFormat='{}{0:N2} kg'}" FontWeight="Bold" FontSize="22" Foreground="#2A9D51" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
-                
                 <Border Background="#FEF6E8" BorderBrush="#F5DFB9" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="5">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                         <TextBlock Text="Total fuel consumed:" FontWeight="SemiBold" FontSize="18" Foreground="#8A5D2F" HorizontalAlignment="Center"/>
@@ -187,10 +188,10 @@
                     </StackPanel>
                 </Border>
 
-                <Border Background="#F5E8FA" BorderBrush="#E0C5E8" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="5">
+                <Border Background="#F2FBF6" BorderBrush="#C4E8D4" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="5">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                        <TextBlock Text="Total heat produced:" FontWeight="SemiBold" FontSize="18" Foreground="#5D2A73" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding TotalHeatProduced, StringFormat='{}{0:N2} MWh'}" FontWeight="Bold" FontSize="22" Foreground="#8E44AD" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Total CO₂ emissions:" FontWeight="SemiBold" FontSize="18" Foreground="#2F5E41" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding TotalCO2, StringFormat='{}{0:N2} kg'}" FontWeight="Bold" FontSize="22" Foreground="#2A9D51" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
             </WrapPanel>

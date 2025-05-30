@@ -414,7 +414,7 @@ namespace HeatProductionOptimization.ViewModels
             SetAxes(_preparedLabels);
         }
 
-        // 4. Production Units Performance
+        // 4. Production Unit Performance
         private void UpdateProductionPerformanceChart()
         {
             var activeAssets = _assetManager.GetAllAssets().Values.Where(a => a.IsActive).ToList();
@@ -426,7 +426,7 @@ namespace HeatProductionOptimization.ViewModels
                     .SelectMany(a => a.ProducedHeat
                         .Where(e => e.Key >= startDate && e.Key <= endDate)
                         .Select(e => e.Value ?? 0));
-                
+
                 TotalProdCosts = OptimizerViewModel.Totalcost ?? 0;
                 TotalCO2 = OptimizerViewModel.TotalCO2 ?? 0;
                 TotalFuel = OptimizerViewModel.TotalFuel ?? 0;
@@ -441,31 +441,60 @@ namespace HeatProductionOptimization.ViewModels
             }
 
             IsResultVisible = true;
-            
+
             _preparedLabels = activeAssets.Select(a => a.Name).ToList();
             _preparedXAxisTitle = "Production Units";
             _preparedYAxisTitle = "Value";
 
             var metrics = new[]
             {
-                ("Heat Produced (MWh)", activeAssets.Select(a => a.ProducedHeat.Values.Sum(v => v ?? 0)).ToList()),
-                ("Production Cost (DKK/MWh)", activeAssets.Select(a => a.ProductionCost ?? 0).ToList()),
-                ("Fuel Consumption", activeAssets.Select(a => a.FuelConsumption ?? 0).ToList()),
-                ("CO₂ Emissions (kg/MWh)", activeAssets.Select(a => a.CO2Emissions ?? 0).ToList())
+                (Name: "Total Heat Produced (MWh)", 
+                Values: activeAssets.Select(a => a.ProducedHeat.Values.Sum(v => v ?? 0)).ToList(),
+                Color: "#8E44AD"),  // Purple
+                
+                (Name: "Total Production Cost (thousands DKK)", 
+                Values: activeAssets.Select(a => ((a.ProductionCost ?? 0) * a.ProducedHeat.Values.Sum(v => v ?? 0)) / 1000).ToList(), 
+                Color: "#0066CC"),  // Blue
+                
+                (Name: "Total Fuel Consumption (MWh)", 
+                Values: activeAssets.Select(a => (a.FuelConsumption ?? 0) * a.ProducedHeat.Values.Sum(v => v ?? 0)).ToList(),
+                Color: "#CC7A00"),  // Orange
+                
+                (Name: "Total CO₂ Emissions (ton)", 
+                Values: activeAssets.Select(a => ((a.CO2Emissions ?? 0) * a.ProducedHeat.Values.Sum(v => v ?? 0)) / 1000).ToList(), 
+                Color: "#2A9D51")   // Green
             };
 
-            foreach (var (name, values) in metrics)
+            foreach (var (name, values, color) in metrics)
             {
+                var skColor = SKColor.Parse(color);
+                
                 ISeries series = SelectedChartType switch
                 {
                     "Line Chart" => new LineSeries<double>
                     {
                         Name = name,
                         Values = values,
+                        Stroke = new SolidColorPaint(skColor) { StrokeThickness = 2 },
+                        GeometryStroke = new SolidColorPaint(skColor) { StrokeThickness = 1 },
+                        GeometryFill = new SolidColorPaint(skColor.WithAlpha(180)),
+                        Fill = new SolidColorPaint(skColor.WithAlpha(50)),
                         LineSmoothness = 0.8
                     },
-                    "Bar Chart" => new ColumnSeries<double> { Name = name, Values = values },
-                    "Scatter Plot" => new ScatterSeries<double> { Name = name, Values = values },
+                    "Bar Chart" => new ColumnSeries<double> 
+                    { 
+                        Name = name, 
+                        Values = values,
+                        Fill = new SolidColorPaint(skColor),
+                        Stroke = null
+                    },
+                    "Scatter Plot" => new ScatterSeries<double> 
+                    { 
+                        Name = name, 
+                        Values = values,
+                        Fill = new SolidColorPaint(skColor),
+                        GeometrySize = 8
+                    },
                     _ => throw new NotSupportedException($"Chart type {SelectedChartType} not supported")
                 };
 
@@ -474,7 +503,7 @@ namespace HeatProductionOptimization.ViewModels
 
             SetAxes(_preparedLabels);
         }
-
+                
         private void RefreshChart()
         {
             this.RaisePropertyChanged(nameof(ChartWidth));
@@ -660,7 +689,7 @@ namespace HeatProductionOptimization.ViewModels
             {
                 var hue = i * hueStep;
                 var lineColor = SKColor.FromHsl((float)hue, 80, 60);
-                var fillColor = SKColor.FromHsl((float)hue, 80, 60).WithAlpha(80); // 80 de alpha para el relleno
+                var fillColor = SKColor.FromHsl((float)hue, 80, 60).WithAlpha(80);
                 colors[i] = (lineColor, fillColor);
             }
 
