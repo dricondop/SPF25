@@ -32,15 +32,16 @@ namespace HeatProductionOptimization.Tests
         [InlineData("HomeButton", typeof(HomeWindowViewModel))]
         [InlineData("AssetManagerButton", typeof(AssetManagerViewModel))]
         [InlineData("OptimizerButton", typeof(OptimizerViewModel))]
-        public void NavigationButton_ShouldNavigateToCorrectView(string buttonName, System.Type expectedType)
+        public void NavigationButton_ShouldNavigateToCorrectView(string buttonName, System.Type expectedType)  // Tests navigation between different views
         {
-            // Find button by nname
+            // Arrange (find button by name)
             var button = _window.FindControl<Button>(buttonName);
             Assert.NotNull(button);
 
-            // This simulates clicking a button
+            // Act ( this simulates clicking a button)
             button.Command?.Execute(null);
 
+            // Assert
             Assert.NotNull(_viewModel.CurrentPage);
             Assert.IsType(expectedType, _viewModel.CurrentPage);
         }
