@@ -376,7 +376,7 @@ namespace HeatProductionOptimization.ViewModels
             var sorted = records.OrderBy(r => r.TimeFrom).ToList();
             _preparedLabels = sorted.Select(r => r.TimeFrom.ToString("dd-MM HH:mm")).ToList();
             _preparedValues = sorted.Select(r => title == "Heat Demand" ? r.HeatDemand ?? 0 : r.ElectricityPrice ?? 0).ToList();
-            _preparedXAxisTitle = "Date and Hour";
+            _preparedXAxisTitle = "Time";
             _preparedYAxisTitle = yAxisTitle;
 
             var seriesColor = new SolidColorPaint(color);
@@ -453,19 +453,19 @@ namespace HeatProductionOptimization.ViewModels
 
             var metrics = new[]
             {
-                (Name: "Total Heat Produced (MWh)", 
+                (Name: "Heat Produced (MWh)", 
                 Values: activeAssets.Select(a => a.ProducedHeat.Values.Sum(v => v ?? 0)).ToList(),
                 Color: "#8E44AD"),  // Purple
                 
-                (Name: "Total Production Cost (thousands DKK)", 
+                (Name: "Production Cost (thousands DKK)", 
                 Values: activeAssets.Select(a => ((a.ProductionCost ?? 0) * a.ProducedHeat.Values.Sum(v => v ?? 0)) / 1000).ToList(), 
                 Color: "#0066CC"),  // Blue
                 
-                (Name: "Total Fuel Consumption (MWh)", 
+                (Name: "Fuel Consumption (MWh)", 
                 Values: activeAssets.Select(a => (a.FuelConsumption ?? 0) * a.ProducedHeat.Values.Sum(v => v ?? 0)).ToList(),
                 Color: "#CC7A00"),  // Orange
                 
-                (Name: "Total CO₂ Emissions (ton)", 
+                (Name: "CO₂ Emissions (ton)", 
                 Values: activeAssets.Select(a => ((a.CO2Emissions ?? 0) * a.ProducedHeat.Values.Sum(v => v ?? 0)) / 1000).ToList(), 
                 Color: "#2A9D51")   // Green
             };
@@ -600,7 +600,11 @@ namespace HeatProductionOptimization.ViewModels
         private double CalculateOptimalMinStep(int labelCount)
         {
             if (labelCount <= 24) return 1;
-            if (labelCount <= 168) return 3;
+            if (labelCount <= 72) return 2;
+            if (labelCount <= 96) return 3;
+            if (labelCount <= 132) return 4;
+            if (labelCount <= 168) return 6;
+            if (labelCount <= 360) return 12;
             if (labelCount <= 720) return 24;
             return 168;
         }
@@ -696,8 +700,8 @@ namespace HeatProductionOptimization.ViewModels
             for (int i = 0; i < count; i++)
             {
                 var hue = i * hueStep;
-                var lineColor = SKColor.FromHsl((float)hue, 80, 60);
-                var fillColor = SKColor.FromHsl((float)hue, 80, 60).WithAlpha(80);
+                var lineColor = SKColor.FromHsl((float)hue, 95, 25);
+                var fillColor = SKColor.FromHsl((float)hue, 95, 75).WithAlpha(80);
                 colors[i] = (lineColor, fillColor);
             }
 
@@ -730,35 +734,47 @@ namespace HeatProductionOptimization.ViewModels
                 string fileName = $"{SelectedDataSource.Replace(" ", "_")}_{SelectedChartType.Replace(" ", "_")}.png";
                 string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), fileName);
 
-                // Configuración de dimensiones
-                int baseHeight = 800;
-                int baseWidth = 1200;
+                int baseHeight = 900;
+                int baseWidth = 1400;
                 int calculatedWidth = baseWidth;
 
-                // Ajustar el ancho si hay muchas etiquetas
                 var xAxis = XAxes.FirstOrDefault();
-                if (xAxis?.Labels != null && xAxis.Labels.Count > 30)
+                if (xAxis != null)
                 {
-                    calculatedWidth = Math.Min(xAxis.Labels.Count * 30, 2000);
-                    xAxis.LabelsRotation = 45;
-                    xAxis.TextSize = 10;
+                    int labelCount = xAxis.Labels?.Count ?? 0; 
+                    calculatedWidth = Math.Min(Math.Max(baseWidth, labelCount * 40), 2500);
+                    
+                    xAxis.TextSize = 14;
+                    xAxis.NameTextSize = 16;
+
+                    xAxis.LabelsRotation = labelCount > 6 ? (labelCount > 30 ? 90 : 45) : 0;
+                }
+
+                var yAxis = YAxes.FirstOrDefault();
+                if (yAxis != null) 
+                {
+                    yAxis.TextSize = 14;
+                    yAxis.NameTextSize = 16;
+                }
+
+                if (SelectedDataSource == "Optimization Results")
+                {
+                    foreach (var series in CartesianSeries.OfType<ColumnSeries<double>>()) 
+                    {
+                        series.MaxBarWidth = 30;
+                    }
                 }
 
                 var chart = new SKCartesianChart
                 {
                     Width = calculatedWidth,
-                    Height = baseHeight,
+                    Height = baseHeight +60,
                     Series = CartesianSeries,
                     XAxes = XAxes,
                     YAxes = YAxes,
-                    Title = new LabelVisual
-                    {
-                        Text = $"{SelectedDataSource} - {SelectedChartType}",
-                        TextSize = 20,
-                        Padding = new LiveChartsCore.Drawing.Padding(15),
-                        Paint = new SolidColorPaint(SKColors.Black)
-                    },
-                    Background = SKColors.White
+                    LegendPosition = LegendPosition.Right,
+                    LegendTextSize = 32,
+                    Background = SKColors.White,
                 };
 
                 using (var image = chart.GetImage())
@@ -776,36 +792,60 @@ namespace HeatProductionOptimization.ViewModels
             }
         }
 
-        // Method to get chart data for external use
-        public ChartData GetChartData()
-        {
-            return new ChartData
-            {
-                Series = new List<ISeries>(CartesianSeries),
-                XAxes = new List<Axis>(XAxes),
-                YAxes = new List<Axis>(YAxes),
-                ChartType = SelectedChartType,
-                DataSource = SelectedDataSource,
-                Values = new List<double>(_preparedValues),
-                Labels = new List<string>(_preparedLabels),
-                XAxisTitle = _preparedXAxisTitle,
-                YAxisTitle = _preparedYAxisTitle,
-                ChartWidth = ChartWidth
-            };
-        }
-
         // Method to generate all required charts and return their image paths
         public Dictionary<string, string> GenerateAllCharts()
         {
             var chartImages = new Dictionary<string, string>();
             var tempFolder = Path.GetTempPath();
 
+            void SaveChartWithSettings(string path)
+            {
+                try
+                {
+                    var xAxis = XAxes.FirstOrDefault() ?? new Axis();
+                    var yAxis = YAxes.FirstOrDefault() ?? new Axis();
+                    
+                    int labelCount = xAxis.Labels?.Count ?? 0; 
+                    int width = Math.Clamp(1200 + (labelCount * 25), 1000, 2500);
+                    int height = 900;
+
+                    xAxis.TextSize = 28;
+                    xAxis.NameTextSize = 32;
+                    xAxis.LabelsRotation = labelCount > 6 ? (labelCount > 30 ? 90 : 45) : 0;
+                    yAxis.TextSize = 28;
+                    yAxis.NameTextSize = 32;
+
+                    var chart = new SKCartesianChart
+                    {
+                        Width = width,
+                        Height = height,
+                        Series = CartesianSeries.ToList(),
+                        XAxes = new[] { xAxis },
+                        YAxes = new[] { yAxis },
+                        LegendPosition = LegendPosition.Right,
+                        LegendTextSize = 32,
+                        Background = SKColors.White,
+                    };
+
+                    using (var image = chart.GetImage())
+                    using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+                    using (var stream = File.OpenWrite(path))
+                    {
+                        data.SaveTo(stream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving chart: {ex.Message}");
+                }
+            }
+
             // 1. Heat Demand Data - Bar Chart
             SelectedDataSource = "Heat Demand Data";
             SelectedChartType = "Bar Chart";
             UpdateChart();
             string heatDemandPath = Path.Combine(tempFolder, "Heat_Demand_Bar.png");
-            SaveSpecificChart(heatDemandPath);
+            SaveChartWithSettings(heatDemandPath);
             chartImages.Add("HeatDemand", heatDemandPath);
 
             // 2. Electricity Price Data - Bar Chart
@@ -813,7 +853,7 @@ namespace HeatProductionOptimization.ViewModels
             SelectedChartType = "Bar Chart";
             UpdateChart();
             string electricityPricePath = Path.Combine(tempFolder, "Electricity_Price_Bar.png");
-            SaveSpecificChart(electricityPricePath);
+            SaveChartWithSettings(electricityPricePath);
             chartImages.Add("ElectricityPrice", electricityPricePath);
 
             // 3. Optimization Results - Bar Chart 
@@ -821,7 +861,7 @@ namespace HeatProductionOptimization.ViewModels
             SelectedChartType = "Bar Chart";
             UpdateChart();
             string optimizationPath = Path.Combine(tempFolder, "Optimization_Bar.png");
-            SaveSpecificChart(optimizationPath);
+            SaveChartWithSettings(optimizationPath);
             chartImages.Add("Optimization", optimizationPath);
 
             // 4. Production Unit Performance - Bar Chart
@@ -829,81 +869,10 @@ namespace HeatProductionOptimization.ViewModels
             SelectedChartType = "Bar Chart";
             UpdateChart();
             string productionPath = Path.Combine(tempFolder, "Production_Performance_Bar.png");
-            SaveSpecificChart(productionPath);
+            SaveChartWithSettings(productionPath);
             chartImages.Add("Production", productionPath);
 
             return chartImages;
-        }
-
-        private void SaveSpecificChart(string filePath)
-        {
-            try
-            {
-                var series = CartesianSeries.ToList();
-                var xAxis = XAxes.FirstOrDefault() ?? new Axis();
-                var yAxis = YAxes.FirstOrDefault() ?? new Axis();
-
-                // Configuración base para todos los gráficos
-                int baseHeight = 800;
-                int baseWidth = 1200;
-                int minWidth = 800;
-                int maxWidth = 2000;
-                int baseFontSize = 12;
-                int minFontSize = 8;
-
-                // Calcular el ancho necesario basado en la cantidad de etiquetas
-                int calculatedWidth = baseWidth;
-                if (xAxis.Labels != null)
-                {
-                    // Ajustar el ancho según la cantidad de etiquetas
-                    int labelCount = xAxis.Labels.Count;
-                    calculatedWidth = Math.Clamp(labelCount * 30, minWidth, maxWidth);
-                    
-                    // Ajustar rotación y tamaño de fuente para muchas etiquetas
-                    if (labelCount > 30)
-                    {
-                        xAxis.LabelsRotation = 45;
-                        xAxis.TextSize = Math.Max(minFontSize, baseFontSize - (labelCount / 30));
-                        xAxis.ShowSeparatorLines = false;
-                    }
-                    else
-                    {
-                        xAxis.LabelsRotation = 0;
-                        xAxis.TextSize = baseFontSize;
-                    }
-                }
-
-                var chart = new SKCartesianChart
-                {
-                    Width = calculatedWidth,
-                    Height = baseHeight,
-                    Series = series,
-                    XAxes = new[] { xAxis },
-                    YAxes = new[] { yAxis },
-                    Title = new LabelVisual
-                    {
-                        Text = $"{SelectedDataSource} - {SelectedChartType}",
-                        TextSize = 20,
-                        Padding = new LiveChartsCore.Drawing.Padding(15),
-                        Paint = new SolidColorPaint(SKColors.Black)
-                    },
-                    Background = SKColors.White
-                };
-
-                // Eliminamos la línea que causaba el error:
-                // chart.Core.Measure(chart.Core.DrawMarginSize);
-
-                using (var image = chart.GetImage())
-                using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
-                using (var stream = File.OpenWrite(filePath))
-                {
-                    data.SaveTo(stream);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving specific chart: {ex.Message}");
-            }
         }
 
         public class ChartData
