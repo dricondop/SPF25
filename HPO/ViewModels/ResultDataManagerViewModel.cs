@@ -111,53 +111,59 @@ public class ResultDataManagerViewModel : ViewModelBase
                 await using var stream = await file.OpenWriteAsync();
                 using var writer = new StreamWriter(stream);
                 
-                // Configurar cultura invariante para decimales
                 var cultureInfo = CultureInfo.InvariantCulture;
 
-                // Write header
-                writer.Write("Timestamp,Heat Demand,Electricity Price");
+                // Write header (actualizado con unidades y nueva columna total)
+                writer.Write("Timestamp,Heat Demand [MWh],Electricity Price [DKK/MWh]");
                 foreach (var asset in activeAssets)
                 {
-                    writer.Write($",{asset.Name} Heat Production");
-                    writer.Write($",{asset.Name} Cost");
-                    writer.Write($",{asset.Name} Emissions");
+                    writer.Write($",{asset.Name} Heat Production [MWh]");
+                    writer.Write($",{asset.Name} Cost [DKK]");
+                    writer.Write($",{asset.Name} Emissions [kg CO₂]");
+                    writer.Write($",{asset.Name} Fuel Consumption [MWh]");
                 }
-                writer.WriteLine(",Total Cost,Total Emissions");
+                writer.WriteLine(",Total Cost [DKK],Total Emissions [kg CO₂],Total Fuel Consumption [MWh]");
 
                 // Write data rows
                 foreach (var timestamp in timestamps)
                 {
-                    // Get values from source data
+                    // Get source data
                     var hasSourceData = sourceDataLookup.TryGetValue(timestamp, out var sourceValues);
                     var heatDemand = hasSourceData ? sourceValues.HeatDemand : 0;
                     var electricityPrice = hasSourceData ? sourceValues.ElectricityPrice : 0;
 
-                    // Formatear timestamp y valores numéricos con decimales
                     writer.Write($"{timestamp:yyyy-MM-dd HH:mm},");
                     writer.Write($"{heatDemand.ToString("0.######", cultureInfo)},");
                     writer.Write($"{electricityPrice.ToString("0.######", cultureInfo)}");
 
                     double totalCost = 0;
                     double totalEmissions = 0;
+                    double totalFuelConsumption = 0; // Nueva variable para el total
 
                     foreach (var asset in activeAssets)
                     {
                         var heatProduction = asset.ProducedHeat?.TryGetValue(timestamp, out var production) == true 
                             ? production ?? 0 
                             : 0;
-                        var cost = asset.ProductionCost ?? 0;
-                        var emissions = asset.CO2Emissions ?? 0;
+                        
+                        var cost = (asset.ProductionCost ?? 0) * heatProduction;
+                        var emissions = (asset.CO2Emissions ?? 0) * heatProduction;
+                        var fuelConsumption = (asset.FuelConsumption ?? 0) * heatProduction;
 
                         writer.Write($",{heatProduction.ToString("0.######", cultureInfo)}");
                         writer.Write($",{cost.ToString("0.######", cultureInfo)}");
                         writer.Write($",{emissions.ToString("0.######", cultureInfo)}");
+                        writer.Write($",{fuelConsumption.ToString("0.######", cultureInfo)}");
 
                         totalCost += cost;
                         totalEmissions += emissions;
+                        totalFuelConsumption += fuelConsumption; // Acumulamos el consumo
                     }
 
+                    // Escribimos los totales (incluyendo el nuevo)
                     writer.Write($",{totalCost.ToString("0.######", cultureInfo)}");
-                    writer.WriteLine($",{totalEmissions.ToString("0.######", cultureInfo)}");
+                    writer.Write($",{totalEmissions.ToString("0.######", cultureInfo)}");
+                    writer.WriteLine($",{totalFuelConsumption.ToString("0.######", cultureInfo)}");
                 }
 
                 var messageBox = new MessageBox("Success", "Optimizer data exported successfully to CSV file.");
