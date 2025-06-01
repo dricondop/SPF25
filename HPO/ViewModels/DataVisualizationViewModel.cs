@@ -741,34 +741,19 @@ namespace HeatProductionOptimization.ViewModels
                 var xAxis = XAxes.FirstOrDefault();
                 if (xAxis != null)
                 {
-                    int labelCount = xAxis.Labels?.Count ?? 0; 
+                    int labelCount = xAxis.Labels?.Count ?? 0;
                     calculatedWidth = Math.Min(Math.Max(baseWidth, labelCount * 40), 2500);
                     
                     xAxis.TextSize = 14;
                     xAxis.NameTextSize = 16;
-
+                    xAxis.MinStep = CalculateOptimalMinStep(labelCount);
                     xAxis.LabelsRotation = labelCount > 6 ? (labelCount > 30 ? 90 : 45) : 0;
-                }
-
-                var yAxis = YAxes.FirstOrDefault();
-                if (yAxis != null) 
-                {
-                    yAxis.TextSize = 14;
-                    yAxis.NameTextSize = 16;
-                }
-
-                if (SelectedDataSource == "Optimization Results")
-                {
-                    foreach (var series in CartesianSeries.OfType<ColumnSeries<double>>()) 
-                    {
-                        series.MaxBarWidth = 30;
-                    }
                 }
 
                 var chart = new SKCartesianChart
                 {
                     Width = calculatedWidth,
-                    Height = baseHeight +60,
+                    Height = baseHeight + 60,
                     Series = CartesianSeries,
                     XAxes = XAxes,
                     YAxes = YAxes,
@@ -783,8 +768,6 @@ namespace HeatProductionOptimization.ViewModels
                 {
                     data.SaveTo(stream);
                 }
-
-                Console.WriteLine($"Chart saved to: {filePath}");
             }
             catch (Exception ex)
             {
@@ -798,47 +781,48 @@ namespace HeatProductionOptimization.ViewModels
             var chartImages = new Dictionary<string, string>();
             var tempFolder = Path.GetTempPath();
 
-            void SaveChartWithSettings(string path)
+        void SaveChartWithSettings(string path)
+        {
+            try
             {
-                try
+                var xAxis = XAxes.FirstOrDefault() ?? new Axis();
+                var yAxis = YAxes.FirstOrDefault() ?? new Axis();
+                
+                int labelCount = xAxis.Labels?.Count ?? 0;
+                int width = Math.Clamp(1200 + (labelCount * 25), 1000, 2500);
+                int height = 900;
+
+                xAxis.TextSize = 28;
+                xAxis.NameTextSize = 32;
+                xAxis.MinStep = CalculateOptimalMinStep(labelCount);
+                xAxis.LabelsRotation = labelCount > 6 ? (labelCount > 30 ? 90 : 45) : 0;
+                yAxis.TextSize = 28;
+                yAxis.NameTextSize = 32;
+
+                var chart = new SKCartesianChart
                 {
-                    var xAxis = XAxes.FirstOrDefault() ?? new Axis();
-                    var yAxis = YAxes.FirstOrDefault() ?? new Axis();
-                    
-                    int labelCount = xAxis.Labels?.Count ?? 0; 
-                    int width = Math.Clamp(1200 + (labelCount * 25), 1000, 2500);
-                    int height = 900;
+                    Width = width,
+                    Height = height,
+                    Series = CartesianSeries.ToList(),
+                    XAxes = new[] { xAxis },
+                    YAxes = new[] { yAxis },
+                    LegendPosition = LegendPosition.Right,
+                    LegendTextSize = 32,
+                    Background = SKColors.White,
+                };
 
-                    xAxis.TextSize = 28;
-                    xAxis.NameTextSize = 32;
-                    xAxis.LabelsRotation = labelCount > 6 ? (labelCount > 30 ? 90 : 45) : 0;
-                    yAxis.TextSize = 28;
-                    yAxis.NameTextSize = 32;
-
-                    var chart = new SKCartesianChart
-                    {
-                        Width = width,
-                        Height = height,
-                        Series = CartesianSeries.ToList(),
-                        XAxes = new[] { xAxis },
-                        YAxes = new[] { yAxis },
-                        LegendPosition = LegendPosition.Right,
-                        LegendTextSize = 32,
-                        Background = SKColors.White,
-                    };
-
-                    using (var image = chart.GetImage())
-                    using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
-                    using (var stream = File.OpenWrite(path))
-                    {
-                        data.SaveTo(stream);
-                    }
-                }
-                catch (Exception ex)
+                using (var image = chart.GetImage())
+                using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+                using (var stream = File.OpenWrite(path))
                 {
-                    Console.WriteLine($"Error saving chart: {ex.Message}");
+                    data.SaveTo(stream);
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving chart: {ex.Message}");
+            }
+        }
 
             // 1. Heat Demand Data - Bar Chart
             SelectedDataSource = "Heat Demand Data";

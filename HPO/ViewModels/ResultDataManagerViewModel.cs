@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using HeatProductionOptimization.Services;
 using HeatProductionOptimization.Services.DataProviders;
+using HeatProductionOptimization.Services.Managers;
 using HeatProductionOptimization.Controls;
 using ReactiveUI;
 using HeatProductionOptimization.Models;
@@ -67,6 +69,27 @@ public class ResultDataManagerViewModel : ViewModelBase
                 .OrderBy(t => t)
                 .ToList();
 
+            // Get source data manager
+            var sourceData = SourceDataManager.sourceDataManagerInstance;
+            
+            // Combine both winter and summer records for lookup
+            var allSourceRecords = sourceData.WinterRecords
+                .Concat(sourceData.SummerRecords)
+                .ToList();
+
+            if (allSourceRecords.Count == 0)
+            {
+                var messageBox = new MessageBox("Error", "No source data records found.");
+                await messageBox.ShowDialog(mainWindow);
+                return;
+            }
+
+            // Create a dictionary for faster lookup by timestamp
+            var sourceDataLookup = allSourceRecords.ToDictionary(
+                r => r.TimeFrom,
+                r => new { HeatDemand = r.HeatDemand ?? 0, ElectricityPrice = r.ElectricityPrice ?? 0 }
+            );
+
             var topLevel = TopLevel.GetTopLevel(mainWindow);
             if (topLevel == null) return;
 
@@ -87,9 +110,12 @@ public class ResultDataManagerViewModel : ViewModelBase
             {
                 await using var stream = await file.OpenWriteAsync();
                 using var writer = new StreamWriter(stream);
+                
+                // Configurar cultura invariante para decimales
+                var cultureInfo = CultureInfo.InvariantCulture;
 
                 // Write header
-                writer.Write("Timestamp,Heat Demand");
+                writer.Write("Timestamp,Heat Demand,Electricity Price");
                 foreach (var asset in activeAssets)
                 {
                     writer.Write($",{asset.Name} Heat Production");
@@ -101,12 +127,15 @@ public class ResultDataManagerViewModel : ViewModelBase
                 // Write data rows
                 foreach (var timestamp in timestamps)
                 {
-                    // Get heat demand (assuming it's available in one of the assets)
-                    var heatDemand = activeAssets.FirstOrDefault()?.ProducedHeat?.TryGetValue(timestamp, out var demand) == true 
-                        ? demand ?? 0 
-                        : 0;
+                    // Get values from source data
+                    var hasSourceData = sourceDataLookup.TryGetValue(timestamp, out var sourceValues);
+                    var heatDemand = hasSourceData ? sourceValues.HeatDemand : 0;
+                    var electricityPrice = hasSourceData ? sourceValues.ElectricityPrice : 0;
 
-                    writer.Write($"{timestamp:yyyy-MM-dd HH:mm},{heatDemand}");
+                    // Formatear timestamp y valores numéricos con decimales
+                    writer.Write($"{timestamp:yyyy-MM-dd HH:mm},");
+                    writer.Write($"{heatDemand.ToString("0.######", cultureInfo)},");
+                    writer.Write($"{electricityPrice.ToString("0.######", cultureInfo)}");
 
                     double totalCost = 0;
                     double totalEmissions = 0;
@@ -119,13 +148,16 @@ public class ResultDataManagerViewModel : ViewModelBase
                         var cost = asset.ProductionCost ?? 0;
                         var emissions = asset.CO2Emissions ?? 0;
 
-                        writer.Write($",{heatProduction},{cost},{emissions}");
+                        writer.Write($",{heatProduction.ToString("0.######", cultureInfo)}");
+                        writer.Write($",{cost.ToString("0.######", cultureInfo)}");
+                        writer.Write($",{emissions.ToString("0.######", cultureInfo)}");
 
                         totalCost += cost;
                         totalEmissions += emissions;
                     }
 
-                    writer.WriteLine($",{totalCost},{totalEmissions}");
+                    writer.Write($",{totalCost.ToString("0.######", cultureInfo)}");
+                    writer.WriteLine($",{totalEmissions.ToString("0.######", cultureInfo)}");
                 }
 
                 var messageBox = new MessageBox("Success", "Optimizer data exported successfully to CSV file.");
