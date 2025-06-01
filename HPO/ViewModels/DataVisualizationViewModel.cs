@@ -219,6 +219,11 @@ namespace HeatProductionOptimization.ViewModels
                     break;
             }
 
+            if (_preparedLabels.Count > 0)
+            {
+                SetAxes(_preparedLabels);
+            }
+
             RefreshChart();
         }
         
@@ -521,7 +526,7 @@ namespace HeatProductionOptimization.ViewModels
 
             XAxes.Add(new Axis
             {
-                Labels = labels.ToArray(),
+                Labels = ShowDataLabels ? labels.ToArray() : Array.Empty<string>(), 
                 Name = ShowDataLabels ? _preparedXAxisTitle : "",
                 ShowSeparatorLines = ShowGridLines,
                 LabelsRotation = GetOptimalLabelRotation(labels.Count),
@@ -529,7 +534,7 @@ namespace HeatProductionOptimization.ViewModels
                 UnitWidth = 1,
                 MinStep = CalculateOptimalMinStep(labels.Count),
                 ForceStepToMin = labels.Count < 100,
-                Labeler = value => FormatDateLabel(value, dateFormat, labels)
+                Labeler = value => ShowDataLabels ? FormatDateLabel(value, dateFormat, labels) : "" 
             });
 
             YAxes.Add(new Axis
@@ -537,7 +542,8 @@ namespace HeatProductionOptimization.ViewModels
                 Name = ShowDataLabels ? _preparedYAxisTitle : "",
                 ShowSeparatorLines = ShowGridLines,
                 MinLimit = AutoScale ? null : 0,
-                MaxLimit = AutoScale ? null : (_preparedValues.Count > 0 ? _preparedValues.Max() * 1.1 : null)
+                MaxLimit = AutoScale ? null : (_preparedValues.Count > 0 ? _preparedValues.Max() * 1.1 : null),
+                Labels = ShowDataLabels ? null : Array.Empty<string>() 
             });
         }
 
@@ -625,12 +631,14 @@ namespace HeatProductionOptimization.ViewModels
             if (XAxes.Count > 0)
             {
                 XAxes[0].Name = ShowDataLabels ? _preparedXAxisTitle : "";
+                XAxes[0].Labels = ShowDataLabels ? _preparedLabels.ToArray() : Array.Empty<string>();
                 this.RaisePropertyChanged(nameof(XAxes));
             }
 
             if (YAxes.Count > 0)
             {
                 YAxes[0].Name = ShowDataLabels ? _preparedYAxisTitle : "";
+                YAxes[0].Labels = ShowDataLabels ? null : Array.Empty<string>();
                 this.RaisePropertyChanged(nameof(YAxes));
             }
         }
