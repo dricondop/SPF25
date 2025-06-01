@@ -14,6 +14,7 @@ using HeatProductionOptimization.Services.Managers;
 using HeatProductionOptimization.Controls;
 using ReactiveUI;
 using HeatProductionOptimization.Models;
+using HeatProductionOptimization.Models.DataModels;
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -113,7 +114,6 @@ public class ResultDataManagerViewModel : ViewModelBase
                 
                 var cultureInfo = CultureInfo.InvariantCulture;
 
-                // Write header (actualizado con unidades y nueva columna total)
                 writer.Write("Timestamp,Heat Demand [MWh],Electricity Price [DKK/MWh]");
                 foreach (var asset in activeAssets)
                 {
@@ -124,10 +124,8 @@ public class ResultDataManagerViewModel : ViewModelBase
                 }
                 writer.WriteLine(",Total Cost [DKK],Total Emissions [kg CO₂],Total Fuel Consumption [MWh]");
 
-                // Write data rows
                 foreach (var timestamp in timestamps)
                 {
-                    // Get source data
                     var hasSourceData = sourceDataLookup.TryGetValue(timestamp, out var sourceValues);
                     var heatDemand = hasSourceData ? sourceValues.HeatDemand : 0;
                     var electricityPrice = hasSourceData ? sourceValues.ElectricityPrice : 0;
@@ -138,7 +136,7 @@ public class ResultDataManagerViewModel : ViewModelBase
 
                     double totalCost = 0;
                     double totalEmissions = 0;
-                    double totalFuelConsumption = 0; // Nueva variable para el total
+                    double totalFuelConsumption = 0; 
 
                     foreach (var asset in activeAssets)
                     {
@@ -146,9 +144,9 @@ public class ResultDataManagerViewModel : ViewModelBase
                             ? production ?? 0 
                             : 0;
                         
-                        var cost = (asset.ProductionCost ?? 0) * heatProduction;
-                        var emissions = (asset.CO2Emissions ?? 0) * heatProduction;
-                        var fuelConsumption = (asset.FuelConsumption ?? 0) * heatProduction;
+                        var cost = CalculateAssetCost(asset, heatProduction, electricityPrice);
+                        var emissions = CalculateAssetEmissions(asset, heatProduction);
+                        var fuelConsumption = CalculateAssetFuelConsumption(asset, heatProduction);
 
                         writer.Write($",{heatProduction.ToString("0.######", cultureInfo)}");
                         writer.Write($",{cost.ToString("0.######", cultureInfo)}");
@@ -157,10 +155,9 @@ public class ResultDataManagerViewModel : ViewModelBase
 
                         totalCost += cost;
                         totalEmissions += emissions;
-                        totalFuelConsumption += fuelConsumption; // Acumulamos el consumo
+                        totalFuelConsumption += fuelConsumption;
                     }
 
-                    // Escribimos los totales (incluyendo el nuevo)
                     writer.Write($",{totalCost.ToString("0.######", cultureInfo)}");
                     writer.Write($",{totalEmissions.ToString("0.######", cultureInfo)}");
                     writer.WriteLine($",{totalFuelConsumption.ToString("0.######", cultureInfo)}");
@@ -179,6 +176,34 @@ public class ResultDataManagerViewModel : ViewModelBase
                 await messageBox.ShowDialog(desktopLifetime.MainWindow);
             }
         }
+    }
+
+    private double CalculateAssetCost(AssetSpecifications asset, double heatProduction, double? electricityPrice)
+    {
+        if (asset.UnitType == "Heat Pump")
+        {
+            return (double)((asset.ProductionCost ?? 0) * heatProduction + 
+                (heatProduction / (asset.MaxHeat / Math.Abs(asset.MaxElectricity ?? 1))) * (electricityPrice ?? 0));
+        }
+        else if (asset.UnitType == "Motor")
+        {
+            return (double)((asset.ProductionCost ?? 0) * heatProduction - 
+                (heatProduction / (asset.MaxHeat / Math.Abs(asset.MaxElectricity ?? 1))) * (electricityPrice ?? 0));
+        }
+        else
+        {
+            return (double)(asset.ProductionCost ?? 0) * heatProduction;
+        }
+    }
+
+    private double CalculateAssetEmissions(AssetSpecifications asset, double heatProduction)
+    {
+        return (double)(asset.CO2Emissions ?? 0) * heatProduction;
+    }
+
+    private double CalculateAssetFuelConsumption(AssetSpecifications asset, double heatProduction)
+    {
+        return (double)(asset.FuelConsumption ?? 0) * heatProduction;
     }
 
     public async Task GenerateAndSavePdfReport()
