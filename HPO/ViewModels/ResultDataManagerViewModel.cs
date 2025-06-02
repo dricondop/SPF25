@@ -127,8 +127,8 @@ public class ResultDataManagerViewModel : ViewModelBase
                 foreach (var timestamp in timestamps)
                 {
                     var hasSourceData = sourceDataLookup.TryGetValue(timestamp, out var sourceValues);
-                    var heatDemand = hasSourceData ? sourceValues.HeatDemand : 0;
-                    var electricityPrice = hasSourceData ? sourceValues.ElectricityPrice : 0;
+                    var heatDemand = (hasSourceData && sourceValues != null) ? sourceValues.HeatDemand : 0;
+                    var electricityPrice = (hasSourceData && sourceValues != null) ? sourceValues.ElectricityPrice : 0;
 
                     writer.Write($"{timestamp:yyyy-MM-dd HH:mm},");
                     writer.Write($"{heatDemand.ToString("0.######", cultureInfo)},");
@@ -182,13 +182,21 @@ public class ResultDataManagerViewModel : ViewModelBase
     {
         if (asset.UnitType == "Heat Pump")
         {
+            var maxHeat = asset.MaxHeat ?? 1;
+            var maxElectricity = asset.MaxElectricity ?? 1;
+            if (maxHeat == 0 || maxElectricity == 0)
+                return (double)((asset.ProductionCost ?? 0) * heatProduction);
             return (double)((asset.ProductionCost ?? 0) * heatProduction + 
-                (heatProduction / (asset.MaxHeat / Math.Abs(asset.MaxElectricity ?? 1))) * (electricityPrice ?? 0));
+                heatProduction / (maxHeat / Math.Abs(maxElectricity)) * (electricityPrice ?? 0));
         }
         else if (asset.UnitType == "Motor")
         {
+            var maxHeat = asset.MaxHeat ?? 1;
+            var maxElectricity = asset.MaxElectricity ?? 1;
+            if (maxHeat == 0 || maxElectricity == 0)
+                return (double)((asset.ProductionCost ?? 0) * heatProduction);
             return (double)((asset.ProductionCost ?? 0) * heatProduction - 
-                (heatProduction / (asset.MaxHeat / Math.Abs(asset.MaxElectricity ?? 1))) * (electricityPrice ?? 0));
+                heatProduction / (maxHeat / Math.Abs(maxElectricity)) * (electricityPrice ?? 0));
         }
         else
         {

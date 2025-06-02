@@ -107,19 +107,19 @@
                         IsChecked="{Binding EnableZoom}" />
                     <Button
                         Grid.Column="5"
-                        Margin="0,0,5,0"
+                        Margin="15,0,5,0"
                         Padding="5"
                         Command="{Binding ResetZoomCommand}"
                         Content="Reset Zoom" />
                     <Button
                         Grid.Column="6"
-                        Margin="0,0,0,0"
+                        Margin="0,0,5,0"
                         Padding="5"
                         Command="{Binding UpdateChartCommand}"
                         Content="Refresh Data" />
                     <Button
                         Grid.Column="7"
-                        Padding="12,6"
+                        Padding="5"
                         Background="#0066CC"
                         BorderBrush="#0052A3"
                         Foreground="White"

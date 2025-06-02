@@ -91,7 +91,6 @@
                           Margin="0,20"
                           VerticalAlignment="Bottom">
                         <Button Classes="sidebar-button"
-                            ToolTip.Tip="Settings"
                             HorizontalAlignment="Center">
                             <Image Width="24" Height="24" Source="avares://HPO/Assets/Icons/HPO.ico"/>
                         </Button>

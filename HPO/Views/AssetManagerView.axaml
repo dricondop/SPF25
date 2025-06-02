@@ -57,12 +57,11 @@
                         Foreground="White"/>
                 
                 <!-- Continue Button -->
-                <Button Content="CONTINUE" 
+                <Button Content="Continue" 
                         Click="Continue_Click"
                         Padding="15,10"
                         Background="#9C27B0"
                         Foreground="White"
-                        Margin="20,0,0,0"
                         IsEnabled="{Binding HasAssets}"/>
             </StackPanel>
             

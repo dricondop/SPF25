@@ -13,7 +13,7 @@ namespace HeatProductionOptimization.ViewModels;
 public partial class OptimizerViewModel : ViewModelBase
 {
     public static AssetManager SharedAssetManager = new AssetManager();
-    private AssetManager assetManager = SharedAssetManager;
+    public AssetManager assetManager = SharedAssetManager;
 
     OptAlgorithm alg = new();
     SourceDataManager sourceDataManager = SourceDataManager.sourceDataManagerInstance;
@@ -23,6 +23,7 @@ public partial class OptimizerViewModel : ViewModelBase
     public static double? Totalcost;
     public static double? TotalCO2;
     public static double? TotalFuel;
+    public static double? TotalHeat;
     
     // Optimization parameters
     private bool _considerProductionCost = true;
@@ -543,6 +544,7 @@ public partial class OptimizerViewModel : ViewModelBase
 
             // Get the actual objects from the SharedAssetManager (not a copy!)
             List<AssetSpecifications> boilers = assetManager.GetAllAssets().Values.ToList();
+        
 
             Console.WriteLine($"Loaded {boilers.Count} boilers");
 
@@ -558,7 +560,7 @@ public partial class OptimizerViewModel : ViewModelBase
                     Console.WriteLine($"  Hour: {entry.Key}, Heat Produced: {entry.Value}");
                 }
             }
-
+            
             List<HeatDemandRecord> WinterData = sourceDataManager.WinterRecords;
             List<HeatDemandRecord> SummerData = sourceDataManager.SummerRecords;
             Console.WriteLine($"Data loaded - Winter records: {WinterData.Count}, Summer records: {SummerData.Count}");
@@ -617,6 +619,7 @@ public partial class OptimizerViewModel : ViewModelBase
             Totalcost = alg.CalculateTotalCost(boilers, Electricity);
             TotalCO2 = alg.CalculateTotalCO2(boilers);
             TotalFuel = alg.CalculateTotalFuel(boilers);
+            TotalHeat= boilers.Where(a=> a.IsActive).SelectMany(d=> d.ProducedHeat.Values).Sum();
 
             Console.WriteLine($"Optimization complete. Total cost: {Totalcost}, Total CO2: {TotalCO2} Total units: {boilers.Count}");
 
