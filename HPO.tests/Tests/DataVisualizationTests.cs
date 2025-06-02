@@ -5,6 +5,7 @@ using HeatProductionOptimization.Services.Managers;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 
 namespace HeatProductionOptimization.Tests
 {
@@ -107,6 +108,37 @@ namespace HeatProductionOptimization.Tests
 
             // Assert
             Assert.Equal("", _viewModel.XAxes[0].Name);
+        }
+
+        [Fact]
+        public void GenerateAllCharts_SavesChartFilesToTempDirectory()
+        {
+            var viewModel = new DataVisualizationViewModel();
+            
+            var chartImages = viewModel.GenerateAllCharts();
+
+            Assert.NotNull(chartImages);
+            Assert.Equal(4, chartImages.Count);
+            
+            Assert.Contains("HeatDemand", chartImages.Keys);
+            Assert.Contains("ElectricityPrice", chartImages.Keys);
+            Assert.Contains("Optimization", chartImages.Keys);
+            Assert.Contains("Production", chartImages.Keys);
+            
+            var tempPath = Path.GetTempPath();
+            foreach (var path in chartImages.Values)
+            {
+                Assert.StartsWith(tempPath, path, StringComparison.OrdinalIgnoreCase);
+                Assert.True(File.Exists(path), $"File {path} does not exist");
+            }
+            
+            foreach (var path in chartImages.Values)
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
         }
     }
 }

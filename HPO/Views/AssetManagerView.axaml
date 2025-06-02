@@ -57,18 +57,28 @@
                         Foreground="White"/>
                 
                 <!-- Continue Button -->
-                <Button Content="CONTINUE" 
+                <Button Content="Continue" 
                         Click="Continue_Click"
                         Padding="15,10"
                         Background="#9C27B0"
                         Foreground="White"
-                        Margin="20,0,0,0"
                         IsEnabled="{Binding HasAssets}"/>
             </StackPanel>
             
-            <TextBlock Text="{Binding StatusMessage}"
-                      VerticalAlignment="Center"
-                      Margin="0,0,10,0"/>
+            <Border Background="{Binding StatusMessageColor}" 
+                    CornerRadius="4" 
+                    Padding="12,8"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Image Width="24" Height="24" Source="avares://HPO/Assets/Images/Robot.png"/>
+                    <TextBlock Text="{Binding StatusMessage}"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                            FontSize="14"/>
+                </StackPanel>
+            </Border>
         </DockPanel>
         
         <ScrollViewer>
@@ -122,7 +132,7 @@
                                                 Padding="0"
                                                 Command="{Binding $parent[views:AssetManagerView].((vm:AssetManagerViewModel)DataContext).RemoveAsset}"
                                                 CommandParameter="{Binding}">
-                                                    <Image Source="avares://HPO/Assets/Icons/Cross.png"
+                                                    <Image Source="avares://HPO/Assets/Images/Cross.png"
                                                         Stretch="Uniform" Width="28"
                                                         Height="28" />
                                                 </Button>

@@ -77,11 +77,23 @@
                                     </Grid>
                                 </StackPanel>
                                 
-                                <TextBlock Text="{Binding DateStatusMessage}"  
-                                        FontSize="14"
-                                        FontStyle="Italic"
-                                        TextWrapping="Wrap"
-                                        Margin="0,10,0,0"/>
+                                <Border Background="{Binding DateStatusMessageColor}"
+                                        CornerRadius="4" 
+                                        Padding="12,8"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal" 
+                                                Spacing="12"
+                                                VerticalAlignment="Center">
+                                        <Image Width="24" Height="24" Source="avares://HPO/Assets/Images/Calendar.png"/>
+                                        <TextBlock Text="{Binding DateStatusMessage}"
+                                                VerticalAlignment="Center"
+                                                Foreground="White"
+                                                FontSize="14"
+                                                TextWrapping="Wrap"/>
+                                </StackPanel>
+                                </Border>
                             </StackPanel>
                         </Border>
                         
@@ -156,11 +168,23 @@
                                         Foreground="White"/>
                             </StackPanel>
                             
-                            <!-- Status Message -->
-                            <TextBlock Text="{Binding StatusMessage}"
-                                    VerticalAlignment="Center"
-                                    TextWrapping="Wrap"
-                                    Margin="0,0,10,0"/>
+                                <!-- Status Message -->
+                                <Border Background="{Binding StatusMessageColor}" 
+                                        CornerRadius="4" 
+                                        Padding="12,8"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal" 
+                                                Spacing="12"
+                                                VerticalAlignment="Center">
+                                        <Image Width="24" Height="24" Source="avares://HPO/Assets/Images/Robot.png"/>
+                                        <TextBlock Text="{Binding StatusMessage}"
+                                                VerticalAlignment="Center"
+                                                Foreground="White"
+                                                FontSize="14"/>
+                                </StackPanel>
+                                </Border>
                         </DockPanel>
                         
                         <!-- Navigation Buttons -->

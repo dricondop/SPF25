@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using HeatProductionOptimization.Services;
 using HeatProductionOptimization.Services.DataProviders;
+using HeatProductionOptimization.Services.Managers;
 using HeatProductionOptimization.Controls;
 using ReactiveUI;
 using HeatProductionOptimization.Models;
+using HeatProductionOptimization.Models.DataModels;
 
 namespace HeatProductionOptimization.ViewModels;
 
@@ -67,6 +70,27 @@ public class ResultDataManagerViewModel : ViewModelBase
                 .OrderBy(t => t)
                 .ToList();
 
+            // Get source data manager
+            var sourceData = SourceDataManager.sourceDataManagerInstance;
+            
+            // Combine both winter and summer records for lookup
+            var allSourceRecords = sourceData.WinterRecords
+                .Concat(sourceData.SummerRecords)
+                .ToList();
+
+            if (allSourceRecords.Count == 0)
+            {
+                var messageBox = new MessageBox("Error", "No source data records found.");
+                await messageBox.ShowDialog(mainWindow);
+                return;
+            }
+
+            // Create a dictionary for faster lookup by timestamp
+            var sourceDataLookup = allSourceRecords.ToDictionary(
+                r => r.TimeFrom,
+                r => new { HeatDemand = r.HeatDemand ?? 0, ElectricityPrice = r.ElectricityPrice ?? 0 }
+            );
+
             var topLevel = TopLevel.GetTopLevel(mainWindow);
             if (topLevel == null) return;
 
@@ -87,45 +111,56 @@ public class ResultDataManagerViewModel : ViewModelBase
             {
                 await using var stream = await file.OpenWriteAsync();
                 using var writer = new StreamWriter(stream);
+                
+                var cultureInfo = CultureInfo.InvariantCulture;
 
-                // Write header
-                writer.Write("Timestamp,Heat Demand");
+                writer.Write("Timestamp,Heat Demand [MWh],Electricity Price [DKK/MWh]");
                 foreach (var asset in activeAssets)
                 {
-                    writer.Write($",{asset.Name} Heat Production");
-                    writer.Write($",{asset.Name} Cost");
-                    writer.Write($",{asset.Name} Emissions");
+                    writer.Write($",{asset.Name} Heat Production [MWh]");
+                    writer.Write($",{asset.Name} Cost [DKK]");
+                    writer.Write($",{asset.Name} Emissions [kg CO₂]");
+                    writer.Write($",{asset.Name} Fuel Consumption [MWh]");
                 }
-                writer.WriteLine(",Total Cost,Total Emissions");
+                writer.WriteLine(",Total Cost [DKK],Total Emissions [kg CO₂],Total Fuel Consumption [MWh]");
 
-                // Write data rows
                 foreach (var timestamp in timestamps)
                 {
-                    // Get heat demand (assuming it's available in one of the assets)
-                    var heatDemand = activeAssets.FirstOrDefault()?.ProducedHeat?.TryGetValue(timestamp, out var demand) == true 
-                        ? demand ?? 0 
-                        : 0;
+                    var hasSourceData = sourceDataLookup.TryGetValue(timestamp, out var sourceValues);
+                    var heatDemand = (hasSourceData && sourceValues != null) ? sourceValues.HeatDemand : 0;
+                    var electricityPrice = (hasSourceData && sourceValues != null) ? sourceValues.ElectricityPrice : 0;
 
-                    writer.Write($"{timestamp:yyyy-MM-dd HH:mm},{heatDemand}");
+                    writer.Write($"{timestamp:yyyy-MM-dd HH:mm},");
+                    writer.Write($"{heatDemand.ToString("0.######", cultureInfo)},");
+                    writer.Write($"{electricityPrice.ToString("0.######", cultureInfo)}");
 
                     double totalCost = 0;
                     double totalEmissions = 0;
+                    double totalFuelConsumption = 0; 
 
                     foreach (var asset in activeAssets)
                     {
                         var heatProduction = asset.ProducedHeat?.TryGetValue(timestamp, out var production) == true 
                             ? production ?? 0 
                             : 0;
-                        var cost = asset.ProductionCost ?? 0;
-                        var emissions = asset.CO2Emissions ?? 0;
+                        
+                        var cost = CalculateAssetCost(asset, heatProduction, electricityPrice);
+                        var emissions = CalculateAssetEmissions(asset, heatProduction);
+                        var fuelConsumption = CalculateAssetFuelConsumption(asset, heatProduction);
 
-                        writer.Write($",{heatProduction},{cost},{emissions}");
+                        writer.Write($",{heatProduction.ToString("0.######", cultureInfo)}");
+                        writer.Write($",{cost.ToString("0.######", cultureInfo)}");
+                        writer.Write($",{emissions.ToString("0.######", cultureInfo)}");
+                        writer.Write($",{fuelConsumption.ToString("0.######", cultureInfo)}");
 
                         totalCost += cost;
                         totalEmissions += emissions;
+                        totalFuelConsumption += fuelConsumption;
                     }
 
-                    writer.WriteLine($",{totalCost},{totalEmissions}");
+                    writer.Write($",{totalCost.ToString("0.######", cultureInfo)}");
+                    writer.Write($",{totalEmissions.ToString("0.######", cultureInfo)}");
+                    writer.WriteLine($",{totalFuelConsumption.ToString("0.######", cultureInfo)}");
                 }
 
                 var messageBox = new MessageBox("Success", "Optimizer data exported successfully to CSV file.");
@@ -141,6 +176,42 @@ public class ResultDataManagerViewModel : ViewModelBase
                 await messageBox.ShowDialog(desktopLifetime.MainWindow);
             }
         }
+    }
+
+    private double CalculateAssetCost(AssetSpecifications asset, double heatProduction, double? electricityPrice)
+    {
+        if (asset.UnitType == "Heat Pump")
+        {
+            var maxHeat = asset.MaxHeat ?? 1;
+            var maxElectricity = asset.MaxElectricity ?? 1;
+            if (maxHeat == 0 || maxElectricity == 0)
+                return (double)((asset.ProductionCost ?? 0) * heatProduction);
+            return (double)((asset.ProductionCost ?? 0) * heatProduction + 
+                heatProduction / (maxHeat / Math.Abs(maxElectricity)) * (electricityPrice ?? 0));
+        }
+        else if (asset.UnitType == "Motor")
+        {
+            var maxHeat = asset.MaxHeat ?? 1;
+            var maxElectricity = asset.MaxElectricity ?? 1;
+            if (maxHeat == 0 || maxElectricity == 0)
+                return (double)((asset.ProductionCost ?? 0) * heatProduction);
+            return (double)((asset.ProductionCost ?? 0) * heatProduction - 
+                heatProduction / (maxHeat / Math.Abs(maxElectricity)) * (electricityPrice ?? 0));
+        }
+        else
+        {
+            return (double)(asset.ProductionCost ?? 0) * heatProduction;
+        }
+    }
+
+    private double CalculateAssetEmissions(AssetSpecifications asset, double heatProduction)
+    {
+        return (double)(asset.CO2Emissions ?? 0) * heatProduction;
+    }
+
+    private double CalculateAssetFuelConsumption(AssetSpecifications asset, double heatProduction)
+    {
+        return (double)(asset.FuelConsumption ?? 0) * heatProduction;
     }
 
     public async Task GenerateAndSavePdfReport()
