@@ -37,7 +37,7 @@ namespace HeatProductionOptimization.Services
                             
                             column.Item()
                                 .AlignCenter()
-                                .Text("ELECTRICAL PERFORMANCE REPORT")
+                                .Text("HEAT PRODUCTION OPTIMIZATION REPORT")
                                 .FontColor(Colors.Blue.Darken3)
                                 .Bold()
                                 .FontSize(24);
@@ -67,131 +67,7 @@ namespace HeatProductionOptimization.Services
                                 .Width(150)
                                 .Image(Placeholders.Image);
                         });
-                    
-                    page.Footer()
-                        .AlignCenter()
-                        .Text(text =>
-                        {
-                            text.Span("Confidential - ").FontColor(Colors.Grey.Darken1);
-                            text.Span("Internal Use Only").Bold().FontColor(Colors.Red.Medium);
-                        });
-                });
-
-                // Executive Summary page
-                container.Page(page =>
-                {
-                    page.Size(PageSizes.A4);
-                    page.Margin(2, Unit.Centimetre);
-                    page.PageColor(Colors.White);
-                    page.DefaultTextStyle(x => x.FontSize(11).FontFamily("Calibri"));
-
-                    page.Header()
-                        .Height(80)
-                        .Background(Colors.White)
-                        .Column(column =>
-                        {
-                            column.Item()
-                                .PaddingBottom(5)
-                                .Row(row =>
-                                {
-                                    row.RelativeItem()
-                                       .AlignLeft()
-                                       .Width(60)
-                                       .Image(Placeholders.Image);
-                                    
-                                    row.RelativeItem()
-                                       .AlignCenter()
-                                       .Column(col =>
-                                       {
-                                           col.Item()
-                                              .Text("EXECUTIVE SUMMARY")
-                                              .FontColor(Colors.Blue.Darken3)
-                                              .Bold()
-                                              .FontSize(18);
-                                       });
-                                });
-                            
-                            column.Item()
-                                .BorderBottom(1)
-                                .BorderColor(Colors.Blue.Darken3);
-                        });
-
-                    page.Content()
-                        .PaddingVertical(10)
-                        .Column(column =>
-                        {
-                            column.Item()
-                                .PaddingBottom(20)
-                                .Background(Colors.Grey.Lighten4)
-                                .Padding(15)
-                                .Column(col =>
-                                {
-                                    col.Item()
-                                       .Text("KEY FINDINGS")
-                                       .FontColor(Colors.Blue.Darken3)
-                                       .Bold()
-                                       .FontSize(14);
-                                    
-                                    col.Item()
-                                       .PaddingTop(10)
-                                       .Text("This report presents the analysis of electrical performance and heat production optimization conducted on:")
-                                       .FontSize(11);
-                                    
-                                    col.Item()
-                                       .PaddingVertical(5)
-                                       .AlignCenter()
-                                       .Text($"{DateTime.Now:MMMM dd, yyyy}")
-                                       .Bold()
-                                       .FontSize(12)
-                                       .FontColor(Colors.Blue.Darken3);
-                                    
-                                    col.Item()
-                                       .PaddingTop(10)
-                                       .Text("The analysis covers the following aspects:")
-                                       .FontSize(11);
-                                    
-                                    col.Item()
-                                       .PaddingLeft(15)
-                                       .PaddingTop(5)
-                                       .Text("• Heat demand variation analysis")
-                                       .FontSize(11);
-                                    
-                                    col.Item()
-                                       .PaddingLeft(15)
-                                       .Text("• Electricity price fluctuation impact")
-                                       .FontSize(11);
-                                    
-                                    col.Item()
-                                       .PaddingLeft(15)
-                                       .Text("• Production unit performance metrics")
-                                       .FontSize(11);
-                                    
-                                    col.Item()
-                                       .PaddingLeft(15)
-                                       .Text("• Optimization results comparison")
-                                       .FontSize(11);
-                                    
-                                    col.Item()
-                                       .PaddingTop(15)
-                                       .Text("The following pages contain detailed charts and analysis for each section.")
-                                       .Italic()
-                                       .FontSize(11);
-                                });
-                        });
-
-                    page.Footer()
-                        .Height(30)
-                        .Background(Colors.White)
-                        .BorderTop(1)
-                        .BorderColor(Colors.Grey.Lighten2)
-                        .AlignCenter()
-                        .AlignMiddle()
-                        .Text(text =>
-                        {
-                            text.Span("Page ").FontColor(Colors.Grey.Darken1);
-                            text.CurrentPageNumber().Bold().FontColor(Colors.Blue.Darken3);
-                        });
-                });
+                }); 
 
                 // Heat Demand page
                 if (chartImages.ContainsKey("HeatDemand"))
@@ -216,7 +92,7 @@ namespace HeatProductionOptimization.Services
                                            .AlignLeft()
                                            .Width(60)
                                            .Image(Placeholders.Image);
-                                        
+
                                         row.RelativeItem()
                                            .AlignCenter()
                                            .Column(col =>
@@ -228,7 +104,7 @@ namespace HeatProductionOptimization.Services
                                                   .FontSize(18);
                                            });
                                     });
-                                
+
                                 column.Item()
                                     .BorderBottom(1)
                                     .BorderColor(Colors.Blue.Darken3);
@@ -244,25 +120,25 @@ namespace HeatProductionOptimization.Services
                                     .FontColor(Colors.Blue.Darken3)
                                     .Bold()
                                     .FontSize(14);
-                                
+
                                 column.Item()
                                     .PaddingBottom(10)
                                     .Text("The following chart shows the heat demand variation throughout the analyzed period.")
                                     .FontSize(11)
                                     .Italic();
-                                
+
                                 column.Item()
                                     .Border(1)
                                     .BorderColor(Colors.Grey.Lighten1)
                                     .Padding(5)
                                     .Image(chartImages["HeatDemand"]);
-                                
+
                                 column.Item()
                                     .AlignRight()
                                     .Text("Figure 1: Heat demand variation chart")
                                     .FontSize(9)
                                     .FontColor(Colors.Grey.Darken1);
-                                
+
                                 column.Item()
                                     .PaddingTop(15)
                                     .Background(Colors.Grey.Lighten4)
@@ -270,10 +146,10 @@ namespace HeatProductionOptimization.Services
                                     .Text("Analysis:")
                                     .Bold()
                                     .FontSize(11);
-                                
+
                                 column.Item()
                                     .PaddingTop(5)
-                                    .Text("The heat demand pattern shows typical consumption behavior with peaks during production hours and lower demand during night time. The maximum recorded demand was X MW at Y time.")
+                                    .Text("") // Insert stats here
                                     .FontSize(11);
                             });
 
@@ -372,7 +248,7 @@ namespace HeatProductionOptimization.Services
                                 
                                 column.Item()
                                     .PaddingTop(5)
-                                    .Text("Price peaks were observed during X hours, reaching Y €/MWh. The optimization algorithm successfully avoided operating high-cost units during these periods, resulting in estimated savings of Z €.")
+                                    .Text("") // Insert stats here
                                     .FontSize(11);
                             });
 
@@ -438,14 +314,14 @@ namespace HeatProductionOptimization.Services
                             {
                                 column.Item()
                                     .PaddingBottom(15)
-                                    .Text("3. OPTIMIZATION RESULTS COMPARISON")
+                                    .Text("3. OPTIMIZATION RESULTS")
                                     .FontColor(Colors.Blue.Darken3)
                                     .Bold()
                                     .FontSize(14);
                                 
                                 column.Item()
                                     .PaddingBottom(10)
-                                    .Text("Comparison between the optimal solution found and alternative scenarios.")
+                                    .Text("Optimal distribution of production units in the desired scenario")
                                     .FontSize(11)
                                     .Italic();
                                 
@@ -457,7 +333,7 @@ namespace HeatProductionOptimization.Services
                                 
                                 column.Item()
                                     .AlignRight()
-                                    .Text("Figure 3: Optimization results comparison")
+                                    .Text("Figure 3: Optimization results chart")
                                     .FontSize(9)
                                     .FontColor(Colors.Grey.Darken1);
                                 
@@ -472,17 +348,7 @@ namespace HeatProductionOptimization.Services
                                 column.Item()
                                     .PaddingLeft(15)
                                     .PaddingTop(5)
-                                    .Text("• Total cost reduction: X% compared to baseline")
-                                    .FontSize(11);
-                                
-                                column.Item()
-                                    .PaddingLeft(15)
-                                    .Text("• CO2 emissions reduction: Y%")
-                                    .FontSize(11);
-                                
-                                column.Item()
-                                    .PaddingLeft(15)
-                                    .Text("• Most utilized unit: Z (A% of total production)")
+                                    .Text("") // Insertar stats aquí
                                     .FontSize(11);
                             });
 
@@ -582,17 +448,7 @@ namespace HeatProductionOptimization.Services
                                 column.Item()
                                     .PaddingLeft(15)
                                     .PaddingTop(5)
-                                    .Text("• Most efficient unit: X (Y% efficiency)")
-                                    .FontSize(11);
-                                
-                                column.Item()
-                                    .PaddingLeft(15)
-                                    .Text("• Highest capacity utilization: Z (A% of total capacity)")
-                                    .FontSize(11);
-                                
-                                column.Item()
-                                    .PaddingLeft(15)
-                                    .Text("• Recommended operational adjustments: ...")
+                                    .Text("")  // Insertar stats aquí
                                     .FontSize(11);
                             });
 
@@ -610,82 +466,6 @@ namespace HeatProductionOptimization.Services
                             });
                     });
                 }
-
-                // Closing page
-                container.Page(page =>
-                {
-                    page.Size(PageSizes.A4);
-                    page.Margin(2, Unit.Centimetre);
-                    page.PageColor(Colors.White);
-                    page.DefaultTextStyle(x => x.FontSize(11).FontFamily("Calibri"));
-
-                    page.Header().Height(1, Unit.Centimetre);
-                    
-                    page.Content()
-                        .PaddingVertical(1, Unit.Centimetre)
-                        .Column(column =>
-                        {
-                            column.Item().Height(5, Unit.Centimetre);
-                            
-                            column.Item()
-                                .AlignCenter()
-                                .Text("ANALYSIS COMPLETE")
-                                .FontColor(Colors.Blue.Darken3)
-                                .Bold()
-                                .FontSize(24);
-                            
-                            column.Item().Height(3, Unit.Centimetre);
-                            
-                            column.Item()
-                                .AlignCenter()
-                                .Width(300)
-                                .Image(Placeholders.Image);
-                            
-                            column.Item().Height(3, Unit.Centimetre);
-                            
-                            column.Item()
-                                .AlignCenter()
-                                .Text("Thank you for using")
-                                .FontSize(14);
-                            
-                            column.Item()
-                                .AlignCenter()
-                                .Text("Heat Production Optimization System")
-                                .Bold()
-                                .FontSize(16)
-                                .FontColor(Colors.Blue.Darken3);
-                            
-                            column.Item().Height(2, Unit.Centimetre);
-                            
-                            column.Item()
-                                .AlignCenter()
-                                .Text("For any questions, please contact:")
-                                .FontSize(11)
-                                .Italic();
-                            
-                            column.Item()
-                                .AlignCenter()
-                                .Text("technical.support@yourcompany.com")
-                                .FontSize(12)
-                                .FontColor(Colors.Blue.Darken3);
-                        });
-                    
-                    page.Footer()
-                        .Height(30)
-                        .Background(Colors.White)
-                        .BorderTop(1)
-                        .BorderColor(Colors.Grey.Lighten2)
-                        .AlignCenter()
-                        .AlignMiddle()
-                        .Text(text =>
-                        {
-                            text.Span("Document ID: ").FontColor(Colors.Grey.Darken1);
-                            text.Span(Guid.NewGuid().ToString().Substring(0, 8).ToUpper()).Bold().FontColor(Colors.Blue.Darken3);
-                            text.Span(" | ").FontColor(Colors.Grey.Darken1);
-                            text.Span("Page ").FontColor(Colors.Grey.Darken1);
-                            text.CurrentPageNumber().Bold().FontColor(Colors.Blue.Darken3);
-                        });
-                });
             });
 
             await Task.Run(() => 
